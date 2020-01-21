@@ -1,0 +1,637 @@
+
+downloading:
+
+https://www.postgresql.org/download/
+
+
+learning documents:
+https://www.runoob.com/postgresql/postgresql-select.html
+http://www.postgres.cn/docs/10/index.html
+http://www.postgres.cn/docs/10/spi-spi-cursor-open.html
+https://www.yiibai.com/postgresql/postgresql-cross-join.html
+
+
+pgadmin 4: 
+http://127.0.0.1:54494/browser/
+
+install dir: 
+C:\PostgreSQL\10\bin
+
+python module:
+psycopg2
+pip install psycopg2
+
+python - 基本增删改查
+
+https://blog.csdn.net/weixin_42142216/article/details/101680469
+
+批量增删改查
+
+https://blog.csdn.net/weixin_42142216/article/details/101686766
+
+
+
+~/bin/createdb mydb
+~/bin/dropdb mydb
+
+
+create database mydb
+select version();
+select current_date;
+
+
+\h : help
+\q : quit
+\i [file]: open file and read sql from file
+\l : list all databases
+\c : select database
+\du: list all users
+\dt: list all tables
+\d [table]: list table schema
+
+
+
+CREATE TABLE if not exists weather  (
+    city            varchar(80),
+    temp_lo         int,           -- 最低温度
+    temp_hi         int,           -- 最高温度
+    prcp            real,          -- 湿度
+    date            date
+);
+
+CREATE TABLE cities (
+    name            varchar(80),
+    location        point
+);
+
+CREATE TABLE if not exists empsalary (
+    depname		varchar(40),
+    empno		int,
+    salary		int
+);
+
+drop table [tablename];
+
+INSERT INTO weather VALUES ('San Francisco', 46, 50, 0.25, '1994-11-27');
+
+INSERT INTO cities VALUES ('San Francisco', '(-194.0, 53.0)');
+
+INSERT INTO weather (city, temp_lo, temp_hi, prcp, date)
+    VALUES ('San Francisco', 43, 57, 0.0, '1994-11-29');
+
+INSERT INTO weather (date, city, temp_hi, temp_lo)
+    VALUES ('1994-11-29', 'Hayward', 54, 37);
+
+insert into cities values  ('beijing', '(50,-180)');
+
+insert into empsalary values ('develop', 11, 5200);
+insert into empsalary values ('develop', 7, 4200);
+insert into empsalary values ('develop', 9, 4500);
+insert into empsalary values ('develop', 8, 6000);
+insert into empsalary values ('develop', 10, 5200);
+insert into empsalary values ('personnel', 5, 3500);
+insert into empsalary values ('personnel', 2, 3900);
+insert into empsalary values ('sales', 3, 4800);
+insert into empsalary values ('sales', 1, 5000);
+insert into empsalary values ('sales', 4, 4800);
+
+#---------------------------
+# join and query
+#---------------------------
+
+SELECT weather.city, weather.temp_lo, weather.temp_hi,
+       weather.prcp, weather.date, cities.location
+    FROM weather, cities
+    WHERE cities.name = weather.city;
+
+SELECT *
+    FROM weather INNER JOIN cities ON (weather.city = cities.name);
+
+SELECT *
+    FROM weather LEFT OUTER JOIN cities ON (weather.city = cities.name);
+
+SELECT *
+    FROM weather RIGHT OUTER JOIN cities ON (weather.city = cities.name);
+
+SELECT *
+    FROM weather FULL OUTER JOIN cities ON (weather.city = cities.name);
+
+SELECT *
+    FROM weather CROSS JOIN cities;
+
+ALTER TABLE weather ADD COLUMN IF NOT EXISTS admin_id TEXT;
+ALTER TABLE weather ADD COLUMN admin_id TEXT;
+
+CREATE TABLE "test04" AS ( select * from test);
+alter table test04 rename to test01;
+ALTER TABLE test04 ADD id_type integer;
+ALTER TABLE test04 DROP COLUMN id_type;
+alter table test04 RENAME "id_type" TO "id"; #修改字段名字
+ALTER TABLE test04 ALTER COLUMN "id_type" TYPE datatype; #修改字段类型
+
+
+#-------------------------------
+#  外键
+#-------------------------------
+CREATE TABLE cities (
+        city     varchar(80) primary key,
+        location point
+);
+
+CREATE TABLE weather (
+        city      varchar(80) references cities(city),
+        temp_lo   int,
+        temp_hi   int,
+        prcp      real,
+        date      date
+);
+
+
+#-------------------------------
+#  检查约束
+#-------------------------------
+CREATE TABLE products (
+    product_no integer,
+    name text,
+    price numeric CHECK (price > 0),
+    discounted_price numeric CHECK (discounted_price > 0),
+    CHECK (price > discounted_price)
+);
+
+CREATE TABLE products (
+    product_no integer,
+    name text,
+    price numeric,
+    CHECK (price > 0),
+    discounted_price numeric,
+    CHECK (discounted_price > 0),
+    CONSTRAINT valid_discount CHECK (price > discounted_price)
+);
+
+#-------------------------------
+#  非空约束
+#-------------------------------
+CREATE TABLE products (
+    product_no integer NOT NULL,
+    name text NOT NULL,
+    price numeric
+);
+
+
+#-------------------------------
+#   唯一约束
+#-------------------------------
+
+CREATE TABLE example (
+    a integer,
+    b integer,
+    c integer,
+    UNIQUE (a, c)
+);
+
+CREATE TABLE products (
+    product_no integer CONSTRAINT must_be_different UNIQUE,
+    name text,
+    price numeric
+);
+
+
+#-------------------------------
+#   主键约束
+#-------------------------------
+
+CREATE TABLE products (
+    product_no integer PRIMARY KEY,
+    name text,
+    price numeric
+);
+
+CREATE TABLE example (
+    a integer,
+    b integer,
+    c integer,
+    PRIMARY KEY (a, c)
+);
+
+#-------------------------------
+#   外键约束
+#-------------------------------
+
+CREATE TABLE products (
+    product_no integer PRIMARY KEY,
+    name text,
+    price numeric
+);
+
+CREATE TABLE orders (
+    order_id integer PRIMARY KEY,
+    product_no integer REFERENCES products (product_no),
+    quantity integer
+);
+
+CREATE TABLE t1 (
+  a integer PRIMARY KEY,
+  b integer,
+  c integer,
+  FOREIGN KEY (b, c) REFERENCES other_table (c1, c2)
+);
+
+#-------------------------------
+#   排他约束
+#-------------------------------
+
+CREATE TABLE circles (
+    c circle,
+    EXCLUDE USING gist (c WITH &&)
+);
+
+#-------------------------------
+#   表修改
+#-------------------------------
+
+ALTER TABLE products ADD COLUMN description text CHECK (description <> '');
+
+ALTER TABLE products DROP COLUMN description CASCADE; 
+
+ALTER TABLE products ADD CHECK (name <> '');
+ALTER TABLE products ADD CONSTRAINT some_name UNIQUE (product_no);
+ALTER TABLE products ADD FOREIGN KEY (product_group_id) REFERENCES product_groups;
+
+ALTER TABLE products ALTER COLUMN product_no SET NOT NULL;
+
+ALTER TABLE products DROP CONSTRAINT some_name;
+
+ALTER TABLE products ALTER COLUMN price SET DEFAULT 7.77;
+
+ALTER TABLE products ALTER COLUMN price TYPE numeric(10,2);
+
+ALTER TABLE products RENAME COLUMN product_no TO product_number;
+
+ALTER TABLE products RENAME TO items;
+
+
+#-------------------------------
+#   权限
+#-------------------------------
+
+GRANT UPDATE ON accounts TO joe;
+
+REVOKE ALL ON accounts FROM PUBLIC;
+
+#-------------------------------
+#   模式
+#-------------------------------
+
+CREATE SCHEMA myschema;
+
+CREATE TABLE myschema.mytable (
+ ...
+);
+
+DROP SCHEMA myschema;
+
+DROP SCHEMA myschema CASCADE;
+
+CREATE SCHEMA schema_name AUTHORIZATION user_name;
+
+CREATE TABLE public.products ( ... );
+
+SHOW search_path;
+
+SET search_path TO myschema,public;
+
+#-------------------------------
+#   分区 partition
+#-------------------------------
+
+CREATE TABLE measurement (
+    city_id         int not null,
+    logdate         date not null,
+    peaktemp        int,
+    unitsales       int
+) PARTITION BY RANGE (logdate);
+
+CREATE TABLE measurement_y2006m02 PARTITION OF measurement
+    FOR VALUES FROM ('2006-02-01') TO ('2006-03-01')
+
+CREATE TABLE measurement_y2006m03 PARTITION OF measurement
+    FOR VALUES FROM ('2006-03-01') TO ('2006-04-01')
+
+...
+CREATE TABLE measurement_y2007m11 PARTITION OF measurement
+    FOR VALUES FROM ('2007-11-01') TO ('2007-12-01')
+
+CREATE TABLE measurement_y2007m12 PARTITION OF measurement
+    FOR VALUES FROM ('2007-12-01') TO ('2008-01-01')
+    TABLESPACE fasttablespace;
+
+CREATE TABLE measurement_y2008m01 PARTITION OF measurement
+    FOR VALUES FROM ('2008-01-01') TO ('2008-02-01')
+    TABLESPACE fasttablespace
+    WITH (parallel_workers = 4);
+
+
+CREATE INDEX ON measurement_y2006m02 (logdate);
+CREATE INDEX ON measurement_y2006m03 (logdate);
+...
+CREATE INDEX ON measurement_y2007m11 (logdate);
+CREATE INDEX ON measurement_y2007m12 (logdate);
+CREATE INDEX ON measurement_y2008m01 (logdate);
+
+DROP TABLE measurement_y2006m02;
+
+ALTER TABLE measurement DETACH PARTITION measurement_y2006m02;
+
+CREATE TABLE measurement_y2008m02 PARTITION OF measurement
+    FOR VALUES FROM ('2008-02-01') TO ('2008-03-01')
+    TABLESPACE fasttablespace;
+
+#------------------------------
+# 返回id
+#------------------------------
+
+CREATE TABLE users (firstname text, lastname text, id serial primary key);
+
+INSERT INTO users (firstname, lastname) VALUES ('Joe', 'Cool') RETURNING id;
+
+
+#------------------------------
+# 查询计划
+#------------------------------
+EXPLAIN SELECT * FROM tenk1;
+
+EXPLAIN ANALYZE SELECT * FROM tenk1;
+
+
+#------------------------------
+# 扩展函数
+#------------------------------
+
+CREATE FUNCTION sales_tax(subtotal real) RETURNS real AS $$
+BEGIN
+    RETURN subtotal * 0.11;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE FUNCTION extended_sales(p_itemno int)
+RETURNS TABLE(quantity int, total numeric) AS $$
+BEGIN
+    RETURN QUERY SELECT s.quantity, s.quantity * s.price FROM sales AS s
+                 WHERE s.itemno = p_itemno;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+#------------------------------
+# 扩展函数  PL/Perl 函数和参数
+#------------------------------
+
+CREATE FUNCTION funcname (argument-types) RETURNS return-type AS $$
+    # PL/Perl 函数体
+$$ LANGUAGE plperl;
+
+
+CREATE FUNCTION perl_max (integer, integer) RETURNS integer AS $$
+    if ($_[0] > $_[1]) { return $_[0]; }
+    return $_[1];
+$$ LANGUAGE plperl;
+
+
+CREATE FUNCTION perl_max (integer, integer) RETURNS integer AS $$
+    my ($x, $y) = @_;
+    if (not defined $x) {
+        return undef if not defined $y;
+        return $y;
+    }
+    return $x if not defined $y;
+    return $x if $x > $y;
+    return $y;
+$$ LANGUAGE plperl;
+
+
+#------------------------------
+# 扩展函数  PL/Python 函数和参数
+#------------------------------
+
+CREATE FUNCTION funcname (argument-list)
+  RETURNS return-type
+AS $$
+  # PL/Python 函数体
+$$ LANGUAGE plpythonu;
+
+
+CREATE FUNCTION pymax (a integer, b integer)
+  RETURNS integer
+AS $$
+  if a > b:
+    return a
+  return b
+$$ LANGUAGE plpythonu;
+
+
+CREATE FUNCTION pystrip(x text)
+  RETURNS text
+AS $$
+  global x
+  x = x.strip()  # 现在好了
+  return x
+$$ LANGUAGE plpythonu;
+
+
+触发器，TD字典
+
+
+
+
+#-------------------------------
+#  窗口函数 window function
+#   over (partition by [] order by [])
+#-------------------------------
+SELECT depname, empno, salary, avg(salary) OVER (PARTITION BY depname) FROM empsalary;
+
+SELECT depname, empno, salary, rank() OVER (PARTITION BY depname ORDER BY salary DESC) FROM empsalary;
+
+SELECT salary, sum(salary) OVER (ORDER BY salary) FROM empsalary;
+
+
+SELECT depname, empno, salary
+FROM
+  (SELECT depname, empno, salary, 
+          rank() OVER (PARTITION BY depname ORDER BY salary DESC, empno) AS pos
+     FROM empsalary
+  ) AS ss
+WHERE pos < 3;
+
+
+SELECT sum(salary) OVER w, avg(salary) OVER w
+  FROM empsalary
+  WINDOW w AS (PARTITION BY depname ORDER BY salary DESC);
+
+#-------------------------------
+#  表的继承 inherits (only)
+#-------------------------------
+
+CREATE TABLE cities (
+  name       text,
+  population real,
+  altitude   int     -- (in ft)
+);
+
+CREATE TABLE capitals (
+  state      char(2)
+) INHERITS (cities);
+
+insert into cities values ('beijing', 30000000, 38)
+alter table cities add level int;
+
+
+SELECT name, altitude
+    FROM ONLY cities
+    WHERE altitude > 500;
+
+
+#-------------------------------
+#  事物 transection
+#-------------------------------
+begin:
+
+
+commit;
+
+BEGIN;
+UPDATE accounts SET balance = balance - 100.00
+    WHERE name = 'Alice';
+SAVEPOINT my_savepoint;
+UPDATE accounts SET balance = balance + 100.00
+    WHERE name = 'Bob';
+-- oops ... forget that and use Wally's account
+ROLLBACK TO my_savepoint;
+UPDATE accounts SET balance = balance + 100.00
+    WHERE name = 'Wally';
+COMMIT;
+
+#-------------------------------
+#  视图
+#-------------------------------
+
+CREATE VIEW myview AS
+    SELECT city, temp_lo, temp_hi, prcp, date, location
+        FROM weather, cities
+        WHERE city = name;
+
+SELECT * FROM myview;
+
+#-------------------------------
+#  Functions
+#-------------------------------
+
+max, min, avg, count, sum
+
+
+#-------------------------------
+#  修改已经存在的某列为自增长类型：
+#-------------------------------
+//将表tb按name排序，利用row_number() over()查询序号并将该列命名为rownum，创建新表tb1并将结果保存到该表中
+
+create table tb1 as (select *, row_number() over(order by name) as rownum from tb); 
+
+//根据两张表共同的字段name，将tb1中rownum对应值更新到tb中num中
+
+update tb set num=(select tb1.rownum from tb1 where tb.name = tb1.name);
+
+//判断表tb1的存在并删除表
+
+drop table if exists tb1;
+
+#-------------------------------
+#  单纯清除数据的方法
+#-------------------------------
+– 清除所有的记录（有外键关联的情况下）
+TRUNCATE TABLE questions CASCADE;
+
+#-------------------------------
+#  清除所有的记录，并且索引号从0开始
+#-------------------------------
+TRUNCATE TABLE questions RESTART IDENTITY CASCADE;
+
+
+
+COPY weather FROM '/home/user/weather.txt';
+
+
+SELECT weather.city, weather.temp_lo, weather.temp_hi,
+       weather.prcp, weather.date, cities.location
+    FROM weather, cities
+    WHERE cities.name = weather.city;
+
+
+SELECT *
+    FROM weather INNER JOIN cities ON (weather.city = cities.name);
+
+#-------------------------------
+#  list all tables
+#-------------------------------
+SELECT   tablename   FROM   pg_tables
+WHERE   tablename   NOT   LIKE   'pg%'
+AND tablename NOT LIKE 'sql_%' 
+ORDER   BY   tablename;
+
+select tablename from pg_tables where schemaname='public';
+
+Drop EXTERNAL TABLE IF EXISTS tableName;
+DROP TABLE IF EXISTS tableName;
+
+
+#-------------------------------
+#  list table size
+#-------------------------------
+select pg_relation_size('test');
+select pg_size_pretty(pg_relation_size('test'));
+select pg_size_pretty(pg_total_relation_size('test'));  表的总大小，包括索引大小
+
+#-------------------------------
+#  list table index and usage
+#-------------------------------
+select * from pg_indexes where tablename='test'; 
+DROP INDEX [index];  
+
+select 
+    relname, indexrelname, idx_scan, idx_tup_read, idx_tup_fetch 
+
+from 
+    pg_stat_user_indexes 
+
+order by 
+    idx_scan asc, idx_tup_read asc, idx_tup_fetch asc;
+
+
+select 
+    relname, indexrelname, idx_scan, idx_tup_read, idx_tup_fetch 
+
+from 
+    pg_stat_user_indexes 
+
+where
+    relname = 'test'
+
+order by 
+    idx_scan asc, idx_tup_read asc, idx_tup_fetch asc;
+
+
+#-------------------------------
+#  list all databases
+#-------------------------------
+SELECT datname FROM pg_database;
+
+#-------------------------------
+#  list database size and all databases' size
+#-------------------------------
+select pg_database_size('mydb');
+select pg_database.datname, pg_database_size(pg_database.datname) AS size from pg_database;
+select pg_size_pretty(pg_database_size('mydb'));    
+
+PostgreSQL data types:
+point
+real
