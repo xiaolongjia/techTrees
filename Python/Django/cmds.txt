@@ -1,0 +1,38 @@
+pip install django
+pip show django
+
+# create a demo project with django-admin.py
+# ~/django/bin/django-admin.py
+
+cd D:\02-FAJob\prepare\techTrees\Python\Django\
+django-admin.py startproject djangoDemo
+
+#---------------------- 
+# create an appdemo
+#---------------------- 
+
+cd D:\02-FAJob\prepare\techTrees\Python\Django\djangoDemo
+python manage.py startapp app_demo
+
+# run server 
+
+python manage.py runserver
+python manage.py runserver 8080
+
+# open a page
+
+http://127.0.0.1:8080/
+
+# app_demo test cases:
+
+http://127.0.0.1:8080/hello/
+http://127.0.0.1:8080/msg/jack/7/
+
+
+#---------------------- 
+# create a polls app
+#---------------------- 
+
+cd D:\02-FAJob\prepare\techTrees\Python\Django\djangoDemo
+python manage.py startapp polls
+
