@@ -36,3 +36,269 @@ http://127.0.0.1:8080/msg/jack/7/
 cd D:\02-FAJob\prepare\techTrees\Python\Django\djangoDemo
 python manage.py startapp polls
 
+#---------------------- 
+# create polls app's module
+#---------------------- 
+
+# migrate firstly
+python manage.py migrate
+
+# edit file models.py under D:\02-FAJob\prepare\techTrees\Python\Django\djangoDemo\polls\
+
+# edit settings.py under D:\02-FAJob\prepare\techTrees\Python\Django\djangoDemo\djangoDemo\
+
+add 'polls' into INSTALLED_APPS 
+
+# migrate again
+python manage.py makemigrations polls
+
+# check sql 
+python manage.py sqlmigrate polls 0001
+
+# check potential issues
+python manage.py check
+
+# use python shell to check models
+
+polls model change steps:
+
+1. vi models.py
+2. python manage.py makemigrations
+3. python manage.py migrate
+
+check data: 
+
+1. python manage.py shell
+2. 
+
+>>> from polls.models import Question, Choice
+>>> Question.objects.all()
+<QuerySet []>
+>>>
+>>> from django.utils import timezone
+>>> q=Question(question_text="What's new ?",pub_date=timezone.now())
+>>> q.save()
+>>> q.id
+1
+>>> q.pub_date
+datetime.datetime(2020, 1, 29, 17, 32, 14, 703706, tzinfo=<UTC>)
+>>> q.question_text
+"What's new ?"
+>>> q.question_text = "good day!"
+>>> q.save()
+>>> q.question_text
+'good day!'
+>>> Question.objects.all()
+<QuerySet [<Question: Question object (1)>]>
+
+# adding def __unicode__(self) into each models (python 2.*)
+# python版本为3.4，Python3.X的版本不可使用__unicode__()（python2.x可用），
+# 应改为__str__().
+
+
+>>> from polls.models import Question, Choice
+>>> Question.objects.all()
+<QuerySet [<Question: Question object (1)>]>
+
+Django提供了丰富的关键字参数（keyword arguments）驱动的数据库
+查看API（a rich database lookup API）。比如，可以执行以下命令：
+
+>>> Question.objects.filter(question_text__startswith="good")
+<QuerySet [<Question: good day!>]>
+>>> Question.objects.filter(id=1)
+<QuerySet [<Question: good day!>]>
+
+>>> from django.utils import timezone
+>>> current_year = timezone.now().year
+>>> Question.objects.get(pub_date__year=current_year)
+<Question: good day!>
+
+>>> Question.objects.get(pk=1)
+<Question: good day!>
+
+>>> q=Question.objects.get(pk=1)
+>>> q.was_published_recently()
+True
+
+>>> q.choice_set.create(choice_text="not much", votes=0)
+<Choice: not much>
+>>> q.choice_set.create(choice_text="the sky", votes=0)
+<Choice: the sky>
+>>> c=q.choice_set.create(choice_text="just hacking again", votes=0)
+>>> c.question
+<Question: good day!>
+>>> q.choice_set.all()
+<QuerySet [<Choice: not much>, <Choice: the sky>, <Choice: just hacking again>]>
+
+
+#
+# models支持的类型与配置
+# Django Model中字段(Field)的可选项和必选项
+
+
+1. CharField() 字符字段
+
+max_length = xxx or None
+
+如不是必填项，可设置blank = True和default = ''
+
+如果用于username, 想使其唯一，可以设置unique = True
+
+如果有choice选项，可以设置 choices = XXX_CHOICES
+
+2. TextField() 文本字段
+
+max_length = xxx
+
+如不是必填项，可设置blank = True和default = ''
+
+3. DateField() and DateTimeField() 日期与时间字段
+
+一般建议设置默认日期default date.
+
+For DateField: default=date.today - 先要from datetime import date
+
+For DateTimeField: default=timezone.now - 先要from django.utils import timezone
+
+对于上一次修改日期(last_modified date)，可以设置: auto_now=True
+
+4. EmailField() 邮件字段
+
+如不是必填项，可设置blank = True和default = ''
+
+一般Email用于用户名应该是唯一的，建议设置unique = True
+
+5. IntegerField(), SlugField(), URLField()，BooleanField()
+
+可以设置blank = True or null = True
+
+对于BooleanField一般建议设置defautl = True or False
+
+6. FileField(upload_to=None, max_length=100) - 文件字段
+
+upload_to = "/some folder/"
+
+max_length = xxxx
+
+7. ImageField(upload_to=None, height_field=None, width_field=None, max_length=100,)
+
+upload_to = "/some folder/"
+
+其他选项是可选的.
+
+8. ForeignKey(to, on_delete, **options) - 单对多关系
+
+to必需指向其他模型，比如 Book or 'self' .
+
+必需指定on_delete options（删除选项): i.e, "on_delete = models.CASCADE" or "on_delete = models.SET_NULL" .
+
+可以设置"default = xxx" or "null = True" .
+
+如果有必要，可以设置 "limit_choices_to = "，如下面例子。
+
+staff_member = models.ForeignKey( User, on_delete=models.CASCADE, limit_choices_to={'is_staff': True}, )
+
+可以设置 "related_name = xxx" 便于反向查询。
+
+9. ManyToManyField(to, **options) - 多对多关系
+
+to 必需指向其他模型，比如 User or 'self' .
+
+设置 "symmetrical = False " if 多对多关系不是对称的
+
+设置 "through = 'intermediary model' " 如果需要建立中间模型来搜集更多信息
+
+可以设置 "related_name = xxx" 便于反向查询。
+
+
+#----------------
+# 复杂models example:
+#-----------------
+
+from django.db import models
+from django.contrib.auth.models import User
+from datetime import date
+
+class Restaurant(models.Model):
+    name = models.TextField()
+    address = models.TextField(blank=True, default='')
+    telephone = models.TextField(blank=True, default='')
+    url = models.URLField(blank=True, null=True)
+    user = models.ForeignKey(User, default=1,on_delete=models.CASCADE)
+    date = models.DateField(default=date.today)
+
+    def __str__(self):
+        return self.name
+
+class Dish(models.Model):
+    name = models.TextField()
+    description = models.TextField(blank=True,  default='')
+    price = models.DecimalField('USD amount', max_digits=8, decimal_places=2, blank=True, null=True)
+    user = models.ForeignKey(User, default=1, on_delete=models.CASCADE)
+    date = models.DateField(default=date.today)
+    image = models.ImageField(upload_to="myrestaurants", blank=True, null=True)
+# Related name "dishes" allows you to use restaurant.dishes.all to access all dishes objects
+# instead of using restaurant.dish_set.all
+# 一但设置了related name, 你将不能再通过_set方法来反向查询。
+    restaurant = models.ForeignKey(Restaurant, null=True, related_name='dishes', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+# This Abstract Review can be used to create RestaurantReview and DishReview
+
+class Review(models.Model):
+    RATING_CHOICES = ((1, 'one'), (2, 'two'), (3, 'three'), (4, 'four'), (5, 'five'))
+    rating = models.PositiveSmallIntegerField('Rating', blank=False, default=3, choices=RATING_CHOICES)
+    comment = models.TextField(blank=True, null=True)
+    user = models.ForeignKey(User, default=1, on_delete=models.CASCADE)
+    date = models.DateField(default=date.today)
+
+    #Review模型里，我们设置了META选项: Abstract = True。
+    #这样一来Django就会认为这个模型是抽象类，而不会在数据库里创建review的数据表。
+    #实际上Model自带的META选项还有很多，都非常有用。参考如下注释：
+    class Meta:
+        abstract = True
+        # 按Priority降序, order_date升序排列.
+        #get_latest_by = ['-priority', 'order_date']
+        # 自定义数据库里表格的名字
+        #db_table = 'music_album'
+        # 按什么排序
+        #ordering = ['pub_date']
+        # 定义APP的标签
+        #app_label = 'myapp'
+        # 声明此类是否为抽象
+        #abstract = True
+        # 添加授权
+        #permissions = (("can_deliver_pizzas", "Can deliver pizzas"),)
+
+
+class RestaurantReview(Review):
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return "{} review".format(self.restaurant.name)
+
+
+
+
+#---------------------- 
+# Admin
+#---------------------- 
+
+# creating an admin user
+
+python manage.py createsuperuser
+brp768
+jiaxl51238
+
+# 使poll app在后台可修改（Make the poll app modifiable in the admin）
+
+vi ~/polls/admin.py
+
+from .models import Question, Choice
+admin.site.register(Question)
+admin.site.register(Choice)
+
+# 定制管理表单（Customize the admin form）
+
