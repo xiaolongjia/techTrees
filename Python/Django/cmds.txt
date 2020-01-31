@@ -279,7 +279,14 @@ class RestaurantReview(Review):
     def __str__(self):
         return "{} review".format(self.restaurant.name)
 
+http://pcacademy.ca/contact-us/
 
+https://international.gscs.ca/fees.html
+
+https://brilliantstarmontessori.com/registration-%26-tuition
+
+https://www.saskatoonchristianschool.ca
+https://www.allegromontessori.ca/staff/liz-reynolds/
 
 
 #---------------------- 
@@ -301,4 +308,127 @@ admin.site.register(Question)
 admin.site.register(Choice)
 
 # 定制管理表单（Customize the admin form）
+
+
+#---------------------- 
+# URL
+#---------------------- 
+
+Django URL提供了两种匹配方式传递参数:?path和re_path。
+path是正常参数传递，re_path是采用正则表达式regex匹配。
+path和re_path传递参数方式如下:
+
+
+
+path方法：采用双尖括号<变量类型:变量名>或<变量名>传递，
+例如<int:id>, <slug:slug>或<username>。
+
+
+re_path方法: 采用命名组(?P<变量名>表达式)的方式传递参数。
+
+urls.py:
+
+urlpatterns = [
+	path('article/<int:articleId>', views.article) #增加新行
+]
+
+views.py里面增加article函数：
+
+def article(request, articleId):
+    return HttpResponse("here is the id {} !".format(articleId))
+
+
+#re_path
+from django.urls import path, re_path
+
+re_path(r'^article/(?P<articleId>\d+)/$', views.article, name='article'),
+
+
+#------------------------
+# View and templates
+#------------------------
+
+# 在polls目录下创建templates目录，把html的模板放在templates下即可
+
+# 编辑 views.py
+
+from django.shortcuts import render, get_object_or_404
+
+#-----------------
+# Function based view
+#-----------------
+
+render方法有4个参数。
+第一个是request, 
+第二个是模板的名称和位置，
+第三个是需要传递给模板的内容, 也被称为context object。
+第四个参数是可选参数content_type（内容类型), 我们什么也没写。
+
+
+
+get_object_or_404方法
+第一个参数是模型Models或数据集queryset的名字，
+第二个参数是需要满足的条件（比如pk = id, title = 'python')。当需要获取的对象不存在时，给方法会自动返回Http 404错误。
+
+
+render(request, 'questionDetail.html', {"question": currQuestion})
+
+# questionDetail.html的文件内容如下：
+
+{% block content %}
+{{ question.question_text }}
+{{ question.pub_date }}
+{{ question.comments }}
+{{ question.add_date }}
+{% endblock %}
+
+#-----------------
+# Class based View
+#-----------------
+
+Django提供了很多通用的基于类的视图(Class Based View)，来帮我们简化视图的编写。
+这些View与上述操作的对应关系如下:
+
+
+
+展示对象列表（比如所有用户，所有文章）-?ListView
+
+
+展示某个对象的详细信息（比如用户资料，比如文章详情) -?DetailView
+
+
+通过表单创建某个对象（比如创建用户，新建文章）-?CreateView
+
+
+通过表单更新某个对象信息（比如修改密码，修改文字内容）-?UpdateView
+
+
+用户填写表单后转到某个完成页面 -?FormView
+
+删除某个对象 -?DeleteView
+
+
+
+
+class IndexView(ListView):
+	model = Question
+
+ListView实际上在背后做了很多事情：
+
+
+提取了需要显示的对象列表或数据集queryset:?Question.objects.all()
+
+
+指定了用来显示对象列表的模板名称(template name): 默认app_name/model_name_list.html, 
+即polls/question_list.html.
+
+ 这里的polls目录是指project下面polls目录的templates目录下的polls. 
+默认行为使用总是不很正常
+指定了内容对象名称(context object name):默认值object_list
+
+
+ListView的自定义，即可以改写的方法：
+
+
+
 

@@ -1,0 +1,6 @@
+{% block content %}
+{% for question in question_list %}
+     {{ question.question_text }}
+     {{ question.pub_date }}
+{% endfor %}
+{% endblock %}

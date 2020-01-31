@@ -16,11 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from django.conf.urls import url
-from app_demo import views
+from app_demo import views as appviews
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('polls/', include('polls.urls')),
-    url(r'^hello/$', views.hello),
-    url(r'^msg/(?P<name>\w+)/(?P<age>\d+)/$', views.msg)
+    url(r'^hello/$', appviews.hello),
+    url(r'^msg/(?P<name>\w+)/(?P<age>\d+)/$', appviews.msg)
 ]
