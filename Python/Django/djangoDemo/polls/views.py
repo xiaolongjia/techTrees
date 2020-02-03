@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
+from django.utils import timezone
 from .models import Question, Choice
 
 def index(request):
@@ -15,5 +16,13 @@ def question(request, questionid):
 from django.views.generic import ListView
 
 class IndexView(ListView):
-    model = Question
+    model = Choice
+    queryset = Choice.objects.all()
+    template_name = 'polls/choice_list.xml'
+    context_object_name = 'choice_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['now'] = timezone.now()
+        return context
 

@@ -385,6 +385,8 @@ render(request, 'questionDetail.html', {"question": currQuestion})
 #-----------------
 # Class based View
 #-----------------
+-javaagent:C:\Program Files\PyCharm 2018.3.3\bin\JetbrainsCrack-release-enc.jar
+
 
 Django提供了很多通用的基于类的视图(Class Based View)，来帮我们简化视图的编写。
 这些View与上述操作的对应关系如下:
