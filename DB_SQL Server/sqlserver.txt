@@ -1,0 +1,493 @@
+
+# data management language
+
+select
+update
+delete
+insert into
+
+# data defination language
+
+create database
+alter database
+create table
+alter table
+drop table
+create index
+drop index
+
+https://blog.csdn.net/weixin_34258078/article/details/90160276
+
+
+================================================
+基本查询
+================================================
+select * from teachers
+select * from teachers where age > 40 
+select * from teachers where age > 40 and salary > 5000
+select * from teachers where age > 40  or salary > 5000
+select * from teachers order by salary      #order by 默认升序排列
+select * from teachers order by salary desc #降序排列 DESC means the descending order
+select * from teachers order by salary asc  #升序排列 ASC 
+select top 2 * from teachers
+select top 20 percent * from teachers           #查找前20%
+select * from teachers where name like 'a%'
+select * from teachers where name like 'a_'     #查找name是以a开头后面只有一个字符的所有列
+select * from teachers where name like '[ac]%'  #查找name是以a或c开头的所有列
+select * from teachers where name like '[^ac]%' #查找name不是以a或c开头的所有列
+select * from teachers where name like '[a-z]%' #查找name只包含英文字符的列
+
+select * from teachers where salary between 3000 and 5000
+select distinct salary from teachers
+
+select * from teacher t1 where salary > 5000 
+union 
+select * from teacher t2 where salary < 10000
+
+select * into new_table from old_table
+
+select * from teacher where id in (1,2)
+select * from teacher where id not in (1,2)
+select * from teacher where id is null
+select * from teacher where id is not null
+
+select count(*), age from teacher group by age
+select distinct age, count(*) from teacher group by age having count(*) > 1 
+select count(*), age from teachers group by age order by age # asc or desc
+select count(*), age from teachers where id > 2 group by age order by age desc
+
+
+some, any, all
+
+select * from teachers where age > all (select age from teachers where id =2)
+select * from teachers where age > some (select age from teachers where id =2)
+select * from teachers where age > any (select age from teachers where id =2)
+
+compute, compute by : 必须在order by 之后
+
+cube : 必须在group by 之后
+
+
+================================================
+union 和 union all 的区别：
+================================================
+union 取并集，不重复
+union all 取并集，重复
+
+================================================
+intersect, except
+================================================
+intersect: 取交集（相同部分）
+except: 取减集（去掉相同部分）
+
+================================================
+with as 
+================================================
+
+with tmpTeachers (id, name) as
+(
+	select id, name from teachers
+)
+select id, name from tmpTeachers
+
+================================================
+where 和 having的区别：
+================================================
+
+having子句可以让我们筛选成组后的各组数据，where子句在聚合前先筛选记录。 
+也就是说where是作用在group by子句和having子句之前，而having子句是在聚合后对组记录进行筛选
+
+The main difference between WHERE and HAVING clause comes when used together with GROUP BY clause, 
+In that case WHERE is used to filter rows before grouping 
+and HAVING is used to exclude records after grouping.
+
+================================================
+杀掉死锁的sql server进程
+sys.dm_tran_locks 
+SELECT pg_cancel_backend(PID)
+SELECT pg_terminate_backend(PID)
+kill -9 pid
+================================================
+
+SELECT 	request_session_id spid,
+	OBJECT_NAME (
+		resource_associated_entity_id
+	) tableName 
+FROM 
+	sys.dm_tran_locks 
+WHERE 
+	resource_type = 'OBJECT'
+
+
+查看死锁信息：
+exec master.dbo.sp_who_lock #查看当前死锁进程
+exec master.dbo.p_killspid ytsafety #杀掉引起死锁的进程
+
+kill [pid]
+
+
+SELECT datname,procpid,query_start, current_query,waiting,client_addr 
+FROM pg_stat_activity 
+WHERE waiting='t'
+
+
+SELECT pg_cancel_backend(PID); # 这种方式只能kill select查询，对update、delete 及DML不生效)
+
+SELECT pg_terminate_backend(PID); # kill掉各种操作(select、update、delete、drop等)操作
+
+kill -9 pid
+
+
+===============================================
+服务器系统表
+===============================================
+sys.dm_exec_sessions # 查询服务器有多少连接请求，以及连接请求的信息
+
+# 按照login name统计每个login name有多少个session
+SELECT login_name ,COUNT(session_id) AS session_count 
+FROM sys.dm_exec_sessions 
+GROUP BY login_name;
+
+#
+sys.dm_exec_requests
+
+sys.sysprocesses
+
+sys.dm_exec_sql_text
+
+================================================
+嵌套子查询 in, not in, exists, not exists, some, any, all
+================================================
+
+select *, (select count(*) from students where teacher_id = teachers.id) as num
+from teachers order by num
+
+select * from students where teacher_id not in (select id from teachers)
+
+select * from students where exists (
+	select * from teachers where id = students.teacher_id and id = 1
+)
+
+select * from students where not exists (
+	select * from teachers where id = students.teacher_id
+)
+
+
+
+================================================
+连接查询： 内连接，外连接，交叉连接
+================================================
+
+1. 内连接(inner join)
+
+select * from table1 t1 inner join table2 t2 on t1.name = t2.name
+select * from table1 t1 inner join table2 t2 on t1.name <> t2.name #显式内连接
+select * from table1 t1, table2 t2 where t1.name = t2.name #隐式内连接
+
+
+2. 外连接(outer join)分为左外连接，右外连接，全外连接，也成为左连接，右连接，全连接。
+
+left outer join, right outer join, full outer join
+
+left join, right join, full join 
+
+# left join, left outer join
+左连接返回左表中的所有行，如果在右表中没有匹配的行则结果中右表中的列返回空值
+
+select * from table1 t1 left join table2 t2 on t1.name = t2.name
+
+# right join, right outer join
+右连接返回右表中的所有行，如果在左表中没有匹配的行则结果中左表中的列返回空值
+
+select * from table1 t1 right join table2 t2 on t1.name = t2.name
+
+# full join, full outer join
+返回左表和右表中所有行，如果某行在另一表中没有匹配的行，则另一表对应的列返回空值
+
+select * from table1 t1 full join table2 t2 on t1.name = t2.name
+
+
+3. 交叉连接(cross join)也称笛卡尔积
+
+
+不带where子句的交叉连接：返回两张表的笛卡尔积，比如t1, 4行，t2 6行，则一共4*6 = 24行
+
+select * from table1 t1, table2 t2
+select * from table1 t1 cross join table2 t2
+
+
+带where子句的交叉连接：返回的是两张表的笛卡尔积经过where子句匹配的结果
+
+select * from table1 t1 cross join table2 t2 where t1.name = t2.name #不能用on子句
+select * from table1 t1, table2 t2 where t1.name = t2.name #上面和下面的等值查询效果一样
+
+================================================
+数据修改，增加，删除，修改（insert, delete, update）
+================================================
+
+insert into teachers values (data1, data2, ...) #对所有列插入数据
+insert into teachers (col1, col2, col3) values (data1, data2, data3) #对特定列插入数据
+
+update teachers set salary = 5000 where name = 'Alex'
+
+delete from teachers where name = 'Alex'
+
+================================================
+函数: 聚合函数，日期函数
+================================================
+
+========================
+聚合函数：
+========================
+avg()
+count()
+first()
+last()
+max()
+min()
+sum()
+
+========================
+日期时间函数：
+========================
+getDate()
+dateAdd()
+dateDiff()
+dateName()
+year()
+month()
+day()
+
+
+select getDate();--当前系统日期
+select getUTCDate();--utc日期
+select dateAdd(day, 3, getDate());--加天
+select dateAdd(year, 3, getDate());--加年
+select dateAdd(hour, 3, getDate());--加小时
+--返回跨两个指定日期的日期边界数和时间边界数
+select dateDiff(day, '2011-06-20', getDate());
+--相差秒数
+select dateDiff(second, '2011-06-22 11:00:00', getDate());
+--相差小时数
+select dateDiff(hour, '2011-06-22 10:00:00', getDate());
+select dateName(month, getDate());--当前月份
+select dateName(minute, getDate());--当前分钟
+select dateName(weekday, getDate());--当前星期
+select datePart(month, getDate());--当前月份
+select datePart(weekday, getDate());--当前星期
+select datePart(second, getDate());--当前秒数
+select day(getDate());--返回当前日期天数
+select day('2011-06-30');--返回当前日期天数
+select month(getDate());--返回当前日期月份
+select month('2011-11-10');
+select year(getDate());--返回当前日期年份
+select year('2010-11-10');
+
+========================
+元数据函数：
+========================
+select object_id('student')
+select col_name(object_id('student'), 1)  #返回列名
+select col_name(object_id('student'), 2)  #返回数据类型长度
+select type_name(type_id('varchar')), type_id('varchar')
+
+========================
+字符串函数：
+========================
+
+select replace('abcedef', 'e', 'E');--替换字符串
+select subString('abc', 1, 1) #字符串的index是从1开始的
+select len('abc');--返回长度
+select reverse('sqlServer');--反转字符串
+select left('leftString', 4);--取左边字符串
+select right('leftString', 6);--取右边字符串
+
+================================================
+当前session 运行的sql
+================================================
+
+
+
+================================================
+系统表 (sql server的系统表介绍）
+================================================
+
+1.获取所有数据库名:
+SELECT Name FROM Master..SysDatabases ORDER BY Name
+
+2.获取所有表名:
+SELECT Name FROM DatabaseName..SysObjects Where XType=’U’ ORDER BY Name
+XType=’U’:表示所有用户表;
+XType=’S’:表示所有系统表;
+
+3.获取所有字段名:
+SELECT Name FROM SysColumns WHERE id=Object_Id(‘TableName’)
+
+
+
+
+
+================================================
+约束：NOT NULL, unique, primary key, foreign key, check, default
+================================================
+
+NOT NULL: 表示某列不能为NULL
+
+unique : 表示某列的每一行必须只能有唯一值，一个表可以有多个unique约束
+
+primary key : 主键pk，数据库表的每条记录的唯一标识（有自定义的unique约束，非空约束），一个表只能有一个primary key约束
+
+foreign key : 外键fk, 保证一个表的数据匹配另一个表中的数据，完整性。指向另一个表的pk或unique约束
+# fk在sql server中不允许为空。但是实际上外键字段可以为空，代表数据不确定
+
+check : 限制列中的值
+
+default : 列的默认值
+
+
+#增加约束 
+
+alter table teachers  add constraint [constraint name] ...
+
+alter table teachers drop constraint [constraint name]
+
+alter table teachers  add constraint [constraint name] foreign key (column name) references table2 (column name)
+
+alter table teachers add unique(name)
+alter table teachers add constraint teacherName unique(name, salary)
+
+
+create table teacher
+(
+	id int not null,
+	name char(5),
+	salary int, 
+	primary key(id)
+)
+
+create table students
+(
+	id int not null,
+	name char(5),
+	age int, 
+	teacher_id int foreign key(teacherID) references teacher(id)
+)
+
+alter table students add constraint stuId primary key(id)
+
+alter table students drop constraint fk_****
+
+alter table students add constraint foreign key (teacherID) references teacher(id)
+
+
+create table students
+(
+	id int check(id>0) not null,
+	name char(5) default('student')
+	 
+)
+alter table students add constraint idvalue check(id>0)
+alter table students add constraint dvalue default('student') for name
+
+
+================================================
+索引
+================================================
+
+create index index1 on teacher (id, name)
+
+drop index index1
+
+drop table teacher 
+
+drop database database_name
+
+truncate table table_name
+
+================================================
+修改表结构(增加，删除，修改字段类型，自增长数据类型identity
+================================================
+
+alter table teacher add  address char(50)
+alter table teacher drop column address
+alter table teacher alter column address varchar(50)
+
+alter table teacher add globalID identity(1,1)
+
+
+
+================================================
+视图
+================================================
+
+create view teacher_view AS
+select * from teacher
+where id <> 0
+
+
+
+
+================================================
+truncate, delete, drop的比较：
+================================================
+
+相同：都可以删除表中数据；drop, truncate都是数据定义语句，自动提交
+不同：
+truncate, delete只删数据， 
+drop会删除表，被依赖的约束，trigger,索引，被依赖的存储过程和函数被置为invalid
+
+delete事务提交后才执行，放入rollback segment中，可以rollback，触发trigger
+
+truncate, drop 不触发trigger, 不能rollback
+
+
+drop释放全部空间, 速度顺序 drop > truncate > delete
+
+
+--delete from 表名
+
+--1>只是删除表中某些数据，表结构还在.。
+
+--2>Delete 可以带where子句来删除一部分数据，例如 DELETE FROM Student WHERE sAge > 20
+
+--3>自动编号不恢复到初始值。
+
+ 
+
+--truncate table 表名
+
+--1>truncate语句不能跟where条件，无法根据条件来删除，只能全部删除数据。
+
+--2>自动编号恢复到初始值。
+
+--3>使用truncate删除表中所有数据要比delete效率高的多，因为truncate操作采用按最小方式来记录日志.
+
+--4>truncate删除数据，不触发delete触发器。
+
+ 
+
+ --drop table 表名
+
+--1>删除表本身，即表中数据和表结构（列、约束、视图、键）全部删除。
+
+ 
+
+自动编号解释：
+
+1自动编号只会向前增长，不会倒退。
+2如果插入数据出错，自动编号也会增长，下次插入时，编号会“跳过”。
+3自动编号列是不能人为修改的。（一般情况）
+
+
+
+
+
+
+
+
+
+
+
+
+
+
