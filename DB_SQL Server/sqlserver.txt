@@ -241,8 +241,6 @@ delete from teachers where name = 'Alex'
 ========================
 avg()
 count()
-first()
-last()
 max()
 min()
 sum()
@@ -294,7 +292,6 @@ select type_name(type_id('varchar')), type_id('varchar')
 ========================
 字符串函数：
 ========================
-
 select replace('abcedef', 'e', 'E');--替换字符串
 select subString('abc', 1, 1) #字符串的index是从1开始的
 select len('abc');--返回长度
@@ -303,15 +300,8 @@ select left('leftString', 4);--取左边字符串
 select right('leftString', 6);--取右边字符串
 
 ================================================
-当前session 运行的sql
-================================================
-
-
-
-================================================
 系统表 (sql server的系统表介绍）
 ================================================
-
 1.获取所有数据库名:
 SELECT Name FROM Master..SysDatabases ORDER BY Name
 
@@ -322,10 +312,6 @@ XType=’S’:表示所有系统表;
 
 3.获取所有字段名:
 SELECT Name FROM SysColumns WHERE id=Object_Id(‘TableName’)
-
-
-
-
 
 ================================================
 约束：NOT NULL, unique, primary key, foreign key, check, default
@@ -373,7 +359,7 @@ create table students
 	teacher_id int foreign key(teacherID) references teacher(id)
 )
 
-alter table students add constraint stuId primary key(id)
+alter table students add constraint stuId primary key(id, name)
 
 alter table students drop constraint fk_****
 
@@ -396,25 +382,25 @@ alter table students add constraint dvalue default('student') for name
 
 create index index1 on teacher (id, name)
 
-drop index index1
+drop index teacher.index1
 
 drop table teacher 
 
 drop database database_name
 
-truncate table table_name
+truncate table teacher
 
 ================================================
 修改表结构(增加，删除，修改字段类型，自增长数据类型identity
 ================================================
+alter table teacher alter column id int not null
+alter table teacher alter column name char(20) not null
+
 
 alter table teacher add  address char(50)
 alter table teacher drop column address
 alter table teacher alter column address varchar(50)
-
 alter table teacher add globalID identity(1,1)
-
-
 
 ================================================
 视图
@@ -424,8 +410,20 @@ create view teacher_view AS
 select * from teacher
 where id <> 0
 
+================================================
+临时表（全局临时表和本地临时表）与表拷贝
+================================================
+临时表存储在tempdb中
 
+全局临时表以##开头，创建之后所有数据库用户可以使用，如果没有任何用户访问，在创建此全局临时表的连接断开之后，全局临时表被删除
 
+本地临时表以#开头，创建之后只对创建者可见，当创建用户与server断开连接之后，将删除本地临时表
+
+select * into  #localTeacher from teacher
+select * into ##globalTeacher from teacher
+
+insert into teacherBK select * from teacher 
+insert into teacherBK (id, name, salary) select id, name, salary from teacher
 
 ================================================
 truncate, delete, drop的比较：
@@ -479,15 +477,227 @@ drop释放全部空间, 速度顺序 drop > truncate > delete
 3自动编号列是不能人为修改的。（一般情况）
 
 
+=======================================================
+1. SQL Server数据库备份的三种常见的备份方式：
+=======================================================
+http://mysql.taobao.org/monthly/2017/11/03/
+
+=======================================================
+数据库完全备份(Full Backup):
+=======================================================
+
+完全备份会导致I/O变慢，而且备份过程中，数据库的事务日志不能够被截断。
+对于具有大事务频繁操作的数据库，可能会导致事务日志空间一直不停频繁增长，
+直到占满所有的磁盘剩余空间
+
+用sql实现全备份：
+USE master
+GO
+
+BACKUP DATABASE [AdventureWorks2008R2] 
+TO DISK = 'C:\Temp\AdventureWorks2008R2_20171112_FULL.bak' WITH COMPRESSION, INIT, STATS = 5;
+GO
+
+=======================================================
+数据库日志备份(Transaction Log Backup)：
+=======================================================
+事务日志备份是将数据库上一次日志备份到当前时间内的所有事务提交的数据变更进行记录备份，配合数据库的完全备份和
+差异化备份来实现时间点的还原，（前提数据库必须是full恢复模式）
+
+事务日志做周期性备份的时候，比如周期5分钟，则导致大量的事务日志备份，事务日志的备份链就会过长，恢复时间变大，增大了
+数据库的还原时间。
+
+用sql修改数据库的恢复模式：
+USE [master]
+GO
+ALTER DATABASE [AdventureWorks2008R2] SET RECOVERY FULL WITH NO_WAIT
+GO
+
+用T-sql来创建事务日志备份：
+USE Master
+GO
+
+BACKUP LOG [AdventureWorks2008R2]
+TO DISK = N'C:\temp\AdventureWorks2008R2_log_201711122201.trn' with compression,stats=1;
+GO
+BACKUP LOG [AdventureWorks2008R2]
+TO DISK = N'C:\temp\AdventureWorks2008R2_log_201711122202.trn' with compression,stats=1;
+GO
+BACKUP LOG [AdventureWorks2008R2]
+TO DISK = N'C:\temp\AdventureWorks2008R2_log_201711122203.trn' with compression,stats=1;
+GO
+
+=======================================================
+数据库差异备份(Differential Backup)
+=======================================================
+差异备份是备份自从上一次数据库全量备份以来的所有变更的数据页。占用的空间小，恢复快。
+
+用T-sql来创建差异备份：
+
+USE master
+GO
+BACKUP DATABASE [AdventureWorks2008R2] 
+TO DISK = 'C:\Temp\AdventureWorks2008R2_20171112_diff.bak' WITH DIFFERENTIAL
+GO
+
+=======================================================
+数据库的尾日志备份 （norecovery）
+=======================================================
+backup log [TestSite]
+to disk = 'D:\TestDBBackupFolder\Sitedb_bak4.trn'
+with
+compression,
+format,
+init,
+skip,
+stats=5，
+norecovery
+
+https://www.cnblogs.com/ljhdo/p/5658476.html
+
+=======================================================
+数据库备份和还原的脚本参考
+=======================================================
+https://www.jianshu.com/p/099bd4331e6a
+
+backup  database DBNAME TO DISK=@db_filename
+restore database DBNAME from DISK=@db_filename
+=======================================================
+2. 创建用户与权限管理（角色）
+=======================================================
+
+创建用户第一步要先创建一个登录账户(create login)
+
+create login dba with password='jiaxl51238', default_database=mytest
+
+第二步创建数据库用户（create user）
+
+create user dba for login dba with default_schema=dbo
+
+第三步对数据库用户授权：
+
+exec sp_addrolemember 'db_owner', 'dba'
+
+sp_dropsrvrolemember （去掉权限）
 
 
+服务器角色：
+sysadmin
+
+	执行SQL Server中的任何动作
 
 
+serveradmin	
+
+配置服务器设置
 
 
+setupadmin
+
+	安装复制和管理扩展过程
 
 
+securityadmin
+
+	管理登录和CREATE DATABASE的权限以及阅读审计
 
 
+processadmin
+
+	管理SQL Server进程
+
+
+dbcreator
+
+	创建和修改数据库
+
+diskadmin
+
+管理磁盘文件
+
+数据库角色：
+db_owner
+
+		可以执行数据库中技术所有动作的用户
+
+
+db_accessadmin
+
+		可以添加、删除用户的用户
+
+
+db_datareader		
+
+可以查看所有数据库中用户表内数据的用户
+
+
+db_datawriter
+
+		可以添加、修改或删除所有数据库中用户表内数据的用户
+
+
+db_ddladmin		
+
+可以在数据库中执行所有DDL操作的用户
+
+
+db_securityadmin
+
+	可以管理数据库中与安全权限有关所有动作的用户
+
+
+db_backoperator
+
+		可以备份数据库的用户(并可以发布DBCC和CHECKPOINT语句，这两个语句一般在备份前都会被执行)
+
+
+db_denydatareader
+
+	不能看到数据库中任何数据的用户
+
+
+db_denydatawriter
+
+	不能改变数据库中任何数据的用户
+
+查询某个用户在某个数据库的角色的权限：
+use mytest
+go
+
+exec sys.sp_helprotect null, @username='dba'
+go
+
+https://blog.csdn.net/e_online/article/details/4597957
+=======================================================
+
+用GRANT来分配表的查询，更新，删除的权限
+
+
+=======================================================
+3. 查询计划与sql优化 (持续中...)
+=======================================================
+
+set statistics profile on 
+dbcc show_statistics (Products, IX_CategoryID)
+
+https://www.cnblogs.com/fish-li/archive/2011/06/06/2073626.html
+
+=======================================================
+4. 常用的系统存储过程
+=======================================================
+
+sp_help [table]
+
+sp_helpdb [db]
+
+sp_helpindex [table]
+
+sp_helpconstraint [table]
+
+sp_helpfile [数据库文件的逻辑名]
+
+sp_helpfilegroup [文件组的逻辑名] #根据文件组名来显示文件
+
+sp_helptext [object] #显示默认值、未加密的 Transact-SQL 存储过程、用户定义 Transact-SQL 函数、触发器、计算列、CHECK 约束灯等的定义
 
 
