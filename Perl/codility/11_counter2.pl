@@ -43,53 +43,48 @@ each element of arrays P, Q is an integer within the range [1..N];
 P[i] ¡Ü Q[i].
 =cut
 
-my @A = (3, 8, 2, 3, 6, 4);
+my @P = (1, 4, 16);
+my @Q = (26, 10, 20);
+my $N = 26;
 
-print(&solution(\@A));
+print(&solution(\@P, \@Q, $N));
 
 sub solution {
-	my $data = shift;
-	my @data = @$data;
-	my $nonDivisor = {};
-	my @nonDivisors = ();
-
-	for (my $i=0; $i<@data; $i++) {
-		for (my $j=$i+1; $j<@data; $j++) {
-			if ($data[$i]%$data[$j] == 0) {
-				if (!($data[$j] == $data[$i])) {
-					if (exists $nonDivisor->{$data[$j]}) {
-						push @{$nonDivisor->{$data[$j]}}, $data[$i];
-					}
-					else {
-						@{$nonDivisor->{$data[$j]}} = ($data[$i]);
-					}
-				}
-			}
-			else {
-				if (exists $nonDivisor->{$data[$i]}) {
-					push @{$nonDivisor->{$data[$i]}}, $data[$j];
-				}
-				else {
-					@{$nonDivisor->{$data[$i]}} = ($data[$j]);
-				}
-				if ($data[$j] % $data[$i] != 0) {
-					if (exists $nonDivisor->{$data[$j]}) {
-						push @{$nonDivisor->{$data[$j]}}, $data[$i];
-					}
-					else {
-						@{$nonDivisor->{$data[$j]}} = ($data[$i]);
-					}
-				}
+	my ($P, $Q, $N) = @_;
+	my @P = @$P;
+	my @Q = @$Q;
+	
+	my @primes;
+	my @semiprimes;
+	for (my $i=2; $i<=$N; $i++) {
+		my $isPrime = 1;
+		for (my $j=$i-1; $j>1; $j--) {
+			if ($i%$j ==0) {
+				$isPrime = 0;
 			}
 		}
-		if (exists $nonDivisor->{$data[$i]}) {
-			push @nonDivisors, scalar @{$nonDivisor->{$data[$i]}};
-			delete $nonDivisor->{$data[$i]};
-		}
-		else {
-			push @nonDivisors, 0;
+		if ($isPrime == 1) {
+			push @primes, $i;
 		}
 	}
-	print(Dumper(@nonDivisors));sleep(2);
-	return $counter;
+	for (my $i=0; $i<@primes; $i++){
+		for (my $j=$i; $j<@primes; $j++){
+			my $number = $primes[$i]*$primes[$j];
+			if ($number <= $N) {
+				push @semiprimes, $number;
+			}
+		}
+	}
+	my @final;
+	for (my $i=0; $i<@P; $i++) {
+		my @result;
+		for (@semiprimes) {
+			my $currnumber = $_;
+			if (($currnumber>= $P[$i]) and ($currnumber<=$Q[$i])) {
+				push @result, $currnumber;
+			}
+		}
+		push @final, scalar @result;
+	}
+	print(Dumper(\@final));
 }

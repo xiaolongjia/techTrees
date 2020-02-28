@@ -22,30 +22,30 @@ N is an integer within the range [1..2,147,483,647].
 Copyright 2009¨C2020 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited.
 =cut
 
-&solution(1041);
+print(&solution(1376796946));
 
 sub solution {
 	my ($N) = shift; 
 	my $Str = sprintf("%b", $N)+0;
 	my @numbers = split("", $Str);
-	print(Dumper(@numbers));
+	my $maxGap = 0;
 	my $currGap = 0;
-
-	for ($i=0; $i<@numbers-1; $i++) {
+	for ($i=1; $i<@numbers-1; $i++) {
 		if ($numbers[$i] == 0) {
+			$currGap += 1;
 			next;
 		}
 		else {
-			for ($j=$i+1; $j<@numbers; $j++) {
-				if ($numbers[$j] == 1) {
-					my $GapNow = $j - $i - 1; 
-					if ($GapNow > 0 and $GapNow > $currGap) {
-						$currGap = $GapNow;
-					}
-					$i = $j - 1;
-				}
+			if ($currGap > $maxGap) {
+				$maxGap = $currGap;
 			}
+			$currGap = 0;
 		}
 	}
-	print("max gap is: ", $currGap);
+	if ($numbers[$#numbers] == 1) {
+		if ($currGap > $maxGap) {
+			$maxGap = $currGap;
+		}
+	}
+	return $maxGap;
 }

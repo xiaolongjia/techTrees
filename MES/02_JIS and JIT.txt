@@ -1,0 +1,16 @@
+Just In Time simply refers to delivering parts or materials to manufacturers at or near the time they are needed for assembly. 
+The primary goal of Just in Time is to produce goods with minimal waste including time, resources, 
+and materials. Just In Time works to reduce inventory quantities or buffer inventory by providing manufacturers with components, 
+and consumers with finished goods right when they need them. As a result, potential errors have greater consequences than traditional 
+methods. Generally, the Just In time strategy is difficult to implement successfully but can result in significant efficiency improvements.
+
+
+Just In Sequence also known as, In-Line Vehicle Sequencing(ILVS), 
+or Sequential Parts Delivery(SPD) takes Just In Time strategies one step further by ensuring that parts are delivered at the scheduled time 
+and in the exact order needed for assembly. For example. if an OEM was manufacturing side view mirrors and was planning on assembling these mirrors sequentially, 
+they would communicate their sequenced demand to the supplier via ¡°a data interchange¡±. 
+The supplier would then prepare loads of parts in sequential order according to the OEMs demand. 
+These loads are also known as racks, pallets, or containers.
+
+
+

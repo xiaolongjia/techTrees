@@ -45,8 +45,8 @@ In your solution, focus on correctness. The performance of your solution will no
 my $k = 3;
 my @A = (3, 8, 9, 7, 6);
 print(Dumper(\@A));
-my $newArray = &solution(\@A, $k);
-print(Dumper($newArray));
+my @newArray = &solution(\@A, $k);
+print(Dumper(@newArray));
 
 sub solution {
 	my ($A) = shift; 
@@ -55,5 +55,8 @@ sub solution {
 	for (my $i=0;$i<$k;$i++) {
 		unshift(@Data, pop @Data);
 	}
-	return \@Data;
+	return @Data;
+	#my $string = join("", @A);
+	#$string =~ s/(.*)(.{$K})$/$2$1/;
+	#@A = split//,$string;
 }

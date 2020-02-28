@@ -1,0 +1,23 @@
+Intermittent/Discrete Manufacturing
+
+Discrete manufacturing is an industry term for the manufacturing of finished products 
+that are distinct items capable of being easily counted, touched or seen. 
+
+Discrete manufacturing involves parts and systems like nuts and bolts, brackets, wires, a
+ssemblies and individual products.
+
+Examples of products made from discrete manufacturing include automobiles, furniture, 
+airplanes, toys, smartphones and defense systems. In theory, a discrete product can be broken down 
+at the end of its lifecycle so its basic components can be recycled.
+
+Discrete vs. process manufacturing£º
+
+Discrete manufacturing contrasts with process manufacturing. 
+In process manufacturing, the product is created by using a formula or recipe to refine raw ingredients 
+and the final product cannot be broken down to its basic components.
+
+Examples of goods produced by process manufacturing include pharmaceuticals, 
+food and beverages, refined oil and paints.
+
+Discrete manufacturers use a bill of materials (BOM) and production follows a route, 
+such as an assembly line, whereas process manufacturing uses a recipe and the ingredients are blended or refined in batches.
