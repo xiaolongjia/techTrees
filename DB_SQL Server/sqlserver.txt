@@ -18,6 +18,22 @@ drop index
 
 https://blog.csdn.net/weixin_34258078/article/details/90160276
 
+================================================
+查询表的数据数
+================================================
+
+use MXMes
+go
+
+SELECT a.name, b.rows
+
+FROM sysobjects AS a INNER JOIN sysindexes AS b ON a.id = b.id
+
+WHERE (a.type = 'u') AND (b.indid IN (0, 1))
+
+and b.rows > 0
+
+ORDER BY b.rows DESC
 
 ================================================
 基本查询

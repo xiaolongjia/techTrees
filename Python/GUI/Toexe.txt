@@ -1,0 +1,6 @@
+pyinstaller -F -w -i D:\02-FAJob\prepare\techTrees\Python\GUI\puebla.ico D:\02-FAJob\prepare\techTrees\Python\GUI\puebla.py
+
+# open CMD with administrator permisson
+
+#https://zhuanlan.zhihu.com/p/38659588
+
