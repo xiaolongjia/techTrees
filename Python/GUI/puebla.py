@@ -3,16 +3,50 @@
 import tkinter as tk
 from tkinter import messagebox
 
-import winsound
-import time
+import sys
+import pymssql
 import re
+import datetime
+import time
+import winsound
 
+#----------------------------------
 # Threshold bar: 30 (left, right matching)
 # Bumper: 30= 5*6 (front, rear matching)
+#----------------------------------
 
 showNumbers  = 5 # the parts layout will be n*6 (row*column)
 showSequence = 0 # 0: descending, 1: ascending
 counter = 0
+
+#--------------
+# MES DB
+#--------------
+mes_dbserver    = "192.168.15.254"
+mes_user        = "sa"
+mes_password    = "Yizit@123"
+mes_database    = "MXMes"
+
+#-------------
+# CallOff Data
+#-------------
+mesConn   = pymssql.connect(mes_dbserver, mes_user, mes_password, mes_database)
+mesCursor = mesConn.cursor()
+
+callOffSql = f"""
+select 
+    RUNNING_NUMBER 
+from MXMes.dbo.M_PJ_BMW_JIS_CALLOFF_T 
+where 1=1
+and PARTS_FAMILY='STFKBR3'
+order by RUNNING_NUMBER
+"""
+
+mesCursor.execute(callOffSql)
+sqlData =  mesCursor.fetchall() 
+callOffList = []
+for data in sqlData:
+    callOffList.append(data[0])
 
 def warningBeep():
     duration = 1000  # millisecond

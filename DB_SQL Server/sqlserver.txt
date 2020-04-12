@@ -18,6 +18,20 @@ drop index
 
 https://blog.csdn.net/weixin_34258078/article/details/90160276
 
+
+================================================
+查询sequence的数据数
+================================================
+
+SELECT 
+name, 
+start_value,
+increment,
+current_value
+FROM sys.sequences WHERE name in ('DPageNumberSequence' , 'FPageNumberSequence', 'IPageNumberSequence', 'TPageNumberSequence')
+
+https://www.cnblogs.com/dotnet261010/p/7082852.html
+
 ================================================
 查询表的数据数
 ================================================
