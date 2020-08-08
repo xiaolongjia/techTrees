@@ -1,0 +1,181 @@
+
+=========================
+1. group by and having min(), max(), count()
+=========================
+
+create table scores (student varchar(20), class varchar(20), score int)
+
+insert into scores (student , class, score) values
+('张三',    '语文',       81),
+('张三',     '数学',       75),
+('李四',     '语文',       76),
+('李四',     '数学',       90),
+('王五',     '语文',       81),
+('王五',     '数学',       100),
+('王五',     '英语',       90)
+
+Question: 选出每一门课的分数都是大于80分的学生名字（1个sql语句）
+
+
+=========================
+2.
+=========================
+
+create table students (
+	id int, 
+	student_number varchar(100), 
+	name varchar(100), 
+	class_number varchar(100), 
+	class varchar(100), 
+	score int)
+
+insert into students (id, student_number, name, class_number, class, score) values 
+(1, '2005001',?'张三',?'0001',?????'数学',?69),
+(2, '2005002',?'李四',?'0001',?????'数学',?89),
+(3, '2005001',?'张三',?'0001',?????'数学',?69)
+
+Question: 删除除了自动编号不同, 其他都相同的学生冗余信息
+
+
+=========================
+3.
+=========================
+
+create table names (name varchar(100))
+
+insert into names (name) values 
+('a'),
+('b'),
+('c'),
+('d')
+
+Question: 列出所有a, b, c, d四只球队比赛的结果
+
+=========================
+4.
+=========================
+
+create table amounts (year varchar(20), month varchar(20), amount varchar(10))
+
+insert into amounts (year, month, amount) values 
+('1991','1','1.1'),
+('1991','2','1.2'),
+('1991','3','1.3'),
+('1991','4','1.4'),
+('1992','1','2.1'),
+('1992','2','2.2'),
+('1992','3','2.3'),
+('1992','4','2.4')
+
+Question: 将表转为横表，
+
+=========================
+5. 拷贝表结构（不拷贝数据）
+=========================
+
+
+=========================
+6. 拷贝表数据（不拷贝结构）
+=========================
+
+
+=========================
+7. 得到同一username的最大回复数字
+=========================
+
+create table replytime (title varchar(20), username varchar(20), lastreply int)
+
+insert into replytime (title, username, lastreply) values 
+('1991','1', 1),
+('1991','1', 2),
+('1991','1',3),
+('1991','2',4),
+('1992','1',1),
+('1992','2',2),
+('1992','2',3),
+('1992','2',4)
+
+=========================
+8.
+=========================
+有两个表A 和B ，均有key 和value 两个字段，如果B 的key 在A 中也有，就把B 的value 换为A 中对应的value
+这道题的SQL 语句怎么写？
+
+create table tablea (name varchar(20), value varchar(20))
+create table tableb (name varchar(20), value varchar(20))
+
+insert into tablea (name, value)
+values 
+('1991', '1'),
+('1992', '1'),
+('1993', '1')
+
+insert into tableb (name, value)
+values 
+('1991', '2'),
+('1992', '3'),
+('1993', '4')
+
+
+update tableb set value = a.value
+from table a
+where a.name = tableb.name
+
+
+
+
+
+
+
+
+
+
+
+
+
+===========================
+Answers
+===========================
+
+1.
+
+select student from scores group by student having min(score)>80
+
+2.
+
+delete from student where id not in (
+select min(id) from students  
+group by student_number, name, class_number, class, score)
+
+3. 
+
+select a.name, b.name from names a, names b where a.name <> b.name
+select a.name, b.name from names a full join names b on a.name <> b.name
+
+4.
+
+select year,
+(select amount from amounts a where a.month = '1'  and a.year = aaa.year) as m1,
+(select amount from amounts a where a.month = '2'  and a.year = aaa.year) as m2,
+(select amount from amounts a where a.month = '3'  and a.year = aaa.year) as m3,
+(select amount from amounts a where a.month = '4'  and a.year = aaa.year) as m4
+from amounts aaa group by year
+
+5. 
+
+select * into b from a where 1<>1
+
+6. 
+
+insert into b (a, b, c) select d, e, f from a 
+
+7.
+
+
+select title, username, max(lastreply)
+from replytime
+group by title, username
+
+select a.title,a.username,b.adddate 
+from table a,(select max(adddate) adddate from table where table.title=a.title and username=a.username) b
+

@@ -10,7 +10,7 @@ Due to its strong text processing abilities, it has become one of the most popul
 What is a perl identifier?
 ===============================
 A perl identifier is a name used to identify a variable, function, class, module, or other object.
-A perl variable name starts with either $, @ or % followed by zero or more letters, underscores, and digits
+A perl variable name starts with either $, @ or % (percent sign) followed by zero or more letters, underscores, and digits
 
 ===============================
 Mention the advantages of programming in Perl?
@@ -258,7 +258,7 @@ and object types all by yourself.
 the number of arguments is in @_ (at underscore)
 
 ==============================
-Define @ISA, @EXPORT, @EXPORT_O?
+Define @ISA, @EXPORT, @EXPORT_OK?
 ==============================
 @ISA: each package has its own @ISA array, this array
 keep track of classes it is inheriting

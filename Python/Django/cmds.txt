@@ -1,140 +1,153 @@
-pip install django
+==============================================
+# django 环境配置
+==============================================
+pip install django==2.1
 pip show django
+
+pip install django-pyodbc-azure==2.1.0
+pip show django-pyodbc-azure
+
+# chartit 画图
+pip install django_chartit==0.2.9
+pip install simplejson==3.17
+
+# db driver
+pip install pymssql==2.1.4
 
 # create a demo project with django-admin.py
 # ~/django/bin/django-admin.py
 
-cd D:\02-FAJob\prepare\techTrees\Python\Django\
-django-admin.py startproject djangoDemo
+# create a project
+cd D:\02-FAJob\prepare\techTrees\Python
+django-admin.py startproject MHMXPaintReports
 
-#---------------------- 
-# create an appdemo
-#---------------------- 
+# create an app
+cd D:\02-FAJob\prepare\techTrees\Python\MHMXPaintReports
+python manage.py startapp skidKanban
 
-cd D:\02-FAJob\prepare\techTrees\Python\Django\djangoDemo
-python manage.py startapp app_demo
+# creating tables
+cd D:\02-FAJob\prepare\techTrees\Python\MHMXPaintReports
+python manage.py makemigrations
+python manage.py makemigrations skidKanban
+python manage.py migrate
+
+#--------------------------
+# python manage.py makemigrations issues 
+# https://zhuanlan.zhihu.com/p/54523930
+#--------------------------
+pip uninstall django.
+/Lib/site-packages, deleted django folder.
+Deleted all *.pyc files in my project.
+Deleted all __pycache__ folders in my project.
+Cleared all migrations folders in my project (keep __init__.py).
+pip install django==x.x.x.
+python manage.py migrate
+python manage.py makemigrations <app_name>
+python manage.py migrate
+python manage.py runserver
+Celebrate.
 
 # run server 
 
+python manage.py help #all parameters
 python manage.py runserver
 python manage.py runserver 8080
+python manage.py runserver 0.0.0.0:8080   # setting.py ALLOWED_HOSTS = ['192.168.15.36']
 
-# open a page
-
-http://127.0.0.1:8080/
-
-# app_demo test cases:
-
-http://127.0.0.1:8080/hello/
-http://127.0.0.1:8080/msg/jack/7/
+#---------------------- 
+# sybase connection （参考）
+#---------------------- 
+pip show django-mssql  #1.8
+pip show pymssql # 2.1.4
+pip show django-pyodbc-azure  #2.1.0
+pip show django-sqlserver
 
 
 #---------------------- 
-# create a polls app
+# settings.py
 #---------------------- 
 
-cd D:\02-FAJob\prepare\techTrees\Python\Django\djangoDemo
-python manage.py startapp polls
+ALLOWED_HOSTS = ['*']
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'skidKanban',
+    'chartit',
+]
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'sql_server.pyodbc',
+        'NAME': 'mytest',
+        'HOST': 'localhost',
+        'PORT': '1433',
+        'USER': 'sa',
+        'PASSWORD': 'jiaxl51238',
+
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+        }
+    }
+}
+
+
+Check drivers supported by pyodbc
+
+>>> import pyodbc
+>>> pyodbc.drivers()
+['SQL Server', 'SQL Server Native Client 11.0', 'ODBC Driver 17 for SQL Server']
+
+>>> exit()
+
+
+#------------------------------
+# creating chart in Django
+#------------------------------
+https://www.codementor.io/@sikrigagan/creating-charts-in-django-chmegrbt7
+
+#-------------------------
+# Django-Chartit 2
+#-------------------------
+https://www.youtube.com/watch?v=uF3r5r-mkGg  #chartit
+https://django-chartit.readthedocs.io/en/master/
+
+#------------------------------
+# 2D bar chart chart.js
+#------------------------------
+https://www.chartjs.org/docs/latest/charts/bar.html
+https://www.chartjs.org/docs/latest/
+https://simpleisbetterthancomplex.com/tutorial/2020/01/19/how-to-use-chart-js-with-django.html
+https://blog.csdn.net/ALaDingPro/article/details/82590390 #柱状图上面加上数字
+https://chartjs-doc.abingoal.com/charts/line.html #中文文档
 
 #---------------------- 
-# create polls app's module
+# 3D bar chart:
 #---------------------- 
+http://code.tutsplus.com/tutorials/create-an-animated-3d-bar-chartgraph--net-24831
+http://www.amcharts.com/demos/3d-column-chart/
 
-# migrate firstly
-python manage.py migrate
+https://stackoverflow.com/questions/24660517/how-to-create-a-3d-bar-chart
+https://www.highcharts.com/docs/chart-concepts/3d-charts
 
-# edit file models.py under D:\02-FAJob\prepare\techTrees\Python\Django\djangoDemo\polls\
+https://www.amcharts.com/demos/3d-bar-chart/ ######
 
-# edit settings.py under D:\02-FAJob\prepare\techTrees\Python\Django\djangoDemo\djangoDemo\
+#---------------------- 
+#Django models data types:
+#---------------------- 
+https://www.webforefront.com/django/modeldatatypesandvalidation.html
 
-add 'polls' into INSTALLED_APPS 
+#querying data
+https://djangobook.com/mdj2-advanced-models/
 
-# migrate again
-python manage.py makemigrations polls
-
-# check sql 
-python manage.py sqlmigrate polls 0001
-
-# check potential issues
-python manage.py check
-
-# use python shell to check models
-
-polls model change steps:
-
-1. vi models.py
-2. python manage.py makemigrations
-3. python manage.py migrate
-
-check data: 
-
-1. python manage.py shell
-2. 
-
->>> from polls.models import Question, Choice
->>> Question.objects.all()
-<QuerySet []>
->>>
->>> from django.utils import timezone
->>> q=Question(question_text="What's new ?",pub_date=timezone.now())
->>> q.save()
->>> q.id
-1
->>> q.pub_date
-datetime.datetime(2020, 1, 29, 17, 32, 14, 703706, tzinfo=<UTC>)
->>> q.question_text
-"What's new ?"
->>> q.question_text = "good day!"
->>> q.save()
->>> q.question_text
-'good day!'
->>> Question.objects.all()
-<QuerySet [<Question: Question object (1)>]>
-
-# adding def __unicode__(self) into each models (python 2.*)
-# python版本为3.4，Python3.X的版本不可使用__unicode__()（python2.x可用），
-# 应改为__str__().
-
-
->>> from polls.models import Question, Choice
->>> Question.objects.all()
-<QuerySet [<Question: Question object (1)>]>
-
-Django提供了丰富的关键字参数（keyword arguments）驱动的数据库
-查看API（a rich database lookup API）。比如，可以执行以下命令：
-
->>> Question.objects.filter(question_text__startswith="good")
-<QuerySet [<Question: good day!>]>
->>> Question.objects.filter(id=1)
-<QuerySet [<Question: good day!>]>
-
->>> from django.utils import timezone
->>> current_year = timezone.now().year
->>> Question.objects.get(pub_date__year=current_year)
-<Question: good day!>
-
->>> Question.objects.get(pk=1)
-<Question: good day!>
-
->>> q=Question.objects.get(pk=1)
->>> q.was_published_recently()
-True
-
->>> q.choice_set.create(choice_text="not much", votes=0)
-<Choice: not much>
->>> q.choice_set.create(choice_text="the sky", votes=0)
-<Choice: the sky>
->>> c=q.choice_set.create(choice_text="just hacking again", votes=0)
->>> c.question
-<Question: good day!>
->>> q.choice_set.all()
-<QuerySet [<Choice: not much>, <Choice: the sky>, <Choice: just hacking again>]>
-
-
-#
+#--------------------------------
 # models支持的类型与配置
 # Django Model中字段(Field)的可选项和必选项
-
+#--------------------------------
 
 1. CharField() 字符字段
 
@@ -430,7 +443,3 @@ ListView实际上在背后做了很多事情：
 
 
 ListView的自定义，即可以改写的方法：
-
-
-
-
