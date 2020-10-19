@@ -1,0 +1,623 @@
+===========================================================================
+Part 1
+===========================================================================
+create table worker (
+WORKER_ID		int, 
+FIRST_NAME		varchar(100), 
+LAST_NAME		varchar(100), 
+SALARY			int, 
+JOINING_DATE	varchar(100), 
+DEPARTMENT		varchar(100)
+)
+
+insert into worker (worker_id, first_name, last_name, salary, joining_date, department) values
+(001,    'Monika'		,'Arora'		,100000		,'2014-02-20 09:00:00',	'HR'),
+(002,    'Niharika'		,'Verma'		,80000		,'2014-06-11 09:00:00',	'Admin'),
+(003,    'Vishal'		,'Singhal'		,300000		,'2014-02-20 09:00:00',	'HR'),
+(004,    'Amitabh'		,'Singh'		,500000		,'2014-02-20 09:00:00',	'Admin'),
+(005,    'Vivek'		,'Bhati'		,500000		,'2014-06-11 09:00:00',	'Admin'),
+(006,    'Vipul'		,'Diwan'		,200000		,'2014-06-11 09:00:00',	'Account'),
+(007,    'Satish'		,'Kumar'		,75000		,'2014-01-20 09:00:00',	'Account'),
+(008,    'Geetika'		,'Chauhan'		,90000		,'2014-04-11 09:00:00',	'Admin')
+
+create table bonus (
+worker_ref_id	int, 
+bonus_date		varchar(100),
+bonus_amount	int
+)
+
+insert into bonus (worker_ref_id, bonus_date, bonus_amount) values
+(1,  '2016-02-20 00:00:00', 5000),
+(2,  '2016-06-11 00:00:00', 3000),
+(3,  '2016-02-20 00:00:00', 4000),
+(1,  '2016-02-20 00:00:00', 4500),
+(2,  '2016-06-11 00:00:00', 3500)
+
+create table title (
+WORKER_REF_ID	int, 
+WORKER_TITLE	varchar(100),
+AFFECTED_FROM	datetime
+)
+
+insert into title (WORKER_REF_ID, WORKER_TITLE, AFFECTED_FROM) values 
+(1,	'Manager',			'2016-02-20 00:00:00'),
+(2,	'Executive',		'2016-06-11 00:00:00'),
+(8,	'Executive',		'2016-06-11 00:00:00'),
+(5,	'Manager',			'2016-06-11 00:00:00'),
+(4,	'Asst. Manager',	'2016-06-11 00:00:00'),
+(7,	'Executive',		'2016-06-11 00:00:00'),
+(6,	'Lead',				'2016-06-11 00:00:00'),
+(3,	'Lead',				'2016-06-11 00:00:00')
+
+------------------------------------------------------------------------------
+Q-1. Write an SQL query to fetch “FIRST_NAME” from Worker table using the alias name as <WORKER_NAME>.
+
+select first_name as worker_name from worker
+------------------------------------------------------------------------------
+Q-2. Write an SQL query to fetch “FIRST_NAME” from Worker table in upper case.
+
+select upper(first_name) from worker  select low(first_name) from worker
+------------------------------------------------------------------------------
+Q-3. Write an SQL query to fetch unique values of DEPARTMENT from Worker table.
+
+select distinct DEPARTMENT from worker 
+------------------------------------------------------------------------------
+Q-4. Write an SQL query to print the first three characters of  FIRST_NAME from Worker table.
+
+select substring(first_name, 1,3)  from worker
+------------------------------------------------------------------------------
+Q-5. Write an SQL query to find the position of the alphabet (‘a’) in the first name column ‘Amitabh’ from Worker table.
+
+select charindex('a', first_name COLLATE Latin1_General_CS_AS) from worker where first_name ='Amitabh'  #区分大小写
+select charindex('a', first_name) from worker where first_name ='Amitabh' #不区分大小写
+
+Notes: method charindex() is not case-sensitive by default. it should follow COLLATE Latin1_General_CS_AS to be case sensitive.
+------------------------------------------------------------------------------
+Q-6. Write an SQL query to print the FIRST_NAME from Worker table after removing white spaces from the right side.
+
+select rtrim(first_name) from worker # from right side
+------------------------------------------------------------------------------
+Q-7. Write an SQL query to print the DEPARTMENT from Worker table after removing white spaces from the left side.
+
+select ltrim(DEPARTMENT) from worker # from left side
+------------------------------------------------------------------------------
+Q-8. Write an SQL query that fetches the unique values of DEPARTMENT from Worker table and prints its length.
+
+select distinct len(DEPARTMENT) from worker 
+------------------------------------------------------------------------------
+Q-9. Write an SQL query to print the FIRST_NAME from Worker table after replacing ‘a’ with ‘A’.
+
+select replace(FIRST_NAME, 'a', 'A') from worker 
+------------------------------------------------------------------------------
+Q-10. Write an SQL query to print the FIRST_NAME and LAST_NAME from Worker table into a single column COMPLETE_NAME. A space char should separate them.
+
+select CONCAT(FIRST_NAME, ' ', LAST_NAME) AS 'COMPLETE_NAME' from Worker  
+select FIRST_NAME + ' ' + LAST_NAME as COMPLETE_NAME from worker 
+------------------------------------------------------------------------------
+Q-11. Write an SQL query to print all Worker details from the Worker table order by FIRST_NAME Ascending.
+
+select * from worker order by FIRST_NAME asc  # 升序 Ascending
+select * from worker order by FIRST_NAME desc # 降序 descending
+------------------------------------------------------------------------------
+Q-12. Write an SQL query to print all Worker details from the Worker table order by FIRST_NAME Ascending and DEPARTMENT Descending.
+
+select * from worker order by FIRST_NAME asc, DEPARTMENT desc
+------------------------------------------------------------------------------
+Q-13. Write an SQL query to print details for Workers with the first name as “Vipul” and “Satish” from Worker table.
+
+Select * from Worker where FIRST_NAME in ('Vipul','Satish')
+select * from worker where FIRST_NAME = 'Vipul' or FIRST_NAME = 'Satish'
+------------------------------------------------------------------------------
+Q-14. Write an SQL query to print details of workers excluding first names, “Vipul” and “Satish” from Worker table.
+
+Select * from Worker where FIRST_NAME not in ('Vipul','Satish')
+select * from worker where FIRST_NAME != 'Vipul' and FIRST_NAME != 'Satish'
+------------------------------------------------------------------------------
+Q-15. Write an SQL query to print details of Workers with DEPARTMENT name as “Admin”.
+
+select * from worker where DEPARTMENT = 'Admin'
+------------------------------------------------------------------------------
+Q-16. Write an SQL query to print details of the Workers whose FIRST_NAME contains ‘a’.
+
+Select * from Worker where FIRST_NAME like '%a%'
+------------------------------------------------------------------------------
+Q-17. Write an SQL query to print details of the Workers whose FIRST_NAME ends with ‘a’.
+
+Select * from Worker where FIRST_NAME like '%a'
+------------------------------------------------------------------------------
+Q-18. Write an SQL query to print details of the Workers whose FIRST_NAME ends with ‘h’ and contains six alphabets.
+
+Select * from Worker where FIRST_NAME like '_____h'
+------------------------------------------------------------------------------
+Q-19. Write an SQL query to print details of the Workers whose SALARY lies between 100000 and 500000.
+
+Select * from Worker where SALARY between 100000 and 500000
+------------------------------------------------------------------------------
+Q-20. Write an SQL query to print details of the Workers who have joined in Feb’2014.
+
+select * from worker where year(JOINING_DATE) = 2014 and month(JOINING_DATE) = 2
+------------------------------------------------------------------------------
+Q-21. Write an SQL query to fetch the count of employees working in the department ‘Admin’.
+
+select count(*) from worker where DEPARTMENT ='Admin'
+------------------------------------------------------------------------------
+Q-22. Write an SQL query to fetch worker names with salaries >= 50000 and <= 100000.
+
+select concat(FIRST_NAME, ' ', LAST_NAME) as worker_name, salary 
+from worker where SALARY  >= 50000 and SALARY <= 100000
+------------------------------------------------------------------------------
+Q-23. Write an SQL query to fetch the no. of workers for each department in the descending order.
+
+select DEPARTMENT, count(*) as Number from worker 
+group by department		order by Number desc
+------------------------------------------------------------------------------
+Q-24. Write an SQL query to print details of the Workers who are also Managers.
+
+select worker.* from worker, title 
+where worker.WORKER_ID = title.WORKER_REF_ID 
+and title.WORKER_TITLE = 'Manager'
+------------------------------------------------------------------------------
+Q-25. Write an SQL query to fetch duplicate records having matching data in some fields of a table.
+
+select WORKER_TITLE, AFFECTED_FROM, count(*)
+from title
+group by WORKER_TITLE, AFFECTED_FROM
+having count(*) > 1
+------------------------------------------------------------------------------
+Q-26. Write an SQL query to show only odd rows from a table.
+
+select * from (
+	SELECT *, row_number() over (order by getdate()) as rownum  FROM Worker 
+) as aaaa  where rownum %2 <>0
+------------------------------------------------------------------------------
+Q-27. Write an SQL query to show only even rows from a table.
+
+select * from (
+	SELECT *, row_number() over (order by getdate()) as rownum  FROM Worker 
+) as aaaa where rownum %2 =0
+------------------------------------------------------------------------------
+Q-28. Write an SQL query to clone a new table from another table.
+
+select * into newworker from worker 
+select * into newworker from worker  where 1=0
+------------------------------------------------------------------------------
+Q-29. Write an SQL query to fetch intersecting records of two tables.
+
+(select * from newworker) intersect (select * from worker where worker_id = 1)
+------------------------------------------------------------------------------
+Q-30. Write an SQL query to show records from one table that another table does not have.
+
+(select * from newworker) except (select * from worker where worker_id = 1)
+------------------------------------------------------------------------------
+Q-31. Write an SQL query to show the current date and time.
+
+select getdate() 	or 	select CURRENT_TIMESTAMP  
+------------------------------------------------------------------------------
+Q-32. Write an SQL query to show the top n (say 10) records of a table.
+
+select top 10 * from worker 
+------------------------------------------------------------------------------
+Q-33. Write an SQL query to determine the nth (say n=5) highest salary from a table.
+
+select top 1 salary from (
+select distinct top 5 salary from worker order by salary desc ) aaa order by salary asc
+------------------------------------------------------------------------------
+Q-34. Write an SQL query to determine the 5th highest salary without using TOP or limit method.
+
+select salary from worker a where 5 = (
+select count( distinct ( b.salary ) )	from worker b
+WHERE a.salary <= b.salary )
+
+5th lowest salary:
+ select salary from worker a where 5 = (
+select count( distinct ( b.salary ) )	from worker b
+WHERE a.salary >= b.salary )
+------------------------------------------------------------------------------
+Q-35. Write an SQL query to fetch the list of employees with the same salary.
+
+select distinct a.WORKER_ID, a.FIRST_NAME, a.Salary 
+from worker a, worker b 
+where a.salary = b.salary 
+and a.worker_id != b.WORKER_ID
+------------------------------------------------------------------------------
+Q-36. Write an SQL query to show the second highest salary from a table.
+
+select max(salary) from worker where salary not in (select max(salary) from worker)
+select min(salary) from worker where salary not in (select min(salary) from worker)
+------------------------------------------------------------------------------
+Q-37. Write an SQL query to show one row twice in results from a table.
+
+select FIRST_NAME, DEPARTMENT from worker W where W.DEPARTMENT='HR' 
+union all 
+select FIRST_NAME, DEPARTMENT from Worker W1 where W1.DEPARTMENT='HR'
+------------------------------------------------------------------------------
+Q-38. Write an SQL query to fetch intersecting records of two tables.
+
+(SELECT * FROM Worker) INTERSECT (SELECT * FROM WorkerClone)
+------------------------------------------------------------------------------
+Q-39. Write an SQL query to fetch the first 50% records from a table.
+
+SELECT * FROM WORKER
+WHERE WORKER_ID <= (SELECT count(WORKER_ID)/2 from Worker)
+
+SELECT TOP 50 PERCENT *  FROM worker
+SELECT 
+        TOP 50 PERCENT Row_Number() over (order by worker_id) as rownumber ,* 
+FROM worker
+
+select * from (
+	SELECT *, row_number()over(order by getdate()) as rownum  
+	FROM Worker 
+) as aaaa
+where rownum > (
+	select count(rownum)/2 from (
+			SELECT *, row_number()over(order by getdate()) as rownum  
+			FROM Worker 
+	) as cccc
+)
+------------------------------------------------------------------------------
+Q-40. Write an SQL query to fetch the departments that have less than five people in it.
+
+select department, count(*) from worker group by department having count(*) < 5
+------------------------------------------------------------------------------
+Q-41. Write an SQL query to show all departments along with the number of people in there.
+
+select department, count(*) from worker group by department
+------------------------------------------------------------------------------
+Q-42. Write an SQL query to show the last record from a table.
+
+select * from (
+	SELECT *, row_number()over(order by getdate()) as rownum  FROM Worker 
+) as aaaa
+where rownum = (
+	select max(rownum) from (
+			SELECT *, row_number()over(order by getdate()) as rownum  
+			FROM Worker 
+	) as cccc
+)
+
+Select * from Worker where WORKER_ID = (SELECT max(WORKER_ID) from Worker)
+------------------------------------------------------------------------------
+Q-43. Write an SQL query to fetch the first row of a table.
+
+select * from (
+	SELECT *, row_number()over(order by getdate()) as rownum  FROM Worker 
+) as aaaa
+where rownum = (
+	select min(rownum) from (
+			SELECT *, row_number()over(order by getdate()) as rownum  
+			FROM Worker 
+	) as cccc
+)
+
+Select * from Worker where WORKER_ID = (SELECT min(WORKER_ID) from Worker)
+------------------------------------------------------------------------------
+Q-44. Write an SQL query to fetch the last five records from a table.
+
+select * from (
+	SELECT *, row_number()over(order by getdate()) as rownum  FROM Worker 
+) as aaaa
+where rownum > (
+	select max(rownum) - 5 from (
+			SELECT *, row_number()over(order by getdate()) as rownum  
+			FROM Worker 
+	) as cccc
+)
+------------------------------------------------------------------------------
+Q-45. Write an SQL query to print the name of employees having the highest salary in each department.
+
+select w.department, w.first_name, w.salary 
+from (select max(salary) as highestSalary, department from worker group by department ) as tmp, worker w
+where tmp.department = w.worker 
+and tmp.highestSalary = w.salary  
+------------------------------------------------------------------------------
+Q-46. Write an SQL query to fetch three max salaries from a table.
+
+SELECT distinct Salary from worker a 
+WHERE 3 >= (SELECT count(distinct Salary) from worker b WHERE a.Salary <= b.Salary) 
+order by a.Salary desc
+------------------------------------------------------------------------------
+Q-47. Write an SQL query to fetch three min salaries from a table.
+
+SELECT distinct Salary from worker a 
+WHERE 3 >= (SELECT count(distinct Salary) from worker b WHERE a.Salary >= b.Salary) 
+order by a.Salary desc
+------------------------------------------------------------------------------
+Q-48. Write an SQL query to fetch nth max salaries from a table.
+
+SELECT distinct Salary  from worker a 
+WHERE 5 >= (SELECT count(distinct Salary) from worker b WHERE a.Salary <= b.Salary) 
+order by a.Salary desc
+
+Q-48. Write an SQL query to fetch nth min salaries from a table.
+
+select distinct a.salary from worker a
+where 5 >= (select count(distinct salary) from worker b where a.salary >= b.salary)
+order by a.salary asc
+------------------------------------------------------------------------------
+Q-49. Write an SQL query to fetch departments along with the total salaries paid for each of them.
+
+select department, sum(salary)  from worker group by department 
+------------------------------------------------------------------------------
+Q-50. Write an SQL query to fetch the names of workers who earn the highest salary.
+
+select first_name, salary from worker
+where salary = (select max(salary) from worker)
+------------------------------------------------------------------------------
+
+===========================================================================
+Part 2
+===========================================================================
+
+CREATE TABLE DEPARTMENT
+(
+   DEPTCODE   INT,
+   DeptName   CHAR(30),
+   LOCATION   VARCHAR(33)
+)
+
+CREATE TABLE EMPLOYEE
+(
+   EmpCode      INT,
+   EmpFName     VARCHAR(15),
+   EmpLName     VARCHAR(15),
+   Job          VARCHAR(45),
+   Manager      CHAR(4),
+   HireDate     DATE,
+   Salary       INT,
+   Commission   INT,
+   DEPTCODE     INT
+)
+
+ALTER TABLE DEPARTMENT ADD PRIMARY KEY (DEPTCODE)
+
+ALTER TABLE DEPARTMENT ALTER COLUMN DEPTCODE INT NOT NULL
+
+ALTER TABLE DEPARTMENT ALTER COLUMN DeptName VARCHAR(15)
+ALTER TABLE DEPARTMENT add constraint DeptNameCons1 unique (DeptName)
+
+ALTER TABLE DEPARTMENT ALTER COLUMN LOCATION  VARCHAR(33) NOT NULL
+
+ALTER TABLE EMPLOYEE ALTER COLUMN EmpCode INT NOT NULL
+ALTER TABLE EMPLOYEE ADD PRIMARY KEY (EmpCode)
+
+ALTER TABLE EMPLOYEE ADD CONSTRAINT deptcode1 FOREIGN KEY (DEPTCODE) REFERENCES dbo.DEPARTMENT(DEPTCODE)
+
+ALTER TABLE EMPLOYEE ALTER COLUMN Salary  DECIMAL(6,2)
+
+ALTER TABLE EMPLOYEE ADD  DOB DATE
+ALTER TABLE EMPLOYEE DROP COLUMN DOB;
+
+
+INSERT INTO DEPARTMENT VALUES (10, 'FINANCE', 'EDINBURGH'),
+                              (20,'SOFTWARE','PADDINGTON'),
+                              (30, 'SALES', 'MAIDSTONE'),
+                              (40,'MARKETING', 'DARLINGTON'),
+                              (50,'ADMIN', 'BIRMINGHAM');
+
+INSERT INTO EMPLOYEE  
+VALUES (9369, 'TONY', 'STARK', 'SOFTWARE ENGINEER', 7902, '1980-12-17', 2800,0,20),
+       (9499, 'TIM', 'ADOLF', 'SALESMAN', 7698, '1981-02-20', 1600, 300,30),    
+       (9566, 'KIM', 'JARVIS', 'MANAGER', 7839, '1981-04-02', 3570,0,20),
+       (9654, 'SAM', 'MILES', 'SALESMAN', 7698, '1981-09-28', 1250, 1400, 30),
+       (9782, 'KEVIN', 'HILL', 'MANAGER', 7839, '1981-06-09', 2940,0,10),
+       (9788, 'CONNIE', 'SMITH', 'ANALYST', 7566, '1982-12-09', 3000,0,20),
+       (9839, 'ALFRED', 'KINSLEY', 'PRESIDENT', 7566, '1981-11-17', 5000,0, 10),
+       (9844, 'PAUL', 'TIMOTHY', 'SALESMAN', 7698, '1981-09-08', 1500,0,30),
+       (9876, 'JOHN', 'ASGHAR', 'SOFTWARE ENGINEER', 7788, '1983-01-12',3100,0,20),
+       (9900, 'ROSE', 'SUMMERS', 'TECHNICAL LEAD', 7698, '1981-12-03', 2950,0, 20),
+       (9902, 'ANDREW', 'FAULKNER', 'ANAYLYST', 7566, '1981-12-03', 3000,0, 10),
+       (9934, 'KAREN', 'MATTHEWS', 'SOFTWARE ENGINEER', 7782, '1982-01-23', 3300,0,20),
+       (9591, 'WENDY', 'SHAWN', 'SALESMAN', 7698, '1981-02-22', 500,0,30),
+       (9698, 'BELLA', 'SWAN', 'MANAGER', 7839, '1981-05-01', 3420, 0,30),
+       (9777, 'MADII', 'HIMBURY', 'ANALYST', 7839, '1981-05-01', 2000, 200, NULL),
+       (9860, 'ATHENA', 'WILSON', 'ANALYST', 7839, '1992-06-21', 7000, 100, 50),
+       (9861, 'JENNIFER', 'HUETTE', 'ANALYST', 7839, '1996-07-01', 5000, 100, 50);
+
+------------------------------------------------------------------------------
+Q-1 Create a query that displays EMPFNAME, EMPLNAME, DEPTCODE, DEPTNAME, LOCATION from EMPLOYEE, and DEPARTMENT tables. 
+Make sure the results are in the ascending order based on the EMPFNAME and LOCATION of the department.
+
+select e.EMPFNAME , e.EMPLNAME, e.DEPTCODE, d.DEPTNAME, d.LOCATION
+from EMPLOYEE e, DEPARTMENT d
+where e.DEPTCODE = d.DEPTCODE
+order by e.EMPFNAME asc , d.LOCATION asc 
+------------------------------------------------------------------------------
+Q-2 Display EMPFNAME and Salary + Commission as “TOTAL SALARY” for each employee
+
+select EmpFName, sum(Salary, Commission) as "Total salary" from EMPLOYEE group by EmpFName
+------------------------------------------------------------------------------
+Q-3 Display MAX and 2nd MAX SALARY from the EMPLOYEE table.
+
+
+
+
+===========================================================================
+Part 3
+===========================================================================
+
+=========================
+1. group by and having min(), max(), count()
+=========================
+
+create table scores (student varchar(20), class varchar(20), score int)
+
+insert into scores (student , class, score) values
+('张三',    '语文',       81),
+('张三',     '数学',       75),
+('李四',     '语文',       76),
+('李四',     '数学',       90),
+('王五',     '语文',       81),
+('王五',     '数学',       100),
+('王五',     '英语',       90)
+
+Question: 选出每一门课的分数都是大于80分的学生名字（1个sql语句）
+
+select class, student, score 
+from scores 
+where score > 80
+group by class 
+
+
+=========================
+2.
+=========================
+
+create table students (
+	id int, 
+	student_number varchar(100), 
+	name varchar(100), 
+	class_number varchar(100), 
+	class varchar(100), 
+	score int)
+
+insert into students (id, student_number, name, class_number, class, score) values 
+(1, '2005001',?'张三',?'0001',?????'数学',?69),
+(2, '2005002',?'李四',?'0001',?????'数学',?89),
+(3, '2005001',?'张三',?'0001',?????'数学',?69)
+
+Question: 删除除了自动编号不同, 其他都相同的学生冗余信息
+
+
+=========================
+3.
+=========================
+
+create table names (name varchar(100))
+
+insert into names (name) values 
+('a'),
+('b'),
+('c'),
+('d')
+
+Question: 列出所有a, b, c, d四只球队比赛的结果
+
+=========================
+4.
+=========================
+
+create table amounts (year varchar(20), month varchar(20), amount varchar(10))
+
+insert into amounts (year, month, amount) values 
+('1991','1','1.1'),
+('1991','2','1.2'),
+('1991','3','1.3'),
+('1991','4','1.4'),
+('1992','1','2.1'),
+('1992','2','2.2'),
+('1992','3','2.3'),
+('1992','4','2.4')
+
+Question: 将表转为横表，
+
+=========================
+5. 拷贝表结构（不拷贝数据）
+=========================
+
+
+=========================
+6. 拷贝表数据（不拷贝结构）
+=========================
+
+
+=========================
+7. 得到同一username的最大回复数字
+=========================
+
+create table replytime (title varchar(20), username varchar(20), lastreply int)
+
+insert into replytime (title, username, lastreply) values 
+('1991','1', 1),
+('1991','1', 2),
+('1991','1',3),
+('1991','2',4),
+('1992','1',1),
+('1992','2',2),
+('1992','2',3),
+('1992','2',4)
+
+=========================
+8.
+=========================
+有两个表A 和B ，均有key 和value 两个字段，如果B 的key 在A 中也有，就把B 的value 换为A 中对应的value
+这道题的SQL 语句怎么写？
+
+create table tablea (name varchar(20), value varchar(20))
+create table tableb (name varchar(20), value varchar(20))
+
+insert into tablea (name, value)
+values 
+('1991', '1'),
+('1992', '1'),
+('1993', '1')
+
+insert into tableb (name, value)
+values 
+('1991', '2'),
+('1992', '3'),
+('1993', '4')
+
+
+update tableb set value = a.value
+from table a
+where a.name = tableb.name
+
+
+
+
+
+
+
+
+
+
+
+
+
+===========================
+Answers
+===========================
+
+1.
+
+select student from scores group by student having min(score)>80
+
+2.
+
+delete from student where id not in (
+select min(id) from students  
+group by student_number, name, class_number, class, score)
+
+3. 
+
+select a.name, b.name from names a, names b where a.name <> b.name
+select a.name, b.name from names a full join names b on a.name <> b.name
+
+4.
+
+select year,
+(select amount from amounts a where a.month = '1'  and a.year = aaa.year) as m1,
+(select amount from amounts a where a.month = '2'  and a.year = aaa.year) as m2,
+(select amount from amounts a where a.month = '3'  and a.year = aaa.year) as m3,
+(select amount from amounts a where a.month = '4'  and a.year = aaa.year) as m4
+from amounts aaa group by year
+
+5. 
+
+select * into b from a where 1<>1
+
+6. 
+
+insert into b (a, b, c) select d, e, f from a 
+
+7.
+
+
+select title, username, max(lastreply)
+from replytime
+group by title, username
+
+select a.title,a.username,b.adddate 
+from table a,(select max(adddate) adddate from table where table.title=a.title and username=a.username) b
+

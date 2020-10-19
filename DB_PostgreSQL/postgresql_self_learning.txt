@@ -1,8 +1,9 @@
 
-downloading:
-
-https://www.postgresql.org/download/
-
+=================================================
+install dir: 
+C:\PostgreSQL\10\bin
+=================================================
+downloading:  https://www.postgresql.org/download/
 
 learning documents:
 https://www.runoob.com/postgresql/postgresql-select.html
@@ -10,36 +11,50 @@ http://www.postgres.cn/docs/10/index.html
 http://www.postgres.cn/docs/10/spi-spi-cursor-open.html
 https://www.yiibai.com/postgresql/postgresql-cross-join.html
 
-
-pgadmin 4: 
-http://127.0.0.1:54494/browser/
-
-install dir: 
-C:\PostgreSQL\10\bin
-
-python module:
-psycopg2
-pip install psycopg2
-
-python - 基本增删改查
+python program examples: 
 
 https://blog.csdn.net/weixin_42142216/article/details/101680469
-
-批量增删改查
-
 https://blog.csdn.net/weixin_42142216/article/details/101686766
 
+=================================================
+Reset the password of postgres 
+=================================================
+modify file ~/data/pg_hba.conf,  'md5' -> 'trust'
+
+re-start  pgadmin4
+
+psql -h 127.0.0.1 -p 5432 -U postgres -w  then: alter user postgres with password '121119';
+
+modify file ~/data/pg_hba.conf,  'trust' -> 'md5'
+
+re-start  pgadmin4
+
+psql -h 127.0.0.1 -p 5432 -U postgres then: input password: 121119
+psql -h 127.0.0.1 -p 5432 -U postgres [dbname] 
+
+=================================================
+user list:
+pgadmin4 121119
+postgres 121119
+
+pgadmin 4: 	start -> PostgreSQL -> pgadmin4 (password: 121119)
+=======================================================
+
+=================================================
+python postgresql module:  psycopg2
+pip install psycopg2
+=================================================
 
 
+#-------------------------------
+#  postgressql system commands
+#-------------------------------
 ~/bin/createdb mydb
 ~/bin/dropdb mydb
 
-
-create database mydb
-select version();
-select current_date;
-
-
+#-------------------------------
+#  psql commands
+#-------------------------------
 \h : help
 \q : quit
 \i [file]: open file and read sql from file
@@ -49,7 +64,29 @@ select current_date;
 \dt: list all tables
 \d [table]: list table schema
 
+\l   <==> SELECT datname FROM pg_database; 	# list all databases  
+\dt  <==> SELECT tablename FROM pg_tables WHERE tablename NOT LIKE 'pg%' AND tablename NOT LIKE 'sql_%' ORDER BY tablename; # list all tables 
 
+# kill some session in using database to be dropped
+SELECT pg_terminate_backend(pid) 
+FROM pg_stat_activity 
+WHERE datname='数据库名' 
+AND pid<>pg_backend_pid(); 
+
+# kill all connections in idle
+select pg_terminate_backend(pid) 
+from pg_stat_activity 
+where state=’idle’;
+
+
+create database mydb
+select version();
+select current_date;
+
+
+#-------------------------------
+#  postgresql sql commands
+#-------------------------------
 
 CREATE TABLE if not exists weather  (
     city            varchar(80),
@@ -131,7 +168,7 @@ ALTER TABLE test04 ALTER COLUMN "id_type" TYPE datatype; #修改字段类型
 
 
 #-------------------------------
-#  外键
+# forign keys
 #-------------------------------
 CREATE TABLE cities (
         city     varchar(80) primary key,
@@ -148,7 +185,7 @@ CREATE TABLE weather (
 
 
 #-------------------------------
-#  检查约束
+#  CONSTRAINT checking
 #-------------------------------
 CREATE TABLE products (
     product_no integer,
@@ -169,7 +206,7 @@ CREATE TABLE products (
 );
 
 #-------------------------------
-#  非空约束
+#  not null CONSTRAINT
 #-------------------------------
 CREATE TABLE products (
     product_no integer NOT NULL,
@@ -179,7 +216,7 @@ CREATE TABLE products (
 
 
 #-------------------------------
-#   唯一约束
+#   unique CONSTRAINT
 #-------------------------------
 
 CREATE TABLE example (
@@ -195,9 +232,8 @@ CREATE TABLE products (
     price numeric
 );
 
-
 #-------------------------------
-#   主键约束
+#   primary key
 #-------------------------------
 
 CREATE TABLE products (
@@ -620,10 +656,7 @@ order by
     idx_scan asc, idx_tup_read asc, idx_tup_fetch asc;
 
 
-#-------------------------------
-#  list all databases
-#-------------------------------
-SELECT datname FROM pg_database;
+
 
 #-------------------------------
 #  list database size and all databases' size
