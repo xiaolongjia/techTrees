@@ -245,6 +245,14 @@ SELECT
         TOP 50 PERCENT Row_Number() over (order by worker_id) as rownumber ,* 
 FROM worker
 
+with base as (
+	SELECT *, row_number()over(order by getdate()) as rownum  
+	FROM Worker 
+)
+select * from base where rownum < (select count(rownum)/2 from base )
+
+
+
 select * from (
 	SELECT *, row_number()over(order by getdate()) as rownum  
 	FROM Worker 
@@ -334,6 +342,18 @@ Q-48. Write an SQL query to fetch nth min salaries from a table.
 select distinct a.salary from worker a
 where 5 >= (select count(distinct salary) from worker b where a.salary >= b.salary)
 order by a.salary asc
+
+Q-48. Write a SQL query to fetch nth max salaries in each department from a table. 
+
+select w.DEPARTMENT , w.FIRST_NAME , w.SALARY 
+from worker w 
+where 3>= (
+select count(distinct SALARY ) from worker w2 
+where  w.SALARY <= w2.SALARY
+and w2.DEPARTMENT  = w.DEPARTMENT 
+)
+order by w.department , w.SALARY desc 
+
 ------------------------------------------------------------------------------
 Q-49. Write an SQL query to fetch departments along with the total salaries paid for each of them.
 

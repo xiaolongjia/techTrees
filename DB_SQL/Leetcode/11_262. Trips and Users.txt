@@ -1,6 +1,8 @@
 262. Trips and Users
+https://leetcode.com/problems/trips-and-users/
 
-The Trips table holds all taxi trips. Each trip has a unique Id, while Client_Id and Driver_Id are both foreign keys to the Users_Id at the Users table. Status is an ENUM type of (‘completed’, ‘cancelled_by_driver’, ‘cancelled_by_client’).
+The Trips table holds all taxi trips. Each trip has a unique Id, while Client_Id and Driver_Id are both foreign keys to the Users_Id at the Users table. 
+Status is an ENUM type of (‘completed’, ‘cancelled_by_driver’, ‘cancelled_by_client’).
 
 +----+-----------+-----------+---------+--------------------+----------+
 | Id | Client_Id | Driver_Id | City_Id |        Status      |Request_at|
@@ -30,6 +32,7 @@ The Users table holds all users. Each user has an unique Users_Id, and Role is a
 |    12    |   No   | driver |
 |    13    |   No   | driver |
 +----------+--------+--------+
+
 Write a SQL query to find the cancellation rate of requests made by unbanned users 
 (both client and driver must be unbanned) between Oct 1, 2013 and Oct 3, 2013. 
 The cancellation rate is computed by dividing the number of canceled (by client or driver) requests made by unbanned users by the total number of requests made by unbanned users.
@@ -73,5 +76,37 @@ insert into Users (Users_Id, Banned, Role) values ('12', 'No', 'driver')
 insert into Users (Users_Id, Banned, Role) values ('13', 'No', 'driver')
 
 Solution:
+
+WITH total_number_of_requests AS (
+ 
+     SELECT request_at, COUNT(Id) AS 'Requests'
+     FROM(
+        SELECT DISTINCT Id,Request_at
+        FROM        Trips  AS A
+        INNER JOIN  Users  AS B ON A.Client_Id = B.Users_Id
+        INNER JOIN  Users  AS C ON A.Driver_Id = C.Users_Id 
+        WHERE B.Banned = 'No' AND C.Banned = 'No'
+        AND   A.Request_at BETWEEN '2013-10-01' AND '2013-10-03'
+    )Z
+    GROUP BY Request_at
+), total_number_of_cancels AS (
+     SELECT  request_at, COUNT(Cancels) AS 'Cancels'
+     FROM(
+            SELECT  request_at,Id AS 'Cancels'
+            FROM        Trips   AS A 
+            INNER JOIN  Users   AS B ON A.Client_Id = B.Users_Id 
+            INNER JOIN  Users   AS C ON A.Driver_Id = C.Users_Id
+            WHERE B.Banned = 'No' AND C.Banned = 'No'
+            AND   A.Request_at BETWEEN '2013-10-01' AND '2013-10-03'
+            AND   A.Status IN ('cancelled_by_driver','cancelled_by_client')
+    )Z
+    GROUP BY request_at
+)
+
+SELECT  A.request_at AS Day, 
+        ROUND(CAST(ISNULL(B.Cancels,0.0) AS FLOAT)/A.Requests,2) AS 'Cancellation Rate'
+FROM      total_number_of_requests AS A 
+LEFT JOIN total_number_of_cancels  AS B ON A.request_at=B.request_at
+================================================================================
 
 

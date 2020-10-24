@@ -42,3 +42,5 @@ insert into Scores (Id, Score) values ('6', '3.65')
 
 Solution:
 
+selet score, dense_rank() over (order by score desc) as [Rank]
+from Scores 
