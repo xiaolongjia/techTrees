@@ -1,0 +1,375 @@
+
+creat():建立一个新文件或重写一个暂存文件
+creat("/usr/pat/read_write"，0666) /* 建立存取许可方式为0666的文件 */
+
+open():在C程序内部打开文件. 需要两个参数:文件路径名和打开方式(I，O，I&O)。
+read():从已由open()打开并用作输入的文件中读信息。
+write():输出信息到已由open()打开并用作输出的文件中
+
+fork():用来建立新进程。其建立的子进程是与调用fork()的进程(父进程)完全相同的拷贝(除了进程号外)
+
+signal():允许进程处理可能发生的意外事件和中断。
+需要两个参数:信号编号和信号发生时要调用的子程序。
+
+
+access():检测指定文件的存取能力是否符合指定的存取类型。文件名和要检测的存取类型(整数)。
+chmod():将指定文件或目录的存取许可方式改成新的许可方式。文件名和新的存取许可方式。
+
+stat():返回文件的状态(属性)。文件路径名和一个结构指针，指向状态信息的存放的位置
+
+getuid():返回进程的实际UID。getgid():返回进程的实际GID。
+geteuid():返回进程的有效UID。getegid():返回进程的有效GID。
+setuid():用于改变有效的UID。setgid():用于改变有效的GID。
+======================================================================
+函数名: fopen 
+功  能: 打开一个流 
+用  法: FILE *fopen(char *filename, char *type); 
+程序例: 
+
+#include <stdlib.h> 
+#include <stdio.h> 
+#include <dir.h> 
+
+int main(void) 
+{ 
+    char *s; 
+    char drive[MAXDRIVE]; 
+    char dir[MAXDIR]; 
+    char file[MAXFILE]; 
+    char ext[MAXEXT]; 
+    int flags; 
+
+    s=getenv("COMSPEC"); /* get the comspec environment parameter */ 
+    flags=fnsplit(s,drive,dir,file,ext); 
+
+    printf("Command processor info:\n"); 
+    if(flags & DRIVE) 
+       printf("\tdrive: %s\n",drive); 
+    if(flags & DIRECTORY) 
+       printf("\tdirectory: %s\n",dir); 
+    if(flags & FILENAME) 
+       printf("\tfile: %s\n",file); 
+    if(flags & EXTENSION) 
+       printf("\textension: %s\n",ext); 
+
+    return 0; 
+} 
+
+函数名: fread 
+功  能: 从一个流中读数据 
+用  法: int fread(void *ptr, int size, int nitems, FILE *stream); 
+程序例: 
+
+#include <string.h> 
+#include <stdio.h> 
+
+int main(void) 
+{ 
+   FILE *stream; 
+   char msg[] = "this is a test"; 
+   char buf[20]; 
+
+   if ((stream = fopen("DUMMY.FIL", "w+")) 
+       == NULL) 
+   { 
+      fprintf(stderr, 
+              "Cannot open output file.\n"); 
+      return 1; 
+   } 
+
+   /* write some data to the file */ 
+   fwrite(msg, strlen(msg)+1, 1, stream); 
+
+   /* seek to the beginning of the file */ 
+   fseek(stream, SEEK_SET, 0); 
+
+   /* read the data and display it */ 
+   fread(buf, strlen(msg)+1, 1, stream); 
+   printf("%s\n", buf); 
+
+   fclose(stream); 
+   return 0; 
+} 
+
+函数名: getc 
+功  能: 从流中取字符 
+用  法: int getc(FILE *stream); 
+程序例: 
+
+#include <stdio.h> 
+
+int main(void) 
+{ 
+   char ch; 
+
+   printf("Input a character:"); 
+/* read a character from the 
+   standard input stream */ 
+   ch = getc(stdin); 
+   printf("The character input was: '%c'\n", 
+          ch); 
+   return 0; 
+} 
+
+函数名: fgetc 
+功  能: 从流中读取字符 
+用  法: int fgetc(FILE *stream); 
+程序例: 
+
+#include <string.h> 
+#include <stdio.h> 
+#include <conio.h> 
+
+int main(void) 
+{ 
+   FILE *stream; 
+   char string[] = "This is a test"; 
+   char ch; 
+
+   /* open a file for update */ 
+   stream = fopen("DUMMY.FIL", "w+"); 
+
+   /* write a string into the file */ 
+   fwrite(string, strlen(string), 1, stream); 
+
+   /* seek to the beginning of the file */ 
+   fseek(stream, 0, SEEK_SET); 
+
+   do 
+   { 
+      /* read a char from the file */ 
+      ch = fgetc(stream); 
+
+      /* display the character */ 
+      putch(ch); 
+   } while (ch != EOF); 
+
+   fclose(stream); 
+   return 0; 
+} 
+
+函数名: gets 
+功  能: 从流中取一字符串 
+用  法: char *gets(char *string); 
+程序例: 
+
+#include <stdio.h> 
+
+int main(void) 
+{ 
+   char string[80]; 
+
+   printf("Input a string:"); 
+   gets(string); 
+   printf("The string input was: %s\n", 
+   string); 
+   return 0; 
+} 
+
+函数名: scanf 
+功  能: 执行格式化输入 
+用  法: int scanf(char *format[,argument,...]); 
+程序例: 
+
+#include <stdio.h> 
+#include <conio.h> 
+
+int main(void) 
+{ 
+   char label[20]; 
+   char name[20]; 
+   int entries = 0; 
+   int loop, age; 
+   double salary; 
+
+   struct Entry_struct 
+   { 
+      char  name[20]; 
+      int   age; 
+      float salary; 
+   } entry[20]; 
+
+/* Input a label as a string of characters restricting to 20 characters */ 
+   printf("\n\nPlease enter a label for the chart: "); 
+   scanf("%20s", label); 
+   fflush(stdin);  /* flush the input stream in case of bad input */ 
+
+/* Input number of entries as an integer */ 
+   printf("How many entries will there be? (less than 20) "); 
+   scanf("%d", &entries); 
+   fflush(stdin);   /* flush the input stream in case of bad input */ 
+
+/* input a name restricting input to only letters upper or lower case */ 
+   for (loop=0;loop<entries;++loop) 
+   { 
+      printf("Entry %d\n", loop); 
+      printf("  Name   : "); 
+      scanf("%[A-Za-z]", entry[loop].name); 
+      fflush(stdin);  /* flush the input stream in case of bad input */ 
+
+/* input an age as an integer */ 
+      printf("  Age    : "); 
+      scanf("%d", &entry[loop].age); 
+      fflush(stdin);  /* flush the input stream in case of bad input */ 
+
+/* input a salary as a float */ 
+      printf("  Salary : "); 
+      scanf("%f", &entry[loop].salary); 
+      fflush(stdin); /* flush the input stream in case of bad input */ 
+   } 
+
+/* Input a name, age and salary as a string, integer, and double */ 
+   printf("\nPlease enter your name, age and salary\n"); 
+   scanf("%20s %d %lf", name, &age, &salary); 
+  
+
+/* Print out the data that was input */ 
+   printf("\n\nTable %s\n",label); 
+   printf("Compiled by %s  age %d  $%15.2lf\n", name, age, salary); 
+   printf("-----------------------------------------------------\n"); 
+   for (loop=0;loop<entries;++loop) 
+      printf("%4d | %-20s | %5d | %15.2lf\n", 
+         loop + 1, 
+  entry[loop].name, 
+  entry[loop].age, 
+         entry[loop].salary); 
+   printf("-----------------------------------------------------\n"); 
+   return 0; 
+} 
+
+函数名: fscanf 
+功  能: 从一个流中执行格式化输入 
+用  法: int fscanf(FILE *stream, char *format[,argument...]); 
+程序例: 
+
+#include <stdlib.h> 
+#include <stdio.h> 
+
+int main(void) 
+{ 
+   int i; 
+
+   printf("Input an integer: "); 
+
+   /* read an integer from the 
+      standard input stream */ 
+   if (fscanf(stdin, "%d", &i)) 
+      printf("The integer read was: %i\n", 
+             i); 
+   else 
+   { 
+      fprintf(stderr, "Error reading an \ 
+              integer from stdin.\n"); 
+      exit(1); 
+   } 
+   return 0; 
+} 
+
+函数名: fwrite 
+功  能: 写内容到流中 
+用  法: int fwrite(void *ptr, int size, int nitems, FILE *stream); 
+程序例: 
+
+#include <stdio.h> 
+
+struct mystruct 
+{ 
+  int i; 
+  char ch; 
+}; 
+
+int main(void) 
+{ 
+   FILE *stream; 
+   struct mystruct s; 
+
+   if ((stream = fopen("TEST.$$$", "wb")) == NULL) /* open file TEST.$$$ */ 
+   { 
+      fprintf(stderr, "Cannot open output file.\n"); 
+      return 1; 
+   } 
+   s.i = 0; 
+   s.ch = 'A'; 
+   fwrite(&s, sizeof(s), 1, stream); /* write struct s to file */ 
+   fclose(stream); /* close file */ 
+   return 0; 
+} 
+
+函数名: putc 
+功  能: 输出一字符到指定流中 
+用  法: int putc(int ch, FILE *stream); 
+程序例: 
+
+#include <stdio.h> 
+
+int main(void) 
+{ 
+   char msg[] = "Hello world\n"; 
+   int i = 0; 
+
+   while (msg[i]) 
+      putc(msg[i++], stdout); 
+   return 0; 
+} 
+
+
+函数名: fputs 
+功  能: 送一个字符到一个流中 
+用  法: int fputs(char *string, FILE *stream); 
+程序例: 
+
+#include <stdio.h> 
+
+int main(void) 
+{ 
+   /* write a string to standard output */ 
+   fputs("Hello world\n", stdout); 
+
+   return 0; 
+} 
+
+函数名: fputc 
+功  能: 送一个字符到一个流中 
+用  法: int fputc(int ch, FILE *stream); 
+程序例: 
+
+#include <stdio.h> 
+
+int main(void) 
+{ 
+   char msg[] = "Hello world"; 
+   int i = 0; 
+
+   while (msg[i]) 
+   { 
+      fputc(msg[i], stdout); 
+      i++; 
+   } 
+   return 0; 
+} 
+
+函数名: getpass 
+功  能: 读一个口令 
+用  法: char *getpass(char *prompt); 
+程序例: 
+
+#include <conio.h> 
+
+int main(void) 
+{ 
+   char *password; 
+
+   password = getpass("Input a password:"); 
+   cprintf("The password is: %s\r\n", 
+    password); 
+   return 0; 
+} 
+
+getpwuid():从/etc/passwd文件中获取指定的UID的入口项。
+getpwnam():对于指定的登录名，在/etc/passwd文件检索入口项。
+getpwent()，打开/etc/passwd并返回指向文件中第一个入口项的指针
+setpwent()把口令文件的指针重新置为文件的开始处。
+endpwent()关闭口令文件。
+putpwent():修改或增加/etc/passwd文件中的入口项。
+crypt():是UNIX系统中的口令加密程序，也被/usr/lib/makekey命令调用。
+

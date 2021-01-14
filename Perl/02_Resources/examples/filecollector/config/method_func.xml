@@ -1,0 +1,23 @@
+<Act_Func_Map>
+
+<Connect_Method>
+	<telnet Function="connect_telnet"/>
+	<socket Function="connect_socket"/>
+	<loginne Function="connect_loginNE"/>
+	<batch_rlogin Function="connect_batch_rlogin"/>
+	<login_itl Function="connect_login_itl"/>
+	<database Function="connect_Database"/>
+	<sqlplus Function="connect_sqlplus"/>
+        <fos_login Function="connect_fos"/>
+        <sie_s8_socket Function="connect_sie8_socket"/>
+</Connect_Method>
+
+<Command_Method>
+	<rcp Function="col_rcp"/>
+	<rsh Function="col_rsh"/>
+	<ftp Function="col_ftp"/>
+	<mmi Function="col_MMI"/>
+	<syscmd Function="col_syscmd"/>
+</Command_Method>
+
+</Act_Func_Map>

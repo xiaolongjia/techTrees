@@ -1,0 +1,11 @@
+﻿Unix Test主要知识点
+
+grep, sed, awk, sort 用法
+which, whois, whatis 含义
+ld, ar, make 用法
+Vi 用法
+ftp 命令, rlogin中.rhots的存放位置
+tee的用法
+/etc/passwd, /etc/fstab 内各字段含义
+crontab中各字段含义
+shell编程相关知识 .profile /etc/profile启动关系

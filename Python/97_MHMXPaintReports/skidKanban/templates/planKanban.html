@@ -1,0 +1,63 @@
+
+<meta http-equiv="refresh" content="30">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<h2 align="center"> Paint Line Plan Kanban </h2>
+
+<table width="100%" border="1px" cellpadding="0" cellspacing="0" bordercolor="#666666">
+    <tr>
+        <th style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #dedede;">LOOP</th>
+		<th style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #dedede;">ID</th>
+        <th style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #dedede;">Start SKID</th>
+		<th style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #dedede;">End SKID</th>
+		<th style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #dedede;">SKID Quantity</th>
+		<th style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #dedede;">Quantity</th>
+		<th style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #dedede;">Actual QTY</th>
+		<th style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #dedede;">Bypass SKIDs</th>
+		<th style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #dedede;">MO</th>
+		<th style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #dedede;">Item No.</th>
+		<th style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #dedede;">Description</th>
+		<th style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #dedede;">Color</th>
+		<th style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #dedede;">Production Type</th>
+    </tr>
+	
+	{% set counter = 0 %}
+	{% block content %}
+	{% for row in planKanban %}
+		{% if counter == 15 %}
+			<tr>
+				<td  style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #25cf38;"> {{ row.loop }} </td>
+				<td  style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #25cf38;"> {{ row.sequence }} </td>
+				<td  style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #25cf38;"> {{ row.startSkid }} </td>
+				<td  style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #25cf38;"> {{ row.endSkid }}  </td>
+				<td  style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #25cf38;"> {{ row.skidQty }} </td>
+				<td  style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #25cf38;"> {{ row.quantity }} </td>
+				<td  style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #25cf38;"> {{ row.actualQty }} </td>
+				<td  style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #25cf38;"> {{ row.bypassQty }} </td>
+				<td  style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #25cf38;"> {{ row.mo }} </td>
+				<td  style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #25cf38;"> {{ row.itemNo }} </td>
+				<td  style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #25cf38;"> {{ row.description }} </td>
+				<td  style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #25cf38;"> {{ row.color }} </td>
+				<td  style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #25cf38;"> {{ row.prodType }} </td>
+			</tr>
+		{% else %}
+			<tr>
+				<td  style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #ffffff;"> {{ row.loop }} </td>
+				<td  style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #ffffff;"> {{ row.sequence }} </td>
+				<td  style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #ffffff;"> {{ row.startSkid }} </td>
+				<td  style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #ffffff;"> {{ row.endSkid }}  </td>
+				<td  style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #ffffff;"> {{ row.skidQty }} </td>
+				<td  style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #ffffff;"> {{ row.quantity }} </td>
+				<td  style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #ffffff;"> {{ row.actualQty }} </td>
+				<td  style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #ffffff;"> {{ row.bypassQty }} </td>
+				<td  style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #ffffff;"> {{ row.mo }} </td>
+				<td  style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #ffffff;"> {{ row.itemNo }} </td>
+				<td  style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #ffffff;"> {{ row.description }} </td>
+				<td  style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #ffffff;"> {{ row.color }} </td>
+				<td  style="border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #ffffff;"> {{ row.prodType }} </td>
+			</tr>
+		{% endif %}
+		{% counter = counter + 1 %}
+	{% endfor %}
+	{% endblock %}
+	
+</table>

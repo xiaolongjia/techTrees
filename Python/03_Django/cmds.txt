@@ -1,0 +1,445 @@
+==============================================
+# django 环境配置
+==============================================
+pip install django==2.1
+pip show django
+
+pip install django-pyodbc-azure==2.1.0
+pip show django-pyodbc-azure
+
+# chartit 画图
+pip install django_chartit==0.2.9
+pip install simplejson==3.17
+
+# db driver
+pip install pymssql==2.1.4
+
+# create a demo project with django-admin.py
+# ~/django/bin/django-admin.py
+
+# create a project
+cd D:\02-FAJob\prepare\techTrees\Python
+django-admin.py startproject MHMXPaintReports
+
+# create an app
+cd D:\02-FAJob\prepare\techTrees\Python\MHMXPaintReports
+python manage.py startapp skidKanban
+
+# creating tables
+cd D:\02-FAJob\prepare\techTrees\Python\MHMXPaintReports
+python manage.py makemigrations
+python manage.py makemigrations skidKanban
+python manage.py migrate
+
+#--------------------------
+# python manage.py makemigrations issues 
+# https://zhuanlan.zhihu.com/p/54523930
+#--------------------------
+pip uninstall django.
+/Lib/site-packages, deleted django folder.
+Deleted all *.pyc files in my project.
+Deleted all __pycache__ folders in my project.
+Cleared all migrations folders in my project (keep __init__.py).
+pip install django==x.x.x.
+python manage.py migrate
+python manage.py makemigrations <app_name>
+python manage.py migrate
+python manage.py runserver
+Celebrate.
+
+# run server 
+
+python manage.py help #all parameters
+python manage.py runserver
+python manage.py runserver 8080
+python manage.py runserver 0.0.0.0:8080   # setting.py ALLOWED_HOSTS = ['192.168.15.36']
+
+#---------------------- 
+# sybase connection （参考）
+#---------------------- 
+pip show django-mssql  #1.8
+pip show pymssql # 2.1.4
+pip show django-pyodbc-azure  #2.1.0
+pip show django-sqlserver
+
+
+#---------------------- 
+# settings.py
+#---------------------- 
+
+ALLOWED_HOSTS = ['*']
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'skidKanban',
+    'chartit',
+]
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'sql_server.pyodbc',
+        'NAME': 'mytest',
+        'HOST': 'localhost',
+        'PORT': '1433',
+        'USER': 'sa',
+        'PASSWORD': 'jiaxl51238',
+
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+        }
+    }
+}
+
+
+Check drivers supported by pyodbc
+
+>>> import pyodbc
+>>> pyodbc.drivers()
+['SQL Server', 'SQL Server Native Client 11.0', 'ODBC Driver 17 for SQL Server']
+
+>>> exit()
+
+
+#------------------------------
+# creating chart in Django
+#------------------------------
+https://www.codementor.io/@sikrigagan/creating-charts-in-django-chmegrbt7
+
+#-------------------------
+# Django-Chartit 2
+#-------------------------
+https://www.youtube.com/watch?v=uF3r5r-mkGg  #chartit
+https://django-chartit.readthedocs.io/en/master/
+
+#------------------------------
+# 2D bar chart chart.js
+#------------------------------
+https://www.chartjs.org/docs/latest/charts/bar.html
+https://www.chartjs.org/docs/latest/
+https://simpleisbetterthancomplex.com/tutorial/2020/01/19/how-to-use-chart-js-with-django.html
+https://blog.csdn.net/ALaDingPro/article/details/82590390 #柱状图上面加上数字
+https://chartjs-doc.abingoal.com/charts/line.html #中文文档
+
+#---------------------- 
+# 3D bar chart:
+#---------------------- 
+http://code.tutsplus.com/tutorials/create-an-animated-3d-bar-chartgraph--net-24831
+http://www.amcharts.com/demos/3d-column-chart/
+
+https://stackoverflow.com/questions/24660517/how-to-create-a-3d-bar-chart
+https://www.highcharts.com/docs/chart-concepts/3d-charts
+
+https://www.amcharts.com/demos/3d-bar-chart/ ######
+
+#---------------------- 
+#Django models data types:
+#---------------------- 
+https://www.webforefront.com/django/modeldatatypesandvalidation.html
+
+#querying data
+https://djangobook.com/mdj2-advanced-models/
+
+#--------------------------------
+# models支持的类型与配置
+# Django Model中字段(Field)的可选项和必选项
+#--------------------------------
+
+1. CharField() 字符字段
+
+max_length = xxx or None
+
+如不是必填项，可设置blank = True和default = ''
+
+如果用于username, 想使其唯一，可以设置unique = True
+
+如果有choice选项，可以设置 choices = XXX_CHOICES
+
+2. TextField() 文本字段
+
+max_length = xxx
+
+如不是必填项，可设置blank = True和default = ''
+
+3. DateField() and DateTimeField() 日期与时间字段
+
+一般建议设置默认日期default date.
+
+For DateField: default=date.today - 先要from datetime import date
+
+For DateTimeField: default=timezone.now - 先要from django.utils import timezone
+
+对于上一次修改日期(last_modified date)，可以设置: auto_now=True
+
+4. EmailField() 邮件字段
+
+如不是必填项，可设置blank = True和default = ''
+
+一般Email用于用户名应该是唯一的，建议设置unique = True
+
+5. IntegerField(), SlugField(), URLField()，BooleanField()
+
+可以设置blank = True or null = True
+
+对于BooleanField一般建议设置defautl = True or False
+
+6. FileField(upload_to=None, max_length=100) - 文件字段
+
+upload_to = "/some folder/"
+
+max_length = xxxx
+
+7. ImageField(upload_to=None, height_field=None, width_field=None, max_length=100,)
+
+upload_to = "/some folder/"
+
+其他选项是可选的.
+
+8. ForeignKey(to, on_delete, **options) - 单对多关系
+
+to必需指向其他模型，比如 Book or 'self' .
+
+必需指定on_delete options（删除选项): i.e, "on_delete = models.CASCADE" or "on_delete = models.SET_NULL" .
+
+可以设置"default = xxx" or "null = True" .
+
+如果有必要，可以设置 "limit_choices_to = "，如下面例子。
+
+staff_member = models.ForeignKey( User, on_delete=models.CASCADE, limit_choices_to={'is_staff': True}, )
+
+可以设置 "related_name = xxx" 便于反向查询。
+
+9. ManyToManyField(to, **options) - 多对多关系
+
+to 必需指向其他模型，比如 User or 'self' .
+
+设置 "symmetrical = False " if 多对多关系不是对称的
+
+设置 "through = 'intermediary model' " 如果需要建立中间模型来搜集更多信息
+
+可以设置 "related_name = xxx" 便于反向查询。
+
+
+#----------------
+# 复杂models example:
+#-----------------
+
+from django.db import models
+from django.contrib.auth.models import User
+from datetime import date
+
+class Restaurant(models.Model):
+    name = models.TextField()
+    address = models.TextField(blank=True, default='')
+    telephone = models.TextField(blank=True, default='')
+    url = models.URLField(blank=True, null=True)
+    user = models.ForeignKey(User, default=1,on_delete=models.CASCADE)
+    date = models.DateField(default=date.today)
+
+    def __str__(self):
+        return self.name
+
+class Dish(models.Model):
+    name = models.TextField()
+    description = models.TextField(blank=True,  default='')
+    price = models.DecimalField('USD amount', max_digits=8, decimal_places=2, blank=True, null=True)
+    user = models.ForeignKey(User, default=1, on_delete=models.CASCADE)
+    date = models.DateField(default=date.today)
+    image = models.ImageField(upload_to="myrestaurants", blank=True, null=True)
+# Related name "dishes" allows you to use restaurant.dishes.all to access all dishes objects
+# instead of using restaurant.dish_set.all
+# 一但设置了related name, 你将不能再通过_set方法来反向查询。
+    restaurant = models.ForeignKey(Restaurant, null=True, related_name='dishes', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+# This Abstract Review can be used to create RestaurantReview and DishReview
+
+class Review(models.Model):
+    RATING_CHOICES = ((1, 'one'), (2, 'two'), (3, 'three'), (4, 'four'), (5, 'five'))
+    rating = models.PositiveSmallIntegerField('Rating', blank=False, default=3, choices=RATING_CHOICES)
+    comment = models.TextField(blank=True, null=True)
+    user = models.ForeignKey(User, default=1, on_delete=models.CASCADE)
+    date = models.DateField(default=date.today)
+
+    #Review模型里，我们设置了META选项: Abstract = True。
+    #这样一来Django就会认为这个模型是抽象类，而不会在数据库里创建review的数据表。
+    #实际上Model自带的META选项还有很多，都非常有用。参考如下注释：
+    class Meta:
+        abstract = True
+        # 按Priority降序, order_date升序排列.
+        #get_latest_by = ['-priority', 'order_date']
+        # 自定义数据库里表格的名字
+        #db_table = 'music_album'
+        # 按什么排序
+        #ordering = ['pub_date']
+        # 定义APP的标签
+        #app_label = 'myapp'
+        # 声明此类是否为抽象
+        #abstract = True
+        # 添加授权
+        #permissions = (("can_deliver_pizzas", "Can deliver pizzas"),)
+
+
+class RestaurantReview(Review):
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return "{} review".format(self.restaurant.name)
+
+http://pcacademy.ca/contact-us/
+
+https://international.gscs.ca/fees.html
+
+https://brilliantstarmontessori.com/registration-%26-tuition
+
+https://www.saskatoonchristianschool.ca
+https://www.allegromontessori.ca/staff/liz-reynolds/
+
+
+#---------------------- 
+# Admin
+#---------------------- 
+
+# creating an admin user
+
+python manage.py createsuperuser
+brp768
+jiaxl51238
+
+# 使poll app在后台可修改（Make the poll app modifiable in the admin）
+
+vi ~/polls/admin.py
+
+from .models import Question, Choice
+admin.site.register(Question)
+admin.site.register(Choice)
+
+# 定制管理表单（Customize the admin form）
+
+
+#---------------------- 
+# URL
+#---------------------- 
+
+Django URL提供了两种匹配方式传递参数:?path和re_path。
+path是正常参数传递，re_path是采用正则表达式regex匹配。
+path和re_path传递参数方式如下:
+
+
+
+path方法：采用双尖括号<变量类型:变量名>或<变量名>传递，
+例如<int:id>, <slug:slug>或<username>。
+
+
+re_path方法: 采用命名组(?P<变量名>表达式)的方式传递参数。
+
+urls.py:
+
+urlpatterns = [
+	path('article/<int:articleId>', views.article) #增加新行
+]
+
+views.py里面增加article函数：
+
+def article(request, articleId):
+    return HttpResponse("here is the id {} !".format(articleId))
+
+
+#re_path
+from django.urls import path, re_path
+
+re_path(r'^article/(?P<articleId>\d+)/$', views.article, name='article'),
+
+
+#------------------------
+# View and templates
+#------------------------
+
+# 在polls目录下创建templates目录，把html的模板放在templates下即可
+
+# 编辑 views.py
+
+from django.shortcuts import render, get_object_or_404
+
+#-----------------
+# Function based view
+#-----------------
+
+render方法有4个参数。
+第一个是request, 
+第二个是模板的名称和位置，
+第三个是需要传递给模板的内容, 也被称为context object。
+第四个参数是可选参数content_type（内容类型), 我们什么也没写。
+
+
+
+get_object_or_404方法
+第一个参数是模型Models或数据集queryset的名字，
+第二个参数是需要满足的条件（比如pk = id, title = 'python')。当需要获取的对象不存在时，给方法会自动返回Http 404错误。
+
+
+render(request, 'questionDetail.html', {"question": currQuestion})
+
+# questionDetail.html的文件内容如下：
+
+{% block content %}
+{{ question.question_text }}
+{{ question.pub_date }}
+{{ question.comments }}
+{{ question.add_date }}
+{% endblock %}
+
+#-----------------
+# Class based View
+#-----------------
+-javaagent:C:\Program Files\PyCharm 2018.3.3\bin\JetbrainsCrack-release-enc.jar
+
+
+Django提供了很多通用的基于类的视图(Class Based View)，来帮我们简化视图的编写。
+这些View与上述操作的对应关系如下:
+
+
+
+展示对象列表（比如所有用户，所有文章）-?ListView
+
+
+展示某个对象的详细信息（比如用户资料，比如文章详情) -?DetailView
+
+
+通过表单创建某个对象（比如创建用户，新建文章）-?CreateView
+
+
+通过表单更新某个对象信息（比如修改密码，修改文字内容）-?UpdateView
+
+
+用户填写表单后转到某个完成页面 -?FormView
+
+删除某个对象 -?DeleteView
+
+
+
+
+class IndexView(ListView):
+	model = Question
+
+ListView实际上在背后做了很多事情：
+
+
+提取了需要显示的对象列表或数据集queryset:?Question.objects.all()
+
+
+指定了用来显示对象列表的模板名称(template name): 默认app_name/model_name_list.html, 
+即polls/question_list.html.
+
+ 这里的polls目录是指project下面polls目录的templates目录下的polls. 
+默认行为使用总是不很正常
+指定了内容对象名称(context object name):默认值object_list
+
+
+ListView的自定义，即可以改写的方法：

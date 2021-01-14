@@ -1,0 +1,102 @@
+{% block content %}
+<meta http-equiv="refresh" content="30">
+
+  <div id="container" style="width: 75%;">
+    <canvas id="SKIDEfficiencyData"  width="600" height="380" data-url="{% url 'SKIDEfficiencyData' %}"></canvas>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+  <script>
+
+    $(function () {
+
+      var $skiddata = $("#SKIDEfficiencyData");
+      $.ajax({
+        url: $skiddata.data("url"),
+        success: function (data) {
+			var ctx = $skiddata[0].getContext("2d");
+
+			new Chart(ctx, {
+				type: 'bar', //line, bar, radar, polarArea, pie, doughnut, bubble
+				data: {
+					labels: data.labels,
+					datasets: [{
+						label: 'Skids',
+						backgroundColor: data.color,
+						data: data.data
+					}, {
+						label: 'BaseLine',
+						data: data.baseline,
+						borderWidth: 3,
+						fill: false,
+						borderColor: 'red', 
+						pointRadius: 0,
+						type: 'line',
+						xAxisID: 0,
+						// this dataset is drawn on top
+						order: 2
+					}]
+				},
+				options: {
+					legend: {
+						display: false
+					},
+					hover: {
+						animationDuration: 0  // 防止鼠标移上去，数字闪烁
+					},
+					scales: {
+						yAxes: [{
+							ticks: {
+								beginAtZero:true
+							}
+						}]
+					},
+					responsive: true,
+					title: {
+						display: true,
+						text: 'Paint Line Efficiency'
+					},
+					animation: {
+						onComplete: function () {
+							var chartInstance = this.chart,
+							ctx = chartInstance.ctx;
+							// 以下属于canvas的属性（font、fillStyle、textAlign...）
+							ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+							ctx.fillStyle = "black";
+							ctx.textAlign = 'center';
+							ctx.textBaseline = 'bottom';
+							
+							//Chart.defaults.global.defaultColor = 'yellow';
+							//ctx.beginPath();
+							//ctx.setLineDash([]);
+							//ctx.moveTo(30, 92);
+							//ctx.lineTo(1100, 92);
+							//ctx.stroke();
+ 
+							this.data.datasets.forEach(function (dataset, i) {
+								if (i==0) {
+									var meta = chartInstance.controller.getDatasetMeta(i);
+									meta.data.forEach(function (bar, index) {
+										var data = dataset.data[index];
+										var rate = (data/60)*100;
+										rate = rate.toFixed(2) + "%";
+										ctx.fillText(rate, bar._model.x, bar._model.y - 5);
+									});
+								}
+							});
+						}
+					}
+				}
+			});
+			
+			
+			
+        }
+      });
+
+    });
+
+  </script>
+
+{% endblock %}

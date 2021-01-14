@@ -1,0 +1,2 @@
+2020-07-02 23:46:28: Error with the connection to printer: 10.100.21.102:9100
+2020-07-02 23:59:19: Error with the connection to printer: 10.100.21.102:9100
