@@ -1,0 +1,28 @@
+
+###############################################################################
+#
+#  
+# 
+#  @(#) Perl Module:FC_PrepareColInf  
+
+#
+#  Copyright(C) 2002-2004 BOCO Inter-Telecom DC Team, All Rights Reserved
+
+#
+
+#  Author(s): JIA XL 
+
+#
+
+#  Creation Date: 2002/12/15
+
+#
+
+#  Last update Date: 2003/02/24
+
+#
+
+#  Description:
+
+#
+###############################################################################
