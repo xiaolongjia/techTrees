@@ -19,9 +19,9 @@ Sample Input:
 1       
 
 Sample Output: 
-preOrderTraverse: [10, 5, 2, 1, 5, 15, 22]
-inOrderTraverse: [1,2,5,5,10,15,22]
-postOrderTraverse: [1,2,5,5,22,15,10]
+preOrderTraverse: [10, 5, 2, 1, 5, 15, 22] # Preorder  (Root, Left, Right) 
+inOrderTraverse: [1,2,5,5,10,15,22]        # Inorder   (Left, Root, Right)
+postOrderTraverse: [1,2,5,5,22,15,10]      # Postorder (Left, Right, Root)
 '''
 class BST:
     def __init__(self, value):
@@ -54,9 +54,11 @@ def postOrderTraverse(tree, array):
 root = BST(10)
 root.left = BST(5)
 root.left.left = BST(2)
-root.left.left.left = BST(1)
 root.left.right = BST(5)
+root.left.left.left = BST(1)
 root.right = BST(15)
+root.right.left = BST(13)
+root.right.left.right = BST(14)
 root.right.right = BST(22)
 array1=[]
 array2=[]

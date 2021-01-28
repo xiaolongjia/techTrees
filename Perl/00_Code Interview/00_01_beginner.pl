@@ -72,13 +72,10 @@ print(crypt($mystring, "18"),"\n");
 @myArray = (2,4,6,8,10, 12, 123);
 
 # grep()
-
 @grepArray = grep(/2/, @myArray);
 print(Dumper(\@grepArray));
 
-
 # my, local 
-
 local $uustring = "local variable";
 {
 	my $uustring = "my variable";
@@ -106,32 +103,11 @@ Z->foo();
 print(Dumper(\%Foo::));
 
 # alias 
-
 $spud = "Wow!"; 
 @spud = ("idaho", "russet"); 
-*potato = *spud; 
-# Alias potato to spud using typeglob assignment 
-
+*potato = *spud; # Alias potato to spud using typeglob assignment 
 print "$potato\n"; # prints "Wow!" 
-$potato .= "okok";
-print($spud."\n");
-exit;
-print @potato, "\n"; # prints "idaho russet" docstore.mik.ua/orelly/perl2/advprog/ch03_02.htm
-exit;
-
-my @array = (10,20);
-#DoubleEachEntry(*array); # @array and @copy are identical.
-DoubleEachEntry(\@array);
-print "@array \n";
-
-sub DoubleEachEntry {
-   local   *copy   = shift;
-   print(Dumper(*copy));
-   print(Dumper(@copy));
-   foreach $element (@copy) {
-       $element *= 2;
-   }
-};
+print @potato, "\n"; # prints "idaho russet"
 exit;
 
 
