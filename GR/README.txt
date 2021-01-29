@@ -61,11 +61,35 @@ DESCRIPTION
 
   6 directories, 15 files. 
 
-3) Pending feature due to limited time
+3) How to run this package?
 
-3.1 The web application security need to be improved (SQL injection, Cross-site scripting).
+3.1 Run commond: spawn-fcgi -n -a [IP] -p [Port] -f /usr/local/var/www/process.fcgi &
 
-3.2 The password management need to be improved. 
+[IP] and [PORT] should be consistent with the field 'fastcgi_pass' of /usr/local/etc/nginx/nginx.conf. For example: 
 
-3.3 The server storage is better to use database instead of using flat text files.
+location ~ \.fcgi$ {
+           root           /usr/local/var/www;
+           fastcgi_pass   127.0.0.1:9900;
+           fastcgi_index  index.fcgi;
+           include        /usr/local/etc/nginx/fastcgi_params;
+           fastcgi_param  SCRIPT_FILENAME  /usr/local/var/www$fastcgi_script_name;
+}
+
+In this case, please run: spawn-fcgi -n -a 127.0.0.1 -p 9900 -f /usr/local/var/www/process.fcgi &
+
+3.2 Lunch the login page:  http://127.0.0.1:9999/login.html
+
+127.0.0.1 is the local host. 
+
+9999 is the port listening by nginx (be consistent with nginx.conf).
+
+4) Pending features due to limited time
+
+4.1 The web application security need to be improved (SQL injection, Cross-site scripting).
+
+4.2 The password management need to be improved. 
+
+4.3 The server storage is better to use database instead of using flat text files.
+
+4.4 The frontend business process logic (FCGI actions) should be optimized folowing OO.
 
