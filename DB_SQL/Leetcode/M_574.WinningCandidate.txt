@@ -1,0 +1,85 @@
+574.(Medium) Winning Candidate
+https://leetcode.com/problems/winning-candidate/
+
+Candidate
++-----+---------+
+| id  | Name    |
++-----+---------+
+| 1   | A       |
+| 2   | B       |
+| 3   | C       |
+| 4   | D       |
+| 5   | E       |
++-----+---------+ 
+
+ Vote
++-----+--------------+
+| id  | CandidateId  |
++-----+--------------+
+| 1   |     2        |
+| 2   |     4        |
+| 3   |     3        |
+| 4   |     2        |
+| 5   |     5        |
++-----+--------------+
+
+output
++------+
+| Name |
++------+
+| B    |
++------+
+
+Notes:
+You may assume there is no tie, in other words there will be at most one winning candidate.
+
+=================
+schema:
+=================
+
+create table M_574_candidate(id int,Name varchar(2))
+insert into M_574_candidate values (1,'A')
+insert into M_574_candidate values (2,'B')
+insert into M_574_candidate values (3,'C')
+insert into M_574_candidate values (4,'D')
+insert into M_574_candidate values (5,'E')
+ 
+CREATE TABLE M_574_Vote (id int,CandidateId int)
+insert into M_574_Vote values(1,2)
+insert into M_574_Vote values(2,4)
+insert into M_574_Vote values(3,3)
+insert into M_574_Vote values(4,2)
+insert into M_574_Vote values(5,5)
+
+=================
+Solution:
+=================
+
+select 
+	Name 
+from M_574_candidate
+where id in (
+	select  top 1 CandidateId 
+	from M_574_Vote 
+	group by CandidateId
+	order by count(*) DESC 
+)
+
+=================
+TSQL:
+=================
+
+with voteResult as (
+	select  top 1 CandidateId 
+	from M_574_Vote 
+	group by CandidateId
+	order by count(*) DESC 
+)
+select 
+Name 
+from M_574_candidate c, voteResult v 
+where c.id = v.CandidateId
+
+=================
+MYSQL:
+=================

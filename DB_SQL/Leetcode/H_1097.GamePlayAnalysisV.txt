@@ -1,0 +1,95 @@
+1097.(Hard) Game Play Analysis V
+https://leetcode.com/problems/game-play-analysis-v/
+
+================================================================================
+1097.(Hard) Game Play Analysis V
+================================================================================
+
+| Column Name  | Type    |
++--------------+---------+
+| player_id    | int     |
+| device_id    | int     |
+| event_date   | date    |
+| games_played | int     |
++--------------+---------+
+(player_id, event_date) is the primary key of this table
+This table shows the activity of players in certain games
+Each line is a record of a player who logged in and played a lot of games before logging out using a certain device on a certain day (may be 0)
+
+We define a player’s installation date as the player’s first login day.
+
+We also define the retention time on the first day of a certain date X as the number of players whose installation date is X, 
+who log in again one day after X, divide by the number of players whose installation date is X, and round to two decimal places .
+
+Write a SQL query to report each installation date, the number of players who installed the game that day, and the retention time on the first day.
+
+The query result format is as follows:
+
+Activity table:
++-----------+-----------+------------+--------------+
+| player_id | device_id | event_date | games_played |
++-----------+-----------+------------+--------------+
+| 1         | 2         | 2016-03-01 | 5            |
+| 1         | 2         | 2016-03-02 | 6            |
+| 2         | 3         | 2017-06-25 | 1            |
+| 3         | 1         | 2016-03-01 | 0            |
+| 3         | 4         | 2016-07-03 | 5            |
++-----------+-----------+------------+--------------+
+
+Result table:
++------------+----------+----------------+
+| install_dt | installs | Day1_retention |
++------------+----------+----------------+
+| 2016-03-01 | 2        | 0.50           |
+| 2017-06-25 | 1        | 0.00           |
++------------+----------+----------------+
+
+
+========================
+schema:
+========================
+Create table L_1097_Activity (player_id int, device_id int, event_date Date, games_played int);
+Truncate table L_1097_Activity;
+insert into L_1097_Activity (player_id, device_id, event_date , games_played) values (1, 2, '2016-03-01', 5);
+insert into L_1097_Activity (player_id, device_id, event_date , games_played) values (1, 2, '2016-03-02', 6);
+insert into L_1097_Activity (player_id, device_id, event_date , games_played) values (2, 3, '2017-06-25', 1);
+insert into L_1097_Activity (player_id, device_id, event_date , games_played) values (3, 1, '2016-03-01', 0);
+insert into L_1097_Activity (player_id, device_id, event_date , games_played) values (3, 4, '2016-07-03', 5);
+
+
+========================
+solution:
+========================
+
+ cast(count(a.player_id)/count(s1.player_id) AS numeric(10,2)) as Day1_retention
+ 
+select 
+s1.event_date as install_dt, count(s1.player_id) as installs, count(a.player_id)
+from 
+(select 
+player_id, event_date, dateadd(day, 1, event_date) as nextDay
+from L_1097_Activity a 
+where a.event_date in 
+	(select min(event_date)
+	from L_1097_Activity b
+	where a.player_id = b.player_id
+	group by player_id) 
+) s1 left join L_1097_Activity a on s1.player_id = a.player_id and s1.nextDay = a.event_date
+group by s1.event_date
+
+SELECT
+    install_dt,
+    COUNT(player_id) installs,
+    ROUND(COUNT(retention)/COUNT(player_id),2) Day1_retention  --次日有记录的数量/当日新id总数=留存率
+FROM
+    (
+    SELECT a.player_id, a.install_dt, b.event_date retention -- id, 首次安装日, 次日的记录
+    FROM
+        (SELECT player_id, MIN(event_date) install_dt   --subquery 1 取每个id的首次安装日
+        FROM Activity
+        GROUP BY player_id) a LEFT JOIN Activity b ON   --sq1左连原表，求首次安装后次日的登陆情况
+            a.player_id = b.player_id AND
+            a.install_dt + 1=b.event_date
+    ) AS tmp
+GROUP BY
+    install_dt

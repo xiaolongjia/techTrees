@@ -1,0 +1,74 @@
+618.(Hard) Students Report By Geography
+https://leetcode.com/problems/students-report-by-geography
+
+====================================================================
+618.(Hard) Students Report By Geography. 纵表转横表
+================================================================================
+
+student
+| name   | continent |
+|--------|-----------|
+| Jack   | America   |
+| Pascal | Europe    |
+| Xi     | Asia      |
+| Jane   | America   |
+
+output
+| America | Asia | Europe |
+|---------|------|--------|
+| Jack    | Xi   | Pascal |
+| Jane    |      |        |
+
+========================
+schema:
+========================
+Create table L_618_student (name varchar(50), continent varchar(50));
+Truncate table L_618_student;
+insert into L_618_student (name , continent) values ('Jack', 'America');
+insert into L_618_student (name , continent) values ('Pascal', 'Europe');
+insert into L_618_student (name , continent) values ('Xi', 'Asia');
+insert into L_618_student (name , continent) values ('Jane', 'America');
+
+========================
+solution:
+========================
+
+========================
+TSQL:
+========================
+
+SELECT America, Asia, Europe
+FROM(
+    SELECT 
+		continentorder,
+		MAX(CASE WHEN continent = 'America' THEN name END )AS America,
+		MAX(CASE WHEN continent = 'Europe' THEN name END )AS Europe,
+		MAX(CASE WHEN continent = 'Asia' THEN name END )AS Asia
+    FROM (
+        SELECT *,
+        ROW_NUMBER()OVER(PARTITION BY continent ORDER BY name) AS continentorder
+        FROM L_618_student
+        ) AS SOURCE
+    GROUP BY continentorder
+)temp
+
+
+========================
+MYSQL:  ?????
+========================
+
+SELECT America, Asia, Europe
+FROM ( 
+	SELECT 
+		continentorder,
+		MAX(CASE WHEN continent = 'America' THEN name END )AS America,
+		MAX(CASE WHEN continent = 'Europe' THEN name END )AS Europe,
+		MAX(CASE WHEN continent = 'Asia' THEN name END )AS Asia
+	FROM (
+		SELECT *,   // ???????
+		@counter := @counter + 1  continentorder
+		FROM L_618_student, (select @counter := 0) r
+		order by continent) source
+	GROUP BY continentorder
+) temp
+

@@ -1,0 +1,62 @@
+177. Nth Highest Salary
+https://leetcode.com/problems/nth-highest-salary/
+
+Write a SQL query to get the nth highest salary from the Employee table.
+
++----+--------+
+| Id | Salary |
++----+--------+
+| 1  | 100    |
+| 2  | 200    |
+| 3  | 300    |
++----+--------+
+
+For example, given the above Employee table, the nth highest salary where n = 2 is 200. 
+If there is no nth highest salary, then the query should return null.
+
++------------------------+
+| getNthHighestSalary(2) |
++------------------------+
+| 200                    |
++------------------------+
+
+=================
+Schema:
+=================
+Create table M_177_Employee (Id int, Salary int)
+Truncate table M_177_Employee
+insert into M_177_Employee (Id, Salary) values (1, 100)
+insert into M_177_Employee (Id, Salary) values (2, 200)
+insert into M_177_Employee (Id, Salary) values (3, 300)
+
+=================
+Solution:
+=================
+
+=================
+TSQL:
+=================
+CREATE FUNCTION getNthHighestSalary(@N INT) RETURNS INT AS
+BEGIN
+    RETURN (
+        /* Write your T-SQL query statement below. */
+		select distinct b.salary
+        from (select salary, dense_rank() over (order by salary desc) as rank from M_177_Employee) b 
+        where b.rank = @N
+    );
+END
+
+=================
+MYSQL: LIMIT A,B   LIMIT A, OFFSET B
+=================
+CREATE FUNCTION getNthHighestSalary(N INT) RETURNS INT
+BEGIN
+  SET N = N - 1;
+  RETURN (
+      # Write your MySQL query statement below.
+      SELECT DISTINCT Salary
+      FROM Employee
+      ORDER BY Salary DESC
+      LIMIT N,1
+  );
+END

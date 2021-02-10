@@ -1,0 +1,46 @@
+571. Find Median Given Frequency of Numbers 
+https://leetcode.com/problems/median-employee-salary/
+
+================================================================================
+571.(Hard) 给定数字的频率查询中位数
+================================================================================
+
+Numbers
++----------+-------------+
+|  Number  |  Frequency  |
++----------+-------------|
+|  0       |  7          |
+|  1       |  1          |
+|  2       |  3          |
+|  3       |  1          |
++----------+-------------+
+000000012223
+
+output
++--------+
+| median |
++--------|
+| 0.0000 |
++--------+
+
+========================
+schema:
+========================
+Create table L_571_Numbers (Number int, Frequency int)
+Truncate table L_571_Numbers
+insert into L_571_Numbers (Number, Frequency) values (0, 7)
+insert into L_571_Numbers (Number, Frequency) values (1, 1)
+insert into L_571_Numbers (Number, Frequency) values (2, 3)
+insert into L_571_Numbers (Number, Frequency) values (3, 1)
+
+========================
+solution:
+========================
+
+# all solution? 
+SELECT AVG(a.number) median
+FROM L_571_Numbers a
+WHERE a.frequency >= ABS(
+    (SELECT SUM(frequency) FROM L_571_Numbers WHERE a.number <= number) -
+    (SELECT SUM(frequency) FROM L_571_Numbers WHERE a.number >= number)
+    )
