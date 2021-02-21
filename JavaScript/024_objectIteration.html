@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2> Object Iteration from JSON String</h2>
+
+<p id="demo"></p>
+<p id="values"></p>
+<p id="json"></p>
+
+<script>
+var text = {"Jack": 8,"Tim":42,"Y":39};
+var values = Object.values(text);
+var myStr = "";
+
+var person = {name:"John", age:30, city:"New York"};
+var myString = JSON.stringify(person);
+document.getElementById("json").innerHTML = myString;
+
+for (let x in text) {
+	myStr += " " + x + "=>" + " " + text[x] + "<br>";
+}
+
+document.getElementById("demo").innerHTML = myStr;
+document.getElementById("values").innerHTML = values;
+
+</script>
+
+</body>
+</html>

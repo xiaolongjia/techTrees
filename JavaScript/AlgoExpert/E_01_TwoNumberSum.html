@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Algo Expert</h2>
+
+<p id="demo"></p>
+
+<script>
+var text =  [3, 5, -4, 8, 11, 1, -1, 6] ;
+var result = twoNumberSum(text, 10);
+document.getElementById("demo").innerHTML = result.toString();
+
+function twoNumberSum(array, targetSum) {
+	let i = 0;
+	let j = array.length - 1;
+	array.sort((a, b) => a - b);
+	console.log(array);
+	while (i < j) {
+		let currSum = array[i] + array[j];
+		if (currSum < targetSum) {
+			console.log(i);
+			i = i + 1
+		} else if (currSum > targetSum) {
+			console.log(j);
+			j--
+		} else if  (currSum === targetSum) {
+			return [array[i], array[j]];
+		}
+	}
+	return [];
+}
+
+</script>
+
+</body>
+</html>
+
+

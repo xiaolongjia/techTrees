@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2> Object Clone from JSON String</h2>
+
+<p id="demo"></p>
+<p id="shallowCopy1"></p>
+<p id="demo1"></p>
+<p id="shallowCopy2"></p>
+<p id="demo2"></p>
+<p id="deepCopy"></p>
+<p id="demo3"></p>
+
+<script>
+var text = {"Jack": {age:8},"Tim":42,"Y":39};
+document.getElementById("demo").innerHTML = text.Jack.age;
+
+var sCopy1 =  { ...text };
+sCopy1["Jack"]["age"] = 21;
+document.getElementById("shallowCopy1").innerHTML = sCopy1["Jack"]["age"] ;
+document.getElementById("demo1").innerHTML = text.Jack.age;
+
+var sCopy2 =  Object.assign({}, text);
+sCopy2.Jack.age = 31;
+document.getElementById("shallowCopy2").innerHTML = sCopy2.Jack.age;
+document.getElementById("demo2").innerHTML = text.Jack.age;
+
+var deepCopy = JSON.parse(JSON.stringify(text));
+deepCopy.Jack.age = 41;
+document.getElementById("deepCopy").innerHTML = deepCopy.Jack.age;
+document.getElementById("demo3").innerHTML = text.Jack.age;
+
+</script>
+
+</body>
+</html>

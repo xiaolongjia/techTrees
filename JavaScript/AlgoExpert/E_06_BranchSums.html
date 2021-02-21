@@ -1,0 +1,60 @@
+
+<!DOCTYPE html>
+<html>
+<body>
+<script src="Trees.js"></script>
+
+<h2>Algo Expert</h2>
+<p id="demo"></p>
+
+<script>
+let root  = new BST(1);
+let var2  = new BST(2);
+let var3  = new BST(3);
+let var4  = new BST(4);
+let var5  = new BST(5);
+let var6  = new BST(6);
+let var7  = new BST(7);
+let var8  = new BST(8);
+let var9  = new BST(9);
+let var10 = new BST(10);
+
+root.left  = var2;
+root.right = var3;
+var2.left  = var4;
+var2.right = var5;
+var3.left  = var6;
+var3.right = var7;
+var4.left  = var8;
+var4.right = var9;
+var5.left  = var10;
+
+document.getElementById("demo").innerHTML = branchSums(root);
+
+function branchSums(tree) {
+	var results = [];
+	branchSumsRecursion(tree, results, 0);
+	return results;
+}
+
+function branchSumsRecursion (tree, results, parentSum) {
+	if (tree === null) return ; 
+	if ((tree.left  === null) && (tree.right  === null)) {
+		results.push(parentSum+tree.value);
+		return ;
+	} 
+	
+	let currSum = parentSum + tree.value;
+	branchSumsRecursion (tree.left,  results, currSum);
+	branchSumsRecursion (tree.right, results, currSum);
+}
+
+// This is the class of the input tree. Do not edit.
+
+
+</script>
+
+</body>
+</html>
+
+

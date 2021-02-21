@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html>
+<body>
+<script src="Trees.js"></script>
+
+<h2>Algo Expert</h2>
+<p id="demo"></p>
+
+<script>
+let root  = new Node("A");
+root.addChild("B");
+root.addChild("C");
+root.addChild("D");
+root.children[0].addChild("E");
+root.children[0].addChild("F");
+root.children[0].children[1].addChild("I");
+root.children[0].children[1].addChild("J");
+root.children[2].addChild("G");
+root.children[2].addChild("H");
+
+document.getElementById("demo").innerHTML = depthFirstSearch(root);
+
+function depthFirstSearch(node) {
+	var results = [];
+	var queue = [node];
+	while (queue.length > 0) {
+		const currNode = queue.shift();
+		results.push(currNode.name);
+		for (const childNode of currNode.children) {
+			queue.push(childNode);
+		}
+	}
+	return results;
+}
+
+</script>
+
+</body>
+</html>
+
+

@@ -34,28 +34,29 @@ If the number of students is odd, there is no need to change the last one's seat
 
 ========================
 schema:
+========================
 
-Create table seat(id int, student varchar(255))
-Truncate table seat
-insert into seat (id, student) values ('1', 'Abbot')
-insert into seat (id, student) values ('2', 'Doris')
-insert into seat (id, student) values ('3', 'Emerson')
-insert into seat (id, student) values ('4', 'Green')
-insert into seat (id, student) values ('5', 'Jeames')
+Create table M_626_seat(id int, student varchar(255));
+Truncate table M_626_seat
+insert into M_626_seat (id, student) values (1, 'Abbot')
+insert into M_626_seat (id, student) values (2, 'Doris')
+insert into M_626_seat (id, student) values (3, 'Emerson')
+insert into M_626_seat (id, student) values (4, 'Green')
+insert into M_626_seat (id, student) values (5, 'Jeames')
 
 ========================
 solution:
 
 select * from (
-select 
-a.id , case when b.student is null then a.student else b.student end as student 
-from seat a 
-left join seat b on a.id = b.id - 1
-where a.id % 2 <> 0 
-union 
-select 
-a.id , case when b.student is null then a.student else b.student end as student 
-from seat a 
-left join seat b on a.id = b.id + 1
-where a.id % 2 = 0) A 
+	select 
+		a.id , case when b.student is null then a.student else b.student end as student 
+	from M_626_seat a 
+	left join M_626_seat b on a.id = b.id - 1
+	where a.id % 2 <> 0 
+	union 
+	select 
+		a.id , case when b.student is null then a.student else b.student end as student 
+	from M_626_seat a 
+	left join M_626_seat b on a.id = b.id + 1
+	where a.id % 2 = 0) A 
 order by id 

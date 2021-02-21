@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>JavaScript String Methods</h2>
+<p id="string"></p>
+<p id="indexof"></p>
+<p id="indexofWithStart"></p>
+<p id="lastIndexOf"></p>
+<p id="lastIndexOfWithStart"></p>
+<p id="slice"></p>
+
+<script>
+var str = "Please locate where 'locate' oc locate curs!";
+document.getElementById("string").innerHTML = str;
+
+var pos1 = str.indexOf("locate");
+document.getElementById("indexof").innerHTML = pos1;
+
+var pos2 = str.indexOf("locate", 23);
+document.getElementById("indexofWithStart").innerHTML = pos2;
+
+var pos3 = str.lastIndexOf("locate");
+document.getElementById("lastIndexOf").innerHTML = pos3;
+
+var pos4 = str.lastIndexOf("locate", 20);
+document.getElementById("lastIndexOfWithStart").innerHTML = pos4;
+
+var newStr = str.slice(3,8);
+document.getElementById("slice").innerHTML = newStr;
+
+</script>
+
+</body>
+</html>

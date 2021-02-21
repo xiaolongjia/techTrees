@@ -1,0 +1,55 @@
+614.(Medium) Second Degree Follower
+https://leetcode.com/problems/second-degree-follower/
+
+follow
++-------------+------------+
+| followee    | follower   |
++-------------+------------+
+|     A       |     B      |
+|     B       |     C      |
+|     B       |     D      |
+|     D       |     E      |
++-------------+------------+
+output:
++-------------+------------+
+| follower    | num        |
++-------------+------------+
+|     B       |  2         |
+|     D       |  1         |
++-------------+------------+
+
+
+
+
+=================
+schema:
+=================
+CREATE TABLE M_614_follow (followee varchar(10), follower varchar(10));
+ 
+insert into M_614_follow values("A", "B");
+insert into M_614_follow values("B", "C");
+insert into M_614_follow values("B", "D");
+insert into M_614_follow values("D", "E");
+
+
+=================
+Solution:
+=================
+
+=================
+TSQL: ???
+=================
+
+
+=================
+MYSQL:  
+=================
+SELECT 
+    a.follower follower, -- b.followeee didn't pass all cases
+    COUNT(DISTINCT b.follower) num
+FROM
+    M_614_follow a JOIN M_614_follow b ON
+    a.follower = b.followee
+GROUP BY
+    b.followee
+

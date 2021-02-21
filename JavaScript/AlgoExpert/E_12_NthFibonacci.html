@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Algo Expert</h2>
+
+<p id="demo"></p>
+
+<script>
+document.getElementById("demo").innerHTML = getNthFib(4);
+
+function getNthFib(n) {
+	var first = 0;
+	var second = 1;
+	if (n===1) {
+		return 0;
+	} else if (n === 2) {
+		return 1;
+	} else {
+		for(let i=2;i<n;i++) {
+			var temp = second + first;
+			first = second ;
+			second = temp;
+		}
+		return second;
+	}
+}
+
+</script>
+
+</body>
+</html>
+
+

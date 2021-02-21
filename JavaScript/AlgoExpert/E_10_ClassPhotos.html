@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html>
+<body>
+<script src="Trees.js"></script>
+
+<h2>Algo Expert</h2>
+<h3>
+It is photo day at the local school, and you are the photographer assigned to take class photos. <br>
+The class that you will be photographing has an even number of students, <br>
+and all these students are wearing red or blue shirts. In fact, exactly half of the <br>
+class is wearing red shirts, and the other half is wearing blue shirts. <br>
+You are responsible for arranging the students in two rows before taking <br>
+the photo. Each row should contain the same number of the students and <br>
+should adhere to the following guidelines:<br>
+1. all students wearing red shirts must be in the same row. <br>
+2. all students wearing blue shirts must be in the same row. <br>
+3. each student in the back row must be strictly taller than the student directly in front of them in the front row <br>
+<br>
+you are given two input arrays: one containing the heights of all the students <br>
+with red shirts and another one containing the heights of all the students with <br>
+blue shirts. these arrays will always have the same length, and each height <br>
+will be a positive integer. Write a function that returns whether or not <br>
+a class photo that follows the stated guidelines can be taken. <br>
+
+Sample input:
+refShirtHeights =  [5,8,1,3,4]
+blueShirtHeights = [6,9,2,4,5]
+
+Sample output:
+true 
+
+</h3>
+
+<p id="demo"></p>
+
+<script>
+let redShirtHeights  =  [5,8,1,3,4];
+let blueShirtHeights =  [6,9,2,4,5];
+
+document.getElementById("demo").innerHTML = classPhotos(redShirtHeights, blueShirtHeights);
+
+function classPhotos(redShirtHeights, blueShirtHeights) {
+	redShirtHeights.sort();
+	blueShirtHeights.sort();
+	var front, back;
+	if (redShirtHeights[0] > blueShirtHeights[0]) {
+		back = redShirtHeights ;
+		front = blueShirtHeights ; 
+	} else {
+		back = blueShirtHeights; 
+		front = redShirtHeights;
+	}
+	
+	for (let i=0; i<front.length; i++) {
+		if (front[i] >= back[i]) {
+			return false
+		}
+	}
+	return true;
+}
+
+</script>
+
+</body>
+</html>
+
+

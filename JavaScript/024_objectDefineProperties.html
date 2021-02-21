@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>JavaScript Getters and Setters</h2>
+
+<p>Perfect for creating counters:</p>
+
+
+<p id="mystring"></p>
+<p id="demo"></p>
+
+<script>
+// Define an object
+var obj = {root: null, left : null, right : null};
+
+// Define Setters and Getters
+Object.defineProperty(obj, "setleft", {
+  set : function (value) {this.left = value;}
+});
+Object.defineProperty(obj, "setright", {
+  set : function (value) {this.right = value;}
+});
+var myString = JSON.stringify(obj);
+document.getElementById("mystring").innerHTML = myString;
+
+obj.setleft = 3;
+obj.setright = 8;
+document.getElementById("demo").innerHTML = JSON.stringify(obj);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>JavaScript NULL test</h2>
+<p id="demo"></p>
+
+<script>
+// Create an object:
+var car = {type:"Fiat", model:"500", color:"white"};
+var number = "hello";
+number = null;
+car = undefined;
+
+document.getElementById("demo").innerHTML = typeof(car) + " " + typeof(number); 
+</script>
+
+</body>
+</html>

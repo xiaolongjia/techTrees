@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>JavaScript Object maintain</h2>
+<p id="demo"></p>
+
+<script>
+// Create an object:
+var car = {type:"Fiat", model:"BMW328", color:"white"};
+
+car.start = "ok";
+car["stop"] = "ok";
+car.maintain = function () {
+	return this.model + " need each 3 months";
+}
+
+document.getElementById("demo").innerHTML = car.maintain(); 
+</script>
+
+</body>
+</html>

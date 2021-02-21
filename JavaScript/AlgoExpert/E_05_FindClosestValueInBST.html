@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+<html>
+<body>
+<script src="Trees.js"></script>
+
+<h2>Algo Expert</h2>
+<p id="demo"></p>
+
+<script>
+let root = new BST(10);
+let var5 = new BST(5);
+let var15 = new BST(15);
+let var2 = new BST(2);
+let var52 = new BST(5);
+let var13 = new BST(13);
+let var22 = new BST(22);
+let var1 = new BST(1);
+let var14 = new BST(14);
+root.left = var5;
+root.right = var15;
+var5.left = var2;
+var5.right = var52;
+var2.left = var1;
+var15.left = var13;
+var15.right = var22;
+var13.left = var14;
+
+document.getElementById("demo").innerHTML = findClosestValueInBst(root, 12);
+
+function findClosestValueInBst(tree, target) {
+  return findValue(tree, target, tree.value);
+}
+
+function findValue (tree, target, closest) {
+	if (tree === null) return closest;
+	console.log(closest);
+	if (Math.abs(target - closest) > Math.abs(target - tree.value)) {
+		closest = tree.value
+	}
+	if (tree.value > target) {
+		return findValue(tree.left, target, closest)
+	} else if (tree.value < target) {
+		return findValue(tree.right, target, closest)
+	} else {
+		return closest
+	}
+}
+
+// This is the class of the input tree. Do not edit.
+
+
+</script>
+
+</body>
+</html>
+
+

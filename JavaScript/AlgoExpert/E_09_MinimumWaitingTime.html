@@ -1,0 +1,31 @@
+
+<!DOCTYPE html>
+<html>
+<body>
+<script src="Trees.js"></script>
+
+<h2>Algo Expert</h2>
+<p id="demo"></p>
+
+<script>
+let queries = [3, 2, 1, 2, 6];
+
+document.getElementById("demo").innerHTML = minimumWaitingTime(queries);
+
+function minimumWaitingTime(queries) {
+	let currTime  = 0;
+	let totalTime = 0;
+	queries.sort();
+	for (let i=0; i<queries.length-1; i++) {
+		currTime += queries[i];
+		totalTime += currTime;
+	}
+	return totalTime;
+}
+
+</script>
+
+</body>
+</html>
+
+

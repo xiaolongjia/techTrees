@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Algo Expert</h2>
+<h3>
+Given an array of positive intergers representing the values of coins in your possession,
+write a function that returns the minimum amount of change (the minimum sum of money)
+that you cannot create. The given coins can have any positive integer value 
+and arenot necessarily unique (i.e., you can have multiple coins of the same value).
+
+For example, if you are given coins = [1, 2, 5], the minimum amount of change 
+that you cannot create is 4. If you are given no coins, the minimum amount of 
+change that you cannot create is 1. 
+</h3>
+
+<p id="demo"></p>
+
+<script>
+let coins =  [1, 1, 2, 4] ;
+document.getElementById("demo").innerHTML = nonConstructibleChange(coins);
+
+function nonConstructibleChange(coins) {
+	coins.sort((a, b) => a - b);
+	let currChange = 0;
+	for (const coin of coins) {
+		if (coin > currChange + 1) {
+			return currChange + 1
+		}
+		currChange += coin ;
+	}
+	return currChange+1;
+}
+
+</script>
+
+</body>
+</html>
+
+

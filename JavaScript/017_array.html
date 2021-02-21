@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>JavaScript Arrays</h2>
+
+<p>JavaScript array elements are accesses using numeric indexes (starting from 0).</p>
+
+<p id="length"></p>
+<p id="last"></p>
+<p id="full"></p>
+<p id="full2"></p>
+
+<script>
+var fruits = ["Banana", "Orange", "Apple", "Mango"];
+var last = fruits[fruits.length-1];
+document.getElementById("last").innerHTML = last;
+document.getElementById("length").innerHTML = fruits.length;
+
+fruits[6] = "WWWW";
+var text = "<ul>";
+for (let i = 0; i < fruits.length; i++) {
+  text += "<li>" + fruits[i] + "</li>";
+}
+text += "</ul>";
+document.getElementById("full").innerHTML = text;
+
+var text2 = "<ul>";
+fruits.forEach(myFunction);
+text2 += "</ul>";
+
+function myFunction(value) {
+  console.log(value);
+  text2 += "<li>" + value + "</li>";
+}
+document.getElementById("full2").innerHTML = text2;
+
+
+</script>
+
+</body>
+</html>

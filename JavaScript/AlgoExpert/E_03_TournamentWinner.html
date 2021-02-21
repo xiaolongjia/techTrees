@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Algo Expert</h2>
+
+<p id="demo"></p>
+
+<script>
+var competitions =  [["HTML", "C#"], ["C#", "Python"], ["Python", "HTML"]] ;
+var results = [0, 0, 1];
+document.getElementById("demo").innerHTML = tournamentWinner(competitions, results);
+
+function tournamentWinner(competitions, results) {
+	let scores = {}, maxScore = -1, lastWinner;
+	for(let index = 0;index<results.length;index++) {
+		let winner;
+		if (results[index] ===0) {
+			winner = competitions[index][1];
+		} else {
+			winner = competitions[index][0];
+		}
+		if (Object.keys(scores).includes(winner)) {
+			scores[winner] += 3
+		}
+		else {
+			scores[winner] = 3
+		}
+	}
+	for (let currKey in scores) {
+		if (scores[currKey] > maxScore) {
+			maxScore = scores[currKey];
+			lastWinner = currKey;
+		}
+	}
+  return lastWinner;
+}
+
+</script>
+
+</body>
+</html>
+
+

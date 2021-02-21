@@ -1,0 +1,33 @@
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Algo Expert</h2>
+
+<p id="demo"></p>
+
+<script>
+var array = [141, 1, 97, -7, -17, -27, 18, 541, 8, 7, 7];
+
+document.getElementById("demo").innerHTML = insertionSort(array);
+
+function insertionSort(array) {
+	for(let i=0; i< array.length; i++) {
+		for (let j=0; j < array.length - i; j++) {
+			if (array[j] > array[j+1]) {
+				var t = array[j];
+				array[j] = array[j+1];
+				array[j+1] = t;
+			}
+		}
+	}
+	return array;
+}
+
+</script>
+
+</body>
+</html>
+
+

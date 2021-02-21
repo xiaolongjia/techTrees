@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html>
+<body>
+<script src="Trees.js"></script>
+
+<h2>Algo Expert</h2>
+<h3>
+You are given the head of a Singly Linked List whose nodes are in sorted order <br>
+with respect to their values. Write a function that returns a modified version
+of the Linked List that does not contain any codes with duplicate values. <br>
+The linked list should be modified in place (i.e., you should not create a <br>
+brand new list), and the modified linked list should still have its nodes 
+sorted with respect to their values. <br>
+Each linked list node has an integer value as well as a next node pointing <br>
+to the next node in the list or to None/null if its the tail of the list. 
+
+Sample input:
+
+linkedList = 1 -> 1 -> 3 -> 4 -> 4 -> 4 -> 5 -> 6 -> 6
+
+Sample output:
+
+1 -> 3 -> 4 -> 5 -> 6
+
+</h3>
+
+<p id="demo"></p>
+
+<script>
+let linkedList = new LinkedList(1);
+linkedList.next = new LinkedList(1);
+linkedList.next.next = new LinkedList(3);
+linkedList.next.next.next = new LinkedList(4);
+linkedList.next.next.next.next = new LinkedList(4);
+linkedList.next.next.next.next.next = new LinkedList(4);
+linkedList.next.next.next.next.next.next = new LinkedList(5);
+linkedList.next.next.next.next.next.next.next = new LinkedList(6);
+linkedList.next.next.next.next.next.next.next.next = new LinkedList(6);
+
+var newLList = removeDuplicatesFromLinkedList(linkedList);
+
+document.getElementById("demo").innerHTML = newLList.printLink();
+
+function removeDuplicatesFromLinkedList(linkedList) {
+	var leftNode = linkedList;
+	var next = linkedList.next;
+	while (next !== null) {
+		var currValue = leftNode.value;
+		var nextValue = next.value;
+		if (currValue === nextValue) {
+			leftNode.next = next.next;
+			next = leftNode.next;
+		} else {
+			leftNode = next;
+			next = leftNode.next;
+		}
+	}
+	return linkedList;
+}
+
+</script>
+
+</body>
+</html>
+
+

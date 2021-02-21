@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Algo Expert</h2>
+
+<p id="demo"></p>
+
+<script>
+var array = [0, 1, 21, 33, 45, 45, 61, 71, 72, 73];
+
+document.getElementById("demo").innerHTML = binarySearch(array, 33);
+
+function binarySearch(array, target) {
+	var left  = 0;
+	var right = array.length - 1;	
+	while (left <= right) {
+		var middle = Math.floor((left + right)/2);
+		if (array[middle] > target) {
+			right = middle - 1
+		} else if (array[middle] < target) {
+			left = middle + 1
+		} else {
+			return middle
+		}
+	}
+	return -1;
+}
+
+</script>
+
+</body>
+</html>
+
+

@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Algo Expert</h2>
+
+<p id="demo"></p>
+
+<script>
+var array = [141, 1, 97, -7, -17, -27, 18, 541, 8, 7, 7];
+
+document.getElementById("demo").innerHTML = findThreeLargestNumbers(array);
+
+function findThreeLargestNumbers(array) {
+	var tmpArray = [null, null, null];
+	for (const num of array) {
+		if (num > tmpArray[2] || tmpArray[2]=== null ) {
+			shiftArray(tmpArray, 2, num)
+		} else if (num > tmpArray[1] || tmpArray[1]=== null ) {
+			shiftArray(tmpArray, 1, num)
+		} else if (num > tmpArray[0] || tmpArray[0]=== null ) {
+			shiftArray(tmpArray, 0, num)
+		}
+	}
+	return tmpArray;
+}
+
+function shiftArray(array, index, value) {
+	for (let i=0; i<index; i++) {
+		array[i] = array[i+1]
+	}
+	array[index] = value ;
+	return array;
+}
+
+</script>
+
+</body>
+</html>
+
+
