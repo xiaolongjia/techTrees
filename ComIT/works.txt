@@ -1,0 +1,29 @@
+
+https://coresumo.com/install-django-on-anaconda/
+
+
+install Anaconda: 
+
+Anaconda3-2020.11-Windows-x86_64
+
+Run cmd exe:
+
+conda install -c anaconda django
+
+echo %PATH% 
+
+pip install django-mssql-backend  # for accessing ms sql server 
+
+===========================================================================
+python dev env 
+===========================================================================
+
+echo %PATH% 
+
+python -m pip install --upgrade pip
+
+pip3 install django==3.0
+pip3 install django-mssql-backend
+
+
+
