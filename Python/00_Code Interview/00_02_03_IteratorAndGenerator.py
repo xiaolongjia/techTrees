@@ -1,4 +1,4 @@
-#!C:\Python\Python
+#!C:\python38\Python
 #coding=utf-8
 
 
@@ -89,8 +89,11 @@ def foo():
         res = yield 4
         print("res:",res)
 g = foo()
+print("*****")
 print(next(g))
+print("*****")
 print(next(g))
+
 
 #=======================
 # generator

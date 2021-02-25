@@ -1,0 +1,47 @@
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Algo Expert</h2>
+
+<p id="demo"></p>
+
+<script>
+var string = "AAAAAAAAAAAAABBCCCCDD";
+
+document.getElementById("demo").innerHTML = runLengthEncoding(string);
+
+function runLengthEncoding(string) {
+	var currChar, currCounter;
+	var result = "";
+
+	for (const letter of string) {
+		if (currChar === undefined) {
+			currChar = letter;
+			currCounter = 1;
+		} else {
+			if (currChar === letter) {
+				currCounter += 1;
+				if (currCounter > 9) {
+					currCounter -= 9;
+					result += "9" + currChar;
+				}
+			} else {
+				result += currCounter + currChar;
+				currCounter = 1;
+				currChar = letter;
+			}
+		}
+	}
+	result += currCounter + currChar;
+	return result;
+}
+
+
+</script>
+
+</body>
+</html>
+
+

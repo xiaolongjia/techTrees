@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Algo Expert</h2>
+
+<p id="demo"></p>
+
+<script>
+var array = [141, 1, 97, -7, -17, -27, 18, 541, 8, 7, 7];
+
+document.getElementById("demo").innerHTML = selectionSort(array);
+
+function selectionSort(array) {
+	for(let i=0; i< array.length; i++) {
+		let minIndex = i;
+		for (let j = i; j < array.length; j++) {
+			if (array[j] < array[minIndex]) {
+				minIndex = j;
+			}
+		}
+		var t = array[i];
+		array[i] = array[minIndex];
+		array[minIndex] = t;
+	}
+	return array;
+}
+
+</script>
+
+</body>
+</html>
+
+

@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Algo Expert</h2>
+<h3>
+Given a non-empty string of lowercase letters and a non-negative integer representing <br>
+a key, write a function that returns a new string obtained by shifting every letter <br>
+in the input string by k positions in the alphabet, where k is the key.
+<br>
+Note that letters should "wrap" around the alphabet; in other words, the letter Z <br>
+shifted by one returns the letter a. <br>
+<br>
+Sample input <br>
+string = "xyz" <br>
+key = 2 <br>
+Sample output <br>
+"zab"<br>
+</h3>
+<p id="demo"></p>
+
+<script>
+var string = "xyz";
+
+document.getElementById("demo").innerHTML = caesarCipherEncryptor(string, 2);
+
+function caesarCipherEncryptor(string, key) {
+	const newArray = [];
+	const newKey = key % 26;
+	for (const letter of string) {
+		console.log(getNewCharacter(letter, newKey));
+		newArray.push(getNewCharacter(letter, newKey));
+	}
+	return newArray.join('');
+}
+
+function getNewCharacter(c, k) {
+	const codeValue = c.charCodeAt() + k;
+	if (codeValue <= 122) {
+		return String.fromCharCode(codeValue)
+	} else {
+		return String.fromCharCode(codeValue%122 + 96)
+	}
+}
+
+</script>
+
+</body>
+</html>
+
+

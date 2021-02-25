@@ -22,8 +22,31 @@ echo %PATH%
 
 python -m pip install --upgrade pip
 
-pip3 install django==3.0
-pip3 install django-mssql-backend
+pip install django==3.0
+
+pip install psycopg2 # postgre driver 
+
+pip install django-mssql-backend # mssql driver 
+
+#pip install django-pymssql old driver (not used)
+
+
+# 1. create a project
+cd C:\00\02-FAJob\techTrees\ComIT\FinalProject
+django-admin.py startproject comIT
+
+
+# 2. create an app
+cd C:\00\02-FAJob\techTrees\ComIT\FinalProject\comIT
+python manage.py startapp onlineTest
+
+# 3. config url, views, setting and run server 
+python manage.py runserver 9999
+
+# 4. migrate table changes 
+
+python manage.py migrate --database=postgresql
+
 
 
 
