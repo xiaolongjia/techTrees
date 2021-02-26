@@ -76,7 +76,8 @@ WSGI_APPLICATION = 'comIT.wsgi.application'
 
 DATABASES = {
     'default': {},
-    'sqlserver': { # the driver does not work. 
+    # sqlserver driver does not work.
+    'sqlserver': {
         'ENGINE': 'sql_server.pyodbc',
         'NAME': 'comIT',
         'HOST': 'DESKTOP-1BOUP1O',
@@ -87,6 +88,7 @@ DATABASES = {
         'OPTIONS': {
             'driver': 'sql server',
         },
+    },
     'postgresql': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'comIT',
@@ -98,7 +100,6 @@ DATABASES = {
         'OPTIONS': {},
     },
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
