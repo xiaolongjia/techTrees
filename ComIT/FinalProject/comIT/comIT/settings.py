@@ -87,7 +87,6 @@ DATABASES = {
         'OPTIONS': {
             'driver': 'sql server',
         },
-    },
     'postgresql': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'comIT',
