@@ -25,6 +25,21 @@ SECRET_KEY = 'x-l=s6#l5o_2870aer36ty+q@jt2b6cxm-l5!azorqs$&7b1*i'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',
+        # DEBUG, INFO, WARNING
+    },
+}
+
 ALLOWED_HOSTS = ['*']
 
 

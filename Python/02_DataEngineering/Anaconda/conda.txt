@@ -1,0 +1,21 @@
+Anaconda Navigator -> root -> open terminal 
+
+
+conda -h # help document 
+
+conda create --name python36 python=3.6 # create virtual python version 
+
+activate python36 # activate it
+
+python -V
+
+activate base 
+
+python -V
+
+deactivate python36 # logout it
+
+conda remove -n python36 --all or conda env remove -n python36 
+
+conda info -e 
+

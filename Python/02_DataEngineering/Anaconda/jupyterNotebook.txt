@@ -1,0 +1,11 @@
+
+pip install jupyter 
+
+open terminal -> run "jupyter notebook"
+
+=========================
+ jupyter document:
+=========================
+
+ https://zhuanlan.zhihu.com/p/32320214
+
