@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-	'onlineTest',
+    'onlineTest',
 ]
 
 MIDDLEWARE = [
@@ -91,19 +91,6 @@ WSGI_APPLICATION = 'comIT.wsgi.application'
 
 DATABASES = {
     'default': {},
-    # sqlserver driver does not work.
-    'sqlserver': {
-        'ENGINE': 'sql_server.pyodbc',
-        'NAME': 'comIT',
-        'HOST': 'DESKTOP-1BOUP1O',
-        'PORT': '',
-        'USER': 'sa',
-        'PASSWORD': 'jiaxl51238',
-
-        'OPTIONS': {
-            'driver': 'sql server',
-        },
-    },
     'postgresql': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'comIT',
@@ -115,6 +102,12 @@ DATABASES = {
         'OPTIONS': {},
     },
 }
+
+DATABASE_ROUTERS = ['comIT.database_router.DatabaseAppsRouter']
+
+DATABASE_APPS_MAPPING = {
+     'onlineTest': 'postgresql',
+ }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators

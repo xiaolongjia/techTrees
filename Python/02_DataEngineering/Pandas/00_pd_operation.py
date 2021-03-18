@@ -50,6 +50,7 @@ print(s[-3:]) #retrieve the last three element
 print(s[['a','c','d']])
 print(s[[0, 2, 3]])
 
+
 #--------------
 # pandas.DataFrame( data, index, columns, dtype, copy)
 #--------------
@@ -187,7 +188,24 @@ print(df[2].std())
 print(df[2].min())
 print(df[2].max())
 print(df[2].abs())
+
+'''
+numpy.random.normal(loc=0,scale=1e-2,size=shape) ，意义如下：
+参数loc(float)：正态分布的均值，对应着这个分布的中心。loc=0说明这一个以Y轴为对称轴的正态分布，
+参数scale(float)：正态分布的标准差，对应分布的宽度，scale越大，正态分布的曲线越矮胖，scale越小，曲线越高瘦。
+参数size(int 或者整数元组)：输出的值赋在shape里，默认为None。
+'''
+print("== ==")
+p = pd.Series(np.random.normal(14, 6, 22))  
+state = np.random.RandomState(120)
+print(state)
+p = pd.Series(state.normal(14, 6, 22))
+print(p)
+print(np.percentile(p, q=[0, 25, 50, 75, 100]))
 exit()
+
+
+
 
 # rename 
 # ihdf.rename(columns={'closePrice':'priceIH'}, inplace=True) 

@@ -9,68 +9,33 @@
 <title>comIT</title>
 <script type="text/javascript" src="//code.jquery.com/jquery-1.4.4.min.js"></script>
 
-<script src="{% static 'common.css' %}"></script>
-<link rel="stylesheet" href="{% static 'common.css' %}" type="text/css" />
-
-<script>
-$(document).ready(function(){
-
-    $("form#loginForm").submit(function() {
-        var error_n = checkFields("loginForm");
-        var username = $('#username').attr('value');
-        var password = $('#password').attr('value');
-
-        if (username && password && error_n) {
-            $.ajax({
-                type: "POST",
-                url: "./bin/process.fcgi",
-                dataType: "json",
-                data: {username:username, password:password, action:"login"},
-                error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    $('div#loginResult').text("responseText: " + XMLHttpRequest.responseText
-                        + ", textStatus: " + textStatus
-                        + ", errorThrown: " + errorThrown);
-                    $('div#loginResult').removeClass("error").addClass("error_show");
-                },
-                success: function(data){
-                    if (data.error) {
-                        $('div#loginResult').text( data.error);
-                        $('div#loginResult').removeClass("error").addClass("error_show");
-                    }
-                    else {
-                        window.location.href="orders.html";
-                    }
-                }
-            });
-        }else{
-            $('div#loginResult').removeClass("error_show").addClass("error");
-        }
-        return false;
-    });
-});
-</script>
+<script src="{% static 'css/common.css' %}"></script>
+<link rel="stylesheet" href="{% static 'css/common.css' %}" type="text/css" />
+<link REL="SHORTCUT ICON" HREF="{% static 'images/favicon.ico' %}"/>
 </head>
 <body>
      <div id="loginContent">
          <div id="loginResult" class="error" > </div>
-         <form id="loginForm" name="loginForm" method="post" action="">
+         <form id="loginForm" name="loginForm" method="post" action="/home/">
+             {% csrf_token %}
              <fieldset>
                  <legend>Enter information</legend>
                  <div>
                      <label for="username">Username</label>
                      <br />
                      <input type="text" id="username" name="username" class="text required" size="20" />
-                     <span class="error">This field is required</span>	
+                     <span class="error">This field is required</span>
                  </div>
                  <div>
                      <label for="password">Password</label>
                      <br />
                      <input type="password" id="password" name="password" class="text required" size="20" />
-                     <span class="error">This field is required</span>	
+                     <span class="error">This field is required</span>
                  </div>
                  <div>
-                     <button type="submit" class="button positive"> Login </button>
-                </div>
+                     <button type="submit" class="button positive"> Sign In </button>
+                     <a href="/signup/">Sign up?</a>
+                 </div>
              </fieldset>
          </form>
       </div>

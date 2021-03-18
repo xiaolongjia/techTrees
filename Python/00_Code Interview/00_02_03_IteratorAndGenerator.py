@@ -82,18 +82,17 @@ print(list(islice(f, 0, 10)))
 
 # https://blog.csdn.net/mieleizhi0522/article/details/82142856
 
-print("yield")
+print("=============== yield")
 def foo():
     print("starting...")
     while True:
-        res = yield 4
+        res = yield 88
         print("res:",res)
 g = foo()
 print("*****")
 print(next(g))
 print("*****")
 print(next(g))
-
 
 #=======================
 # generator

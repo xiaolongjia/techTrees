@@ -11,6 +11,12 @@ from sqlalchemy import create_engine
 
 # pip install psycopg2
 
+# https://blog.csdn.net/dbagaoshou/article/details/103251407
+# https://geek-docs.com/pandas/pandas-tutorials/pandas-tutorial.html
+# https://www.jianshu.com/p/56150cda0018
+# https://zhuanlan.zhihu.com/p/45400714
+# 
+
 engine = create_engine('postgres+psycopg2://postgres:jiaxl51238@localhost:5432/comIT', echo=True)
 dbConnection    = engine.connect()
 

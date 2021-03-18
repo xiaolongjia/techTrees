@@ -83,7 +83,7 @@ myself.walk()
 '''
 1) What is Encapsulation in Python?
 
-Encapsulation in Python is the process of wrapping up variables andmethods into a single entity. 
+Encapsulation in Python is the process of wrapping up variables and methods into a single entity. 
 In programming, a class is an example that wraps all the variables and methods defined inside it.
 
 2) How can we achieve Encapsulation in Python?
