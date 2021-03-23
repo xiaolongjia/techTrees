@@ -48,14 +48,17 @@ python manage.py runserver 9999
 python manage.py migrate --database=postgresql
 
 
+=================================================
+# django tutorial 
 
+https://developer.mozilla.org/zh-CN/docs/learn/Server-side/Django
 
-# 多数据库路由设置
+# 多数据库路由设置 (migration error?)
 
 https://blog.csdn.net/weixin_42134789/article/details/107194373
 
 
-# View 与 models 交互 
+# View 与 models 交互 (ORM) 
 
 https://blog.csdn.net/weixin_43962136/article/details/84955489
 
@@ -64,4 +67,8 @@ https://blog.csdn.net/weixin_43962136/article/details/84955489
 
 https://blog.csdn.net/shomy_liu/article/details/44141483
 
+
+# redirect 
+
+https://zhuanlan.zhihu.com/p/41547331
 

@@ -1,65 +1,74 @@
-#!C:\Python\Python
+#!C:\Python38\Python
 #coding=utf-8
 
 import re
 
-#------------------
-# re Functions 
-#------------------
+# match() search(), groups(), group(), string 
+
+result = re.match(r'(\d+)-((\d+)-(\d+)) (\d+):(\d+):(\d+)', '2021-03-19 10:00:21')
+print(result.groups())
+print(result.group())  # all matched data. 
+print(result.group(0)) # all matched data. 
+print(result.string)   # all matched data.
+
+print(result.group(2,4,5,6))
+print(result[0]) # same 
+print(result[2]) # does not support result[2,4,5,6]
+print(result.lastindex)
+
+# (?P<first_name>\w+)
+
+m = re.match(r"(?P<first_name>\w+) (?P<last_name>\w+)", "Malcolm Reynolds")
+print(m.groupdict())
+print(m['first_name'])
+print(m.lastgroup) # group name
+
+# search(), start(), end(), span()
+
+email = "tony@tiremove_thisger.net"
+s = re.search(r'(remove)_(this)', email)
+print("start {}, end {}".format(s.start(), s.end()))
+print("start1 {}, end1 {}".format(s.start(1), s.end(1))) # start/end of group 1
+print("start2 {}, end2 {}".format(s.start(2), s.end(2))) # start/end of group 2
+
+# span() its argument is group name. it equals to (start(1), end(1))
+
+print("span(1): {}\t(start(1), end(1)): {}".format(s.span(1), (s.start(1), s.end(1))))
+print(email[:s.start()]+email[s.end():])
+
+# split 
+
+r = re.split(r'\s+', '2021-03-19 10:00:21')
+print(r)
+
+# compile  ???
+
+pair = re.compile(r".*(.).*")
+print(pair.match("717ak").group())
+print(pair.match("717ak").groups())
+
+pair = re.compile(r".*(.).*\1")
+print(pair.match("717ak").group())
+print(pair.match("717ak").groups())
+
+# non-greedy modifier suffix ?
+
+print(re.match(r'(\d+?)', '123').group(1)) # non-greedy
+print(re.match(r'(\d+)', '123').group(1)) # greedy
 
 # findall(): returns a list with mateched data or empty list. 
+
 txt = "The rain in Spain"
-x = re.findall("\w", txt)
+print(re.findall("\w+", txt))
+print(re.findall("\w", txt))
 
-# search(): returns a match object or none 
-x = re.search("(\w)(2)", txt)
-if x:
-    print(x.groups())
-else:
-    print("Not matched!")
+# sub(): substitutes matched string with the text of your choice
 
-# split(): returns a list 
-x = re.split("\s", txt)
-print(x)
-
-# sub(): replaces matched string with the text of your choice
 x = re.sub("\s", "999", txt)
 print(x)
 
-exit()
+# expand(template_string) ???
 
-#------------------
-# Match object Functions 
-#------------------
-
-# expand(template_string) 
 xx = re.compile(r"(\d\d)(\d\d)")
 yy = xx.search("in the year 1999")
-print(yy.expand(r"Year: \1")) # \1 is group 1
-
-# groups(): Return a tuple containing all the subgroups of the match.
-print("groups(): {}".format(yy.groups()))
-print("group1(): {}".format(yy.group(1)))
-print("group2(): {}".format(yy.group(2)))
-
-# start(), end()
-print("group1.start(): {}".format(yy.start(1)))
-print("group1.end(): {}".format(yy.end(1)))
-print("group2.start(): {}".format(yy.start(2)))
-print("group2.end(): {}".format(yy.end(2)))
-
-# span() its argument is group name. it equals to (start(1), end(1))
-print("span(1): {}\t(start(1), end(1)): {}".format(yy.span(1), (yy.start(1), yy.end(1))))
-
-#------------------
-# Match object Attributes  
-#------------------
-
-# string 
-print("yy.string is {}".format(yy.string))
-
-# lastindex : the last index of matched group 
-print("yy.lastindex is {}".format(yy.lastindex))
-
-
-
+print(yy.expand(r"Year: \2")) # \1 is group 1

@@ -1,4 +1,4 @@
-#!C:\Python\Python
+#!C:\Python38\Python
 #coding=utf-8
 
 #----------------------------
@@ -72,13 +72,29 @@ print(a[:-1])
 #----------------------------
 # Dictionary
 #----------------------------
-myDict = {'Name' : 'Saurabh', 'Age' : 23}
+myDict = {'1' : 'Saurabh', '2' : 23}
 myDictRef = myDict
 myNewDict = myDict.copy() #浅拷贝
-myDict['address'] = 'saskatoon'
+myDict['3'] = 'saskatoon'
 print(myDict)
 print(myNewDict)
 print(myDictRef)
+for i in sorted(myDict.keys()):
+    print("key {} value {}".format(i, myDict[i]))
+
+a = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+def fn(a):
+	return a%2 == 1
+res = filter(fn, a)
+print(list(res))
+res = map(fn, a)
+print(list(res))
+
+a=(1,)
+b=(1)
+c=("1")
+print(type(a),type(b),type(c))
+exit()
 
 # function as dictionary's value. 
 def mySum (x, y):

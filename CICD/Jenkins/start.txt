@@ -1,0 +1,20 @@
+https://www.jianshu.com/p/5f671aca2b5a
+
+port 9995
+
+
+admin passwd: jiaxl51238
+
+C:\WINDOWS\system32\config\systemprofile\AppData\Local\Jenkins\.jenkins\secrets\initialAdminPassword
+
+
+jenkin jiaxl51238
+
+
+
+
+# install and config 
+https://www.jianshu.com/p/400b4516b98e
+
+# user manual 
+https://www.jianshu.com/p/5f671aca2b5a
