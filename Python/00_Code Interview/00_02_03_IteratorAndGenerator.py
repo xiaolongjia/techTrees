@@ -93,6 +93,7 @@ print("*****")
 print(next(g))
 print("*****")
 print(next(g))
+exit()
 
 #=======================
 # generator
