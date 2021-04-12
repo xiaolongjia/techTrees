@@ -21,7 +21,5 @@ urlpatterns = [
     path('', olviews.login, name='login'),
     path('signup/', olviews.signup, name='signup'),
     path('home/', olviews.home, name='home'),
-    re_path(r'index/(\d+)',  olviews.index),
-    path('index/', olviews.index, name='index'),
     path('admin/', admin.site.urls),
 ]

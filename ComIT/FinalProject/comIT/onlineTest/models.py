@@ -12,3 +12,11 @@ class Users (models.Model):
 	
 	def __str__(self):
 		return '{} + {}'.format(self.userFirstName, self.userLastName)
+
+
+class FundRate(models.Model):
+	rate = models.IntegerField()
+	FundID = models.IntegerField()
+	FundName = models.CharField(max_length=255, default='')
+	avgIncrease = models.DecimalField( max_digits=30, decimal_places=28)
+	increaseRate = models.DecimalField( max_digits=30, decimal_places=28)

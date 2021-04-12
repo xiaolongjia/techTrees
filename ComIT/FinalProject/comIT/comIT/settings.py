@@ -90,7 +90,15 @@ WSGI_APPLICATION = 'comIT.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {},
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'comIT',
+        'HOST': '127.0.0.1',
+        'PORT': '',
+        'USER': 'postgres',
+        'PASSWORD': 'jiaxl51238',
+        'OPTIONS': {},
+    },
     'postgresql': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'comIT',
@@ -98,7 +106,6 @@ DATABASES = {
         'PORT': '',
         'USER': 'postgres',
         'PASSWORD': 'jiaxl51238',
-
         'OPTIONS': {},
     },
 }

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import Users
+from .models import Users, FundRate
 from .forms import SignupForm, AddForm
 import logging
 import datetime
@@ -29,7 +29,10 @@ def signup(request):
                     not Users.objects.filter(email=newUser.email).first():
                 newUser.registerDate = datetime.date.today().strftime('%Y-%m-%d')
                 newUser.save()
-                return redirect('/home/', username=newUser.userID, password=newUser.password)
+                request.session['is_login'] = True
+                request.session['user'] = newUser.userID
+                request.session.set_expiry(30)
+                return redirect('/home/')
             else:
                 error1 = "user has been registered"
                 error2 = "please check User ID or Email Address"
@@ -41,33 +44,17 @@ def signup(request):
 
 
 def home(request):
-    userID = request.GET['username']
-    password = request.GET['password']
-    if request.method == 'POST':
+    if request.method == 'POST': # from login.html
         userID = request.POST.get('username')
         password = request.POST.get('password')
         if not Users.objects.filter(userID=userID).filter(password=password).first():
             return HttpResponse("userID and password incorrect!")
-
-    logger.info(userID)
-    logger.info(password)
-    # read from cookie
-    # 1. use username in cookie
-    # 2. redirect to login.html
-    return HttpResponse("Home page.")
-
-
-def index(request, index):
-    logger.info("index is: {}".format(index))
-    if request.method == 'POST':  # 当提交表单时
-        logger.info(request.POST)
-        form = AddForm(request.POST)  # form 包含提交的数据
-
-        if form.is_valid():  # 如果提交的数据合法
-            a = form.cleaned_data['a']
-            b = form.cleaned_data['b']
-            return HttpResponse(str(int(a) + int(b)))
-
-    else:  # 当正常访问时
-        form = AddForm()
-    return render(request, 'form.html', {'form': form})
+        request.session['is_login'] = True
+        request.session['user'] = userID
+        request.session.set_expiry(30)
+    else:
+        status = request.session.get('is_login')
+        if not status:
+            return redirect('login')
+    userID = request.session.get('user')
+    return render(request, 'fundrate.html')

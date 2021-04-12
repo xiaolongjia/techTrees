@@ -1,15 +1,40 @@
 #!C:\Anaconda3\python.exe
 #coding=utf-8
 
+import psycopg2
 import numpy as np
 import pandas as pd
 import os
 
-fundA = pd.read_csv('02_read_csv.csv', encoding = "ISO-8859-1")
-print(fundA.head())
+fundA = pd.read_csv('02_read_csv.csv', encoding = "gb2312")
+#print(fundA.head())
 
-fundB = pd.read_table('02_read_csv.csv',  encoding = "ISO-8859-1", sep=',')
-print(fundB.head())
+
+# Connect to your postgres DB
+conn = psycopg2.connect("dbname=comIT user=postgres password=jiaxl51238")
+
+# Open a cursor to perform database operations
+cur = conn.cursor()
+
+# Execute a query
+cur.execute("SELECT * FROM \"onlineTest_fundrate\"")
+
+# Retrieve query results
+records = cur.fetchall()
+
+for row in records:
+	print(row)
+
+sql = "INSERT INTO \"onlineTest_fundrate\" (rate, \"FundID\" , \"FundName\", \"increaseRate\", \"avgIncrease\") VALUES(%s,%s,%s,%s,%s)"
+strings = []
+for index, row in fundA.iterrows():
+     strings.append([row['rate'], row['FundID'], row['FundName'], row['increaseRate'], row['avgIncrease']])
+cur.executemany(sql, strings)
+conn.commit()
+exit()
+
+#fundB = pd.read_table('02_read_csv.csv',  encoding = "ISO-8859-1", sep=',')
+#print(fundB.head())
 
 '''
 https://blog.csdn.net/brucewong0516/article/details/79092579

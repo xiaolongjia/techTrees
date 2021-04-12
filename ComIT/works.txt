@@ -49,6 +49,21 @@ python manage.py migrate --database=postgresql
 
 
 =================================================
+自定义模板标签
+=================================================
+https://blog.csdn.net/u014792107/article/details/72598057
+
+
+1. 在应用目录(onlinetest)下创建目录 templatetags
+
+2. 在这个目录下创建一个 __init__.py 文件，使其成为一个python 包
+
+3. 同时创建templateTags.py用来存放自定义模板标签代码
+
+4. 模板标签本质上就是一个 Python 函数，因此按照 Python 函数的思路来编写模板标签的代码就可以了
+
+
+=================================================
 # django tutorial 
 
 https://developer.mozilla.org/zh-CN/docs/learn/Server-side/Django
