@@ -2,6 +2,9 @@ https://www.jianshu.com/p/233b91d869f8
 
 https://zhuanlan.zhihu.com/p/111844817
 
+https://sparkbyexamples.com/pyspark-tutorial/
+https://sparkbyexamples.com/pyspark-tutorial/#external-data-sources
+
 
 
 Scala 2.11.8

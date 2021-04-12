@@ -53,7 +53,7 @@ python manage.py migrate --database=postgresql
 
 https://developer.mozilla.org/zh-CN/docs/learn/Server-side/Django
 
-# 多数据库路由设置 (migration error?)
+# 多数据库路由设置 (migration error?	)
 
 https://blog.csdn.net/weixin_42134789/article/details/107194373
 
