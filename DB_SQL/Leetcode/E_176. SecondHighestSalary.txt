@@ -1,0 +1,40 @@
+SQL Schema
+Write a SQL query to get the second highest salary from the Employee table.
+
++----+--------+
+| Id | Salary |
++----+--------+
+| 1  | 100    |
+| 2  | 200    |
+| 3  | 300    |
++----+--------+
+For example, given the above Employee table, the query should return 200 as the second highest salary. 
+If there is no second highest salary, then the query should return null.
+
++---------------------+
+| SecondHighestSalary |
++---------------------+
+| 200                 |
++---------------------+
+
+if not exists (select * from sysobjects where name='L_176_Employee' and xtype='U')
+    create table L_176_Employee (
+		Id int, 
+		Salary int
+    )
+go
+
+
+Truncate table L_176_Employee
+insert into L_176_Employee (Id, Salary) values ('1', '100')
+insert into L_176_Employee (Id, Salary) values ('2', '200')
+insert into L_176_Employee (Id, Salary) values ('3', '300')
+
+
+Solution:
+
+select max(salary) as SecondHighestSalary  
+from L_176_Employee 
+where Salary not in (select top 1 Salary from L_176_Employee order by Salary DESC )
+
+

@@ -47,44 +47,53 @@ Henry earns the highest salary while Sam earns the second highest salary.
 =================
 Schema:
 =================
-drop table L_185_Employee
-drop table L_185_Department
-Create table L_185_Employee (Id int, Name varchar(255), Salary int, DepartmentId int)
-Create table L_185_Department (Id int, Name varchar(255))
-Truncate table L_185_Employee
-insert into L_185_Employee (Id, Name, Salary, DepartmentId) values ('1', 'Joe', '85000', '1')
-insert into L_185_Employee (Id, Name, Salary, DepartmentId) values ('2', 'Henry', '80000', '2')
-insert into L_185_Employee (Id, Name, Salary, DepartmentId) values ('3', 'Sam', '60000', '2')
-insert into L_185_Employee (Id, Name, Salary, DepartmentId) values ('4', 'Max', '90000', '1')
-insert into L_185_Employee (Id, Name, Salary, DepartmentId) values ('5', 'Janet', '69000', '1')
-insert into L_185_Employee (Id, Name, Salary, DepartmentId) values ('6', 'Randy', '85000', '1')
-insert into L_185_Employee (Id, Name, Salary, DepartmentId) values ('7', 'Will', '70000', '1')
-Truncate table L_185_Department
-insert into L_185_Department (Id, Name) values ('1', 'IT')
-insert into L_185_Department (Id, Name) values ('2', 'Sales')
+drop table H_185_Employee
+drop table H_185_Department
+Create table H_185_Employee (Id int, Name varchar(255), Salary int, DepartmentId int)
+Create table H_185_Department (Id int, Name varchar(255))
+Truncate table H_185_Employee
+insert into H_185_Employee (Id, Name, Salary, DepartmentId) values ('1', 'Joe', '85000', '1')
+insert into H_185_Employee (Id, Name, Salary, DepartmentId) values ('2', 'Henry', '80000', '2')
+insert into H_185_Employee (Id, Name, Salary, DepartmentId) values ('3', 'Sam', '60000', '2')
+insert into H_185_Employee (Id, Name, Salary, DepartmentId) values ('4', 'Max', '90000', '1')
+insert into H_185_Employee (Id, Name, Salary, DepartmentId) values ('5', 'Janet', '69000', '1')
+insert into H_185_Employee (Id, Name, Salary, DepartmentId) values ('6', 'Randy', '85000', '1')
+insert into H_185_Employee (Id, Name, Salary, DepartmentId) values ('7', 'Will', '70000', '1')
+Truncate table H_185_Department
+insert into H_185_Department (Id, Name) values ('1', 'IT')
+insert into H_185_Department (Id, Name) values ('2', 'Sales')
 =================
 Solution:
 =================
 1. solve the group sorting. (windows function)
 
-SELECT DepartmentId, Name, Salary, ROW_NUMBER() OVER (partition by DepartmentId ORDER BY Salary DESC) ranking FROM L_185_Employee
-SELECT DepartmentId, Name, Salary, RANK() OVER (partition by DepartmentId ORDER BY Salary DESC) ranking FROM L_185_Employee
-SELECT DepartmentId, Name, Salary, DENSE_RANK() OVER (partition by DepartmentId ORDER BY Salary DESC) ranking FROM L_185_Employee
+SELECT DepartmentId, Name, Salary, ROW_NUMBER() OVER (partition by DepartmentId ORDER BY Salary DESC) ranking FROM H_185_Employee
+SELECT DepartmentId, Name, Salary, RANK() OVER (partition by DepartmentId ORDER BY Salary DESC) ranking FROM H_185_Employee
+SELECT DepartmentId, Name, Salary, DENSE_RANK() OVER (partition by DepartmentId ORDER BY Salary DESC) ranking FROM H_185_Employee
 
 =================
 TSQL:
 =================
+
+select * from (
+select d.name as department, e.name as employee, e.salary, 
+dense_rank() over (partition by e.departmentid order by e.salary desc) as rank
+from 
+H_185_Employee e, H_185_Department d
+where e.departmentid = d.id ) temp where rank <=3
+
+
 select b.Name as Department , a.Name as Employee , a.Salary 
-from L_185_Employee a , L_185_Department b 
-where 3 >= (SELECT count(distinct Salary) from L_185_Employee b WHERE a.Salary <= b.Salary and a.DepartmentId = b.DepartmentId ) 
+from H_185_Employee a , H_185_Department b 
+where 3 >= (SELECT count(distinct Salary) from H_185_Employee b WHERE a.Salary <= b.Salary and a.DepartmentId = b.DepartmentId ) 
 and a.DepartmentId = b.Id
 order by b.Name ,  a.Salary desc
 
 select  
 	DepartmentId, Name, Salary 
-from L_185_Employee a 
+from H_185_Employee a 
 where a.Salary in (
-	select distinct top 3 Salary from L_185_Employee b
+	select distinct top 3 Salary from H_185_Employee b
 	where b.DepartmentId = a.DepartmentId
 	order by Salary DESC ) 
 order by DepartmentId, Salary DESc
@@ -101,7 +110,7 @@ from (
 
 /* core sorting sql query at here */
 
-) a , L_185_Department d
+) a , H_185_Department d
 where a.DepartmentId = d.Id
 and a.ranking <=3
 
@@ -110,7 +119,7 @@ and a.ranking <=3
 SELECT s.DepartmentId, s.Name,  s.Salary,
 IF(@pre_course_id = s.DepartmentId, @cur_rank := @cur_rank + 1, @cur_rank := 1) ranking,
 @pre_course_id := s.DepartmentId
-FROM L_185_Employee s,  (SELECT @cur_rank := 0, @pre_course_id := NULL) r
+FROM H_185_Employee s,  (SELECT @cur_rank := 0, @pre_course_id := NULL) r
 ORDER BY DepartmentId, Salary DESC
 
 # 分组并列跳跃排名
@@ -122,7 +131,7 @@ SELECT
   if(@preDepart = s.DepartmentId, if(@preSalary=s.Salary, @currRank, @currRank := @depCounter), @currRank := @depCounter) ranking,
   @preDepart := s.DepartmentId,
   @preSalary :=s.Salary
-FROM L_185_Employee s,  (SELECT @currRank := 0, @preDepart := 0, @preSalary := NULL, @depCounter := 0) r
+FROM H_185_Employee s,  (SELECT @currRank := 0, @preDepart := 0, @preSalary := NULL, @depCounter := 0) r
 ORDER BY DepartmentId, Salary DESC
 
 # 分组并列连续排名
@@ -133,7 +142,7 @@ SELECT
   if(@preDepart = s.DepartmentId, if(@preSalary=s.Salary, @currRank, @currRank := @currRank + 1), @currRank := 1) ranking,
   @preDepart := s.DepartmentId,
   @preSalary :=s.Salary
-FROM L_185_Employee s,  (SELECT @currRank := 0, @preDepart := 0, @preSalary := NULL) r
+FROM H_185_Employee s,  (SELECT @currRank := 0, @preDepart := 0, @preSalary := NULL) r
 ORDER BY DepartmentId, Salary DESC
 
 # 整体方案
@@ -142,12 +151,12 @@ SELECT
     e1.Name Employee,
     e1.Salary Salary
 FROM
-    L_185_Employee e1 INNER JOIN L_185_Department d
+    H_185_Employee e1 INNER JOIN H_185_Department d
     ON e1.DepartmentId = d.Id          
 WHERE 3 > (SELECT
                COUNT(DISTINCT e2.Salary)
            FROM
-               L_185_Employee e2
+               H_185_Employee e2
            WHERE
                e1.Salary < e2.Salary AND
                e1.DepartmentID = e2.DepartmentId)

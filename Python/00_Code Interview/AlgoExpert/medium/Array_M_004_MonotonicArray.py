@@ -1,4 +1,4 @@
-#!C:\Python\Python
+#!C:\Python38\Python
 #coding=utf-8
 
 '''
@@ -38,4 +38,6 @@ def isMonotonic(array):
             if currDirec > 0:
                 return False 
     return True 
-    
+
+array = [-1, -5, -10, -1100, -1100, -901, -1102, -9001]
+print(isMonotonic(array))

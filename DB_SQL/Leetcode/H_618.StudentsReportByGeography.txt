@@ -22,12 +22,12 @@ output
 ========================
 schema:
 ========================
-Create table L_618_student (name varchar(50), continent varchar(50));
-Truncate table L_618_student;
-insert into L_618_student (name , continent) values ('Jack', 'America');
-insert into L_618_student (name , continent) values ('Pascal', 'Europe');
-insert into L_618_student (name , continent) values ('Xi', 'Asia');
-insert into L_618_student (name , continent) values ('Jane', 'America');
+Create table H_618_student (name varchar(50), continent varchar(50));
+Truncate table H_618_student;
+insert into H_618_student (name , continent) values ('Jack', 'America');
+insert into H_618_student (name , continent) values ('Pascal', 'Europe');
+insert into H_618_student (name , continent) values ('Xi', 'Asia');
+insert into H_618_student (name , continent) values ('Jane', 'America');
 
 ========================
 solution:
@@ -36,6 +36,26 @@ solution:
 ========================
 TSQL:
 ========================
+
+with a as (
+select row_number() over (order by name) as id, name as America
+from H_618_student
+where continent = 'America'),
+e as (
+select row_number() over (order by name) as id, name as Europe
+from H_618_student
+where continent = 'Europe'),
+asia as (
+select row_number() over (order by name) as id, name as Asia
+from H_618_student
+where continent = 'Asia')
+select 
+America, Europe, Asia
+from a
+left join e on a.id = e.id 
+left join asia on a.id = asia.id 
+
+
 
 SELECT America, Asia, Europe
 FROM(
@@ -47,7 +67,7 @@ FROM(
     FROM (
         SELECT *,
         ROW_NUMBER()OVER(PARTITION BY continent ORDER BY name) AS continentorder
-        FROM L_618_student
+        FROM H_618_student
         ) AS SOURCE
     GROUP BY continentorder
 )temp
@@ -67,7 +87,7 @@ FROM (
 	FROM (
 		SELECT *,   // ???????
 		@counter := @counter + 1  continentorder
-		FROM L_618_student, (select @counter := 0) r
+		FROM H_618_student, (select @counter := 0) r
 		order by continent) source
 	GROUP BY continentorder
 ) temp

@@ -26,21 +26,33 @@ output
 ========================
 schema:
 ========================
-Create table L_571_Numbers (Number int, Frequency int)
-Truncate table L_571_Numbers
-insert into L_571_Numbers (Number, Frequency) values (0, 7)
-insert into L_571_Numbers (Number, Frequency) values (1, 1)
-insert into L_571_Numbers (Number, Frequency) values (2, 3)
-insert into L_571_Numbers (Number, Frequency) values (3, 1)
-
+Create table H_571_Numbers (Number int, Frequency int)
+Truncate table H_571_Numbers
+insert into H_571_Numbers (Number, Frequency) values (0, 5)
+insert into H_571_Numbers (Number, Frequency) values (1, 2)
+insert into H_571_Numbers (Number, Frequency) values (2, 3)
+insert into H_571_Numbers (Number, Frequency) values (3, 2)
 ========================
 solution:
 ========================
 
-# all solution? 
+========================
+SQL Server 
+========================
+
+select t.Number from (
+    select 
+		Number,
+		Frequency,
+        sum(Frequency)over(order by Number) as AccFreq,
+        sum(Frequency)over()/2 as HalfSumFreq
+    from H_571_Numbers ) t 
+where t.AccFreq BETWEEN t.HalfSumFreq AND t.HalfSumFreq + t.Frequency 
+
+# another solution
 SELECT AVG(a.number) median
-FROM L_571_Numbers a
+FROM H_571_Numbers a
 WHERE a.frequency >= ABS(
-    (SELECT SUM(frequency) FROM L_571_Numbers WHERE a.number <= number) -
-    (SELECT SUM(frequency) FROM L_571_Numbers WHERE a.number >= number)
+    (SELECT SUM(frequency) FROM H_571_Numbers WHERE a.number <= number) -
+    (SELECT SUM(frequency) FROM H_571_Numbers WHERE a.number >= number)
     )

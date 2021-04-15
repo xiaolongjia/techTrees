@@ -33,20 +33,20 @@ Output
 ========================
 schema:
 ========================
-Create table L_615_salary (id int, employee_id int, amount int,  pay_date Date);
-Truncate table L_615_salary;
-insert into L_615_salary (id, employee_id, amount,  pay_date) values (1, 1, 9000,  '2017-03-31');
-insert into L_615_salary (id, employee_id, amount,  pay_date) values (2, 2, 6000,  '2017-03-31');
-insert into L_615_salary (id, employee_id, amount,  pay_date) values (3, 3, 10000, '2017-03-31');
-insert into L_615_salary (id, employee_id, amount,  pay_date) values (4, 1, 7000,  '2017-02-28');
-insert into L_615_salary (id, employee_id, amount,  pay_date) values (5, 2, 6000,  '2017-02-28');
-insert into L_615_salary (id, employee_id, amount,  pay_date) values (6, 3, 8000,  '2017-02-28');
+Create table H_615_salary (id int, employee_id int, amount int,  pay_date Date);
+Truncate table H_615_salary;
+insert into H_615_salary (id, employee_id, amount,  pay_date) values (1, 1, 9000,  '2017-03-31');
+insert into H_615_salary (id, employee_id, amount,  pay_date) values (2, 2, 6000,  '2017-03-31');
+insert into H_615_salary (id, employee_id, amount,  pay_date) values (3, 3, 10000, '2017-03-31');
+insert into H_615_salary (id, employee_id, amount,  pay_date) values (4, 1, 7000,  '2017-02-28');
+insert into H_615_salary (id, employee_id, amount,  pay_date) values (5, 2, 6000,  '2017-02-28');
+insert into H_615_salary (id, employee_id, amount,  pay_date) values (6, 3, 8000,  '2017-02-28');
 
-Create table employee_615 (employee_id int, department_id int);
-Truncate table employee_615;
-insert into employee_615 (employee_id, department_id) values (1, 1);
-insert into employee_615 (employee_id, department_id) values (2, 2);
-insert into employee_615 (employee_id, department_id) values (3, 2);
+Create table H_615_employee (employee_id int, department_id int);
+Truncate table H_615_employee;
+insert into H_615_employee (employee_id, department_id) values (1, 1);
+insert into H_615_employee (employee_id, department_id) values (2, 2);
+insert into H_615_employee (employee_id, department_id) values (3, 2);
 
 ========================
 solution:
@@ -66,7 +66,7 @@ SELECT
 	FORMAT(pay_date, 'yyyy-MM') as pay_month,
 	e.department_id,
 	AVG(s.amount) as mean_sal
-FROM L_615_salary s, employee_615 e
+FROM H_615_salary s, H_615_employee e
 where s.employee_id = e.employee_id
 group by FORMAT(pay_date, 'yyyy-MM'), department_id
 
@@ -74,7 +74,7 @@ subquery 2:
 SELECT
 	FORMAT(pay_date, 'yyyy-MM') as pay_month,
 	AVG(amount) as mean_sal
-FROM L_615_salary 
+FROM H_615_salary 
 group by FORMAT(pay_date, 'yyyy-MM')
 
 final query:
@@ -91,14 +91,14 @@ from
 	FORMAT(pay_date, 'yyyy-MM') as pay_month,
 	e.department_id,
 	AVG(s.amount) as mean_sal
-FROM L_615_salary s, employee_615 e
+FROM H_615_salary s, H_615_employee e
 where s.employee_id = e.employee_id
 group by FORMAT(pay_date, 'yyyy-MM'), department_id) s1, 
 (
 SELECT
 	FORMAT(pay_date, 'yyyy-MM') as pay_month,
 	AVG(amount) as mean_sal
-FROM L_615_salary 
+FROM H_615_salary 
 group by FORMAT(pay_date, 'yyyy-MM')
 ) s2
 where s1.pay_month = s2.pay_month
@@ -121,7 +121,7 @@ FROM
         e.department_id,
         AVG(s.amount) mean_sal
     FROM
-        L_615_salary s JOIN employee_615 e ON
+        H_615_salary s JOIN H_615_employee e ON
         s.employee_id = e.employee_id
     GROUP BY
         DATE_FORMAT(pay_date, '%Y-%m'),
@@ -132,7 +132,7 @@ FROM
         DATE_FORMAT(pay_date, '%Y-%m') pay_month,
         AVG(s.amount) mean_sal
     FROM
-        L_615_salary s JOIN employee_615 e ON
+        H_615_salary s JOIN H_615_employee e ON
         s.employee_id = e.employee_id
     GROUP BY
         DATE_FORMAT(pay_date, '%Y-%m')

@@ -42,32 +42,53 @@ median salary for each company
 ================================================================================
 # schema 
 ================================================================================
-Create table L_569_Employee (Id int, Company varchar(20), Salary int);
-Truncate table L_569_Employee;
-insert into L_569_Employee (Id, Company, Salary) values (1,  'A',  2341 );
-insert into L_569_Employee (Id, Company, Salary) values (2,  'A',  341  );
-insert into L_569_Employee (Id, Company, Salary) values (3,  'A',  15   );
-insert into L_569_Employee (Id, Company, Salary) values (4,  'A',  15314);
-insert into L_569_Employee (Id, Company, Salary) values (5,  'A',  451  );
-insert into L_569_Employee (Id, Company, Salary) values (6,  'A',  513  );
-insert into L_569_Employee (Id, Company, Salary) values (7,  'B',  15   );
-insert into L_569_Employee (Id, Company, Salary) values (8,  'B',  13   );
-insert into L_569_Employee (Id, Company, Salary) values (9,  'B',  1154 );
-insert into L_569_Employee (Id, Company, Salary) values (10, 'B',  1345 );
-insert into L_569_Employee (Id, Company, Salary) values (11, 'B',  1221 );
-insert into L_569_Employee (Id, Company, Salary) values (12, 'B',  234  );
-insert into L_569_Employee (Id, Company, Salary) values (13, 'C',  2345 );
-insert into L_569_Employee (Id, Company, Salary) values (14, 'C',  2645 );
-insert into L_569_Employee (Id, Company, Salary) values (15, 'C',  2645 );
-insert into L_569_Employee (Id, Company, Salary) values (16, 'C',  2652 );
-insert into L_569_Employee (Id, Company, Salary) values (17, 'C',  65   );
+Create table H_569_Employee (Id int, Company varchar(20), Salary int);
+Truncate table H_569_Employee;
+insert into H_569_Employee (Id, Company, Salary) values (1,  'A',  2341 );
+insert into H_569_Employee (Id, Company, Salary) values (2,  'A',  341  );
+insert into H_569_Employee (Id, Company, Salary) values (3,  'A',  15   );
+insert into H_569_Employee (Id, Company, Salary) values (4,  'A',  15314);
+insert into H_569_Employee (Id, Company, Salary) values (5,  'A',  451  );
+insert into H_569_Employee (Id, Company, Salary) values (6,  'A',  513  );
+insert into H_569_Employee (Id, Company, Salary) values (7,  'B',  15   );
+insert into H_569_Employee (Id, Company, Salary) values (8,  'B',  13   );
+insert into H_569_Employee (Id, Company, Salary) values (9,  'B',  1154 );
+insert into H_569_Employee (Id, Company, Salary) values (10, 'B',  1345 );
+insert into H_569_Employee (Id, Company, Salary) values (11, 'B',  1221 );
+insert into H_569_Employee (Id, Company, Salary) values (12, 'B',  234  );
+insert into H_569_Employee (Id, Company, Salary) values (13, 'C',  2345 );
+insert into H_569_Employee (Id, Company, Salary) values (14, 'C',  2645 );
+insert into H_569_Employee (Id, Company, Salary) values (15, 'C',  2645 );
+insert into H_569_Employee (Id, Company, Salary) values (16, 'C',  2652 );
+insert into H_569_Employee (Id, Company, Salary) values (17, 'C',  65   );
 
 
 ================================================================================
-# sollution 
+# SQL Server 
 ================================================================================
 
-
+with base as (
+	select 
+		company, 
+		id, 
+		salary, 
+		row_number() over (partition by company order by salary desc) as ranking 
+	from H_569_Employee),
+total as (
+	select 
+		company, 
+		count(*) as total,
+		(case when count(*) %2<>0 then  CEILING(count(*)*1.0/2)  else count(*) /2   end) as median1,
+		(case when count(*) %2<>0 then  CEILING(count(*)*1.0/2)  else count(*) /2+1 end) as median2 
+	from base
+	group by company )
+select 
+	b.company, 
+	b.id, 
+	b.salary
+from base b, total t 
+where b.company = t.company 
+and (b.ranking = t.median1 or b.ranking = t.median2)
 
 ================================================================================
 # MYSQL  ??
@@ -78,7 +99,7 @@ SELECT
     a.Company,
     a.Salary
 FROM
-    L_569_Employee a LEFT JOIN L_569_Employee b ON
+    H_569_Employee a LEFT JOIN H_569_Employee b ON
     a.Company = b.Company
 GROUP BY a.id
 HAVING

@@ -21,7 +21,8 @@ We define a player’s installation date as the player’s first login day.
 We also define the retention time on the first day of a certain date X as the number of players whose installation date is X, 
 who log in again one day after X, divide by the number of players whose installation date is X, and round to two decimal places .
 
-Write a SQL query to report each installation date, the number of players who installed the game that day, and the retention time on the first day.
+Write a SQL query to report each installation date, the number of players who installed the game that day, 
+and the retention time on the first day.
 
 The query result format is as follows:
 
@@ -48,18 +49,36 @@ Result table:
 ========================
 schema:
 ========================
-Create table L_1097_Activity (player_id int, device_id int, event_date Date, games_played int);
-Truncate table L_1097_Activity;
-insert into L_1097_Activity (player_id, device_id, event_date , games_played) values (1, 2, '2016-03-01', 5);
-insert into L_1097_Activity (player_id, device_id, event_date , games_played) values (1, 2, '2016-03-02', 6);
-insert into L_1097_Activity (player_id, device_id, event_date , games_played) values (2, 3, '2017-06-25', 1);
-insert into L_1097_Activity (player_id, device_id, event_date , games_played) values (3, 1, '2016-03-01', 0);
-insert into L_1097_Activity (player_id, device_id, event_date , games_played) values (3, 4, '2016-07-03', 5);
+Create table H_1097_Activity (player_id int, device_id int, event_date Date, games_played int);
+Truncate table H_1097_Activity;
+insert into H_1097_Activity (player_id, device_id, event_date , games_played) values (1, 2, '2016-03-01', 5);
+insert into H_1097_Activity (player_id, device_id, event_date , games_played) values (1, 2, '2016-03-02', 6);
+insert into H_1097_Activity (player_id, device_id, event_date , games_played) values (2, 3, '2017-06-25', 1);
+insert into H_1097_Activity (player_id, device_id, event_date , games_played) values (3, 1, '2016-03-01', 0);
+insert into H_1097_Activity (player_id, device_id, event_date , games_played) values (3, 4, '2016-07-03', 5);
 
 
 ========================
 solution:
 ========================
+
+
+========================
+SQL SERVER
+========================
+
+select installDate, count(player_id), CAST(count(retentionDate)*1.0/count(installDate) as Decimal(3,2)) as Day1_retention
+from 
+(select 
+a.player_id, a.installDate, b.event_date as retentionDate
+from 
+( select player_id, min(event_date) as installDate
+from H_1097_Activity
+group by player_id) a left join H_1097_Activity b on a.player_id = b.player_id
+and  DATEADD(day, 1, a.installDate) = b.event_date) temp
+group by installDate
+
+
 
  cast(count(a.player_id)/count(s1.player_id) AS numeric(10,2)) as Day1_retention
  
@@ -68,13 +87,13 @@ s1.event_date as install_dt, count(s1.player_id) as installs, count(a.player_id)
 from 
 (select 
 player_id, event_date, dateadd(day, 1, event_date) as nextDay
-from L_1097_Activity a 
+from H_1097_Activity a 
 where a.event_date in 
 	(select min(event_date)
-	from L_1097_Activity b
+	from H_1097_Activity b
 	where a.player_id = b.player_id
 	group by player_id) 
-) s1 left join L_1097_Activity a on s1.player_id = a.player_id and s1.nextDay = a.event_date
+) s1 left join H_1097_Activity a on s1.player_id = a.player_id and s1.nextDay = a.event_date
 group by s1.event_date
 
 SELECT
