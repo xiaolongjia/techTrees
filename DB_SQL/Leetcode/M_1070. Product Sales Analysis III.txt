@@ -1,0 +1,100 @@
+1070. Product Sales Analysis III (Medium)
+https://leetcode.com/problems/product-sales-analysis-iii/
+
+Sales table Sales:
+
++-------------+-------+
+| Column Name | Type  |
++-------------+-------+
+| sale_id     | int   |
+| product_id  | int   |
+| year        | int   |
+| quantity    | int   |
+| price       | int   |
++-------------+-------+
+sale_id is the primary key of this table.
+The product ID is a foreign key to the product table.
+Please note that the price is per unit.
+
+Product table Product:
+
++--------------+---------+
+| Column Name  | Type    |
++--------------+---------+
+| product_id   | int     |
+| product_name | varchar |
++--------------+---------+
+The product ID is the primary key of this table.
+ 
+
+Write a SQL query to select the product id, year, quantity, and price of each product sold in the first year.
+
+The query result format is as follows:
+
+Sales table:
++---------+------------+------+----------+-------+
+| sale_id | product_id | year | quantity | price |
++---------+------------+------+----------+-------+ 
+| 1       | 100        | 2008 | 10       | 5000  |
+| 2       | 100        | 2009 | 12       | 5000  |
+| 7       | 200        | 2011 | 15       | 9000  |
++---------+------------+------+----------+-------+
+
+Product table:
++------------+--------------+
+| product_id | product_name |
++------------+--------------+
+| 100        | Nokia        |
+| 200        | Apple        |
+| 300        | Samsung      |
++------------+--------------+
+
+Result table:
++------------+------------+----------+-------+
+| product_id | first_year | quantity | price |
++------------+------------+----------+-------+ 
+| 100        | 2008       | 10       | 5000  |
+| 200        | 2011       | 15       | 9000  |
++------------+------------+----------+-------+
+
+
+========================
+schema:
+========================
+
+create table M_1070_Sales (sale_id int, product_id int, year int, quantity int, price int);
+insert into M_1070_Sales (sale_id , product_id , year , quantity , price)
+values
+(1, 100, 2008, 10, 5000),
+(2, 100, 2009, 12, 5000),
+(7, 200, 2011, 15, 9000);  
+
+create table M_1070_Product(product_id int, product_name varchar(255));
+insert into M_1070_Product(product_id, product_name)
+values
+(100, 'Nokia'),
+(200, 'Apple'),
+(300, 'Samsung');
+
+
+========================
+solution:
+========================
+
+========================
+SQL Server
+========================
+
+select 
+ b.product_id, a.first_year, b.quantity, b.price
+from (
+	select 
+		product_id, min(year) as first_year
+	from M_1070_Sales
+	group by product_id
+	) a,  M_1070_Sales b 
+where a.product_id = b.product_id
+and b.year = a.first_year 
+
+
+

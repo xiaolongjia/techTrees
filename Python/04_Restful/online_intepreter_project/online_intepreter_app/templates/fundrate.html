@@ -1,0 +1,25 @@
+{% load templateTags %}
+<!DOCTYPE html>
+<html>
+{% get_top10_rates as top10 %}
+<table border="1">
+        <tr>
+            <th>Rate</th>
+            <th>Fund ID</th>
+		    <th>Fund Name</th>
+		    <th>Avg Increase</th>
+		    <th>Increase Rate</th>
+        </tr>
+    {% block content %}
+    {% for fund in top10 %}
+	<tr>
+		<td> {{ fund.rate }} </td>
+		<td> {{ fund.FundID }} </td>
+		<td> {{ fund.FundName }}  </td>
+		<td> {{ fund.avgIncrease }} </td>
+		<td> {{ fund.increaseRate }} </td>
+	</tr>
+	{% endfor %}
+	{% endblock %}
+</table>
+</html>

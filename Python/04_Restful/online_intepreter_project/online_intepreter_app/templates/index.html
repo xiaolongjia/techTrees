@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Online Python Intepreter</title>
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css" rel="stylesheet">
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row text-center h1">
+        Online Python Intepreter
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-3">
+            <table class="table table-striped"><!--filelist-->
+                <thead> <!--title-->
+                    <tr>
+                        <th class="text-center">File Name</th> <!--center-->
+                        <th class="text-center">Option</th> <!--center-->
+                    </tr>
+                </thead>
+                <tbody></tbody> <!-- javascript render-->
+            </table>
+        </div>
+        <div class="col-md-9">
+            <div class="container-fluid">
+                <div class="col-md-6">
+                    <p class="text-center h3">Please enter code below</p>
+                    <textarea class="form-control" id="code-input"></textarea> <!--code input-->
+                    
+                    <p class="text-info">if you need to save your code, it is recommended to input code name</p>
+                    <label for="code-name-input">Code Name</label>
+                    <input type="text" class="form-control" id="code-name-input">
+                    <hr>
+                    <div id="code-options"
+                         style="display: flex;
+                         justify-content: space-around;
+                         flex-wrap: wrap" > <!--use flex to distribute each option evenly-->
+                    </div>
+                </div>
+                <p class="text-center h3">Output</p>
+                <div class="col-md-6">
+                    <textarea id="code-output" disabled
+                              class="form-control "></textarea><!--output result-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="js/jquery.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/main.js"></script> <!--import js file-->
+</body>
+</html>

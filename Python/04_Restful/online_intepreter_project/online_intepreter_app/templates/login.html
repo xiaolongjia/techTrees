@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="UTF-8">
+<title>comIT</title>
+<link rel="SHORTCUT ICON" href="images/favicon.ico"/>
+<link rel="stylesheet" href="css/bootstrap.css"/>
+<link rel="stylesheet" href="css/main.css"/>
+<link rel="stylesheet" href="css/common.css"/>
+</head>
+<body>
+     <div id="loginContent">
+         <div id="loginResult" class="error" > </div>
+         <form id="loginForm" name="loginForm" method="post" action="/home/">
+		 {% csrf_token %}
+             <fieldset>
+                 <legend> comIT </legend>
+                 <div>
+                     <label for="username">Username</label>
+                     <br />
+                     <input type="text" id="username" name="username" class="text required" size="20" />
+                     <span class="error">This field is required</span>
+                 </div>
+                 <div>
+                     <label for="password">Password</label>
+                     <br />
+                     <input type="password" id="password" name="password" class="text required" size="20" />
+                     <span class="error">This field is required</span>
+                 </div>
+                 <div>
+                     <button type="submit" class="btn btn-primary"> Sign In </button>
+                     <a href="/signup/">Sign up?</a>
+                 </div>
+             </fieldset>
+         </form>
+      </div>
+</body>
+</html>

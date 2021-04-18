@@ -1,7 +1,14 @@
+#coding=utf-8
+
+from django.views import View  # 引入最基本的类视图
+from django.http import HttpResponse, JsonResponse # 引入现成的响应类
+from django.core.serializers import serialize  # 引入序列化函数
+import json  # 引入 json 库，我们会用它来处理 json 字符串。
+
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from .models import Users, FundRate
 from .forms import SignupForm, AddForm
+
 import logging
 import datetime
 
@@ -58,3 +65,5 @@ def home(request):
             return redirect('login')
     userID = request.session.get('user')
     return render(request, 'fundrate.html')
+
+

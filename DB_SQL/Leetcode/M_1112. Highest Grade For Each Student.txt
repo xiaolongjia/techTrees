@@ -1,0 +1,66 @@
+1112.(Medium) Highest Grade For Each Student
+
+Get highest grade for each student
+In case of a tie, choose the course with smaller course_id
+sorted by increasing student_id
+
++------------+-------------------+
+| student_id | course_id | grade |
++------------+-----------+-------+
+| 2          | 2         | 95    |
+| 2          | 3         | 95    |
+| 1          | 1         | 90    |
+| 1          | 2         | 99    |
+| 3          | 1         | 80    |
+| 3          | 2         | 75    |
+| 3          | 3         | 82    |
++------------+-----------+-------+
+
+Result table:
++------------+-------------------+
+| student_id | course_id | grade |
++------------+-----------+-------+
+| 1          | 2         | 99    |
+| 2          | 2         | 95    |
+| 3          | 3         | 82    |
++------------+-----------+-------+
+
+
+========================
+schema:
+========================
+drop table M_1112_Students
+
+create table M_1112_Students (student_id int, course_id int, grade int);
+insert into M_1112_Students  (student_id ,  course_id , grade)
+values
+(2, 2, 95),
+(2, 3, 95),
+(1, 1, 90),
+(1, 2, 99),
+(3, 1, 80),
+(3, 2, 75),
+(3, 3, 82);
+
+
+
+========================
+solution:
+========================
+
+========================
+SQL Server
+========================
+
+select
+	s.student_id, 
+	min(s.course_id) as course_id, 
+	s.grade 
+from 
+	(select student_id, max(grade) as maxGrade 
+	from M_1112_Students s 
+	group by student_id) tmp , M_1112_Students s 
+where tmp.student_id = s.student_id 
+and tmp.maxGrade = s.grade 
+group by s.student_id, s.grade  
+order by s.student_id

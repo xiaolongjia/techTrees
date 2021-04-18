@@ -1,0 +1,78 @@
+1077.(Medium) Project Employees III
+https://leetcode.com/problems/project-employees-iii/
+
+每个项目组里工作年限最长的人（可能多个）。
+
+Project table:
++-------------+-------------+
+| project_id  | employee_id |
++-------------+-------------+
+| 1           | 1           |
+| 1           | 2           |
+| 1           | 3           |
+| 2           | 1           |
+| 2           | 4           |
++-------------+-------------+
+
+Employee table:
++-------------+--------+------------------+
+| employee_id | name   | experience_years |
++-------------+--------+------------------+
+| 1           | Khaled | 3                |
+| 2           | Ali    | 2                |
+| 3           | John   | 3                |
+| 4           | Doe    | 2                |
++-------------+--------+------------------+
+
+Result table:
++-------------+---------------+
+| project_id  | employee_id   |
++-------------+---------------+
+| 1           | 1             |
+| 1           | 3             |
+| 2           | 1             |
++-------------+---------------+
+
+
+========================
+schema:
+========================
+
+create table M_1077_Project (project_id int, employee_id int);
+insert into M_1077_Project (project_id , employee_id)
+values
+(1, 1),
+(1, 2),
+(1, 3),
+(2, 1),
+(2, 4);  
+
+create table M_1077_Employee (employee_id int, name varchar(50), experience_years int);
+insert into M_1077_Employee (employee_id, name, experience_years)
+values
+(1, 'Khaled', 3),
+(2, 'Ali', 2),
+(3, 'John', 3),
+(4, 'Doe', 2);
+
+
+========================
+solution:
+========================
+
+========================
+SQL Server
+========================
+
+select 
+	p.project_id, p.employee_id
+from 
+	( select 
+		p.project_id , max(e.experience_years) max_years 
+	  from M_1077_Project p, M_1077_Employee e 
+	  where p.employee_id = e.employee_id
+	  group by p.project_id ) temp, M_1077_Project p , M_1077_Employee e 
+where temp.project_id = p.project_id 
+and p.employee_id = e.employee_id
+and e.experience_years = temp.max_years
+

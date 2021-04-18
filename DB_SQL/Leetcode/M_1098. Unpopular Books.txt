@@ -1,0 +1,122 @@
+1098.(Medium) Unpopular Books
+
+Source: LeetCode
+link: https://leetcode-cn.com/problems/unpopular-books
+
+Books list Books:
+
++----------------+---------+
+| Column Name    | Type    |
++----------------+---------+
+| book_id        | int     |
+| name           | varchar |
+| available_from | date    |
++----------------+---------+
+
+book_id is the primary key of this table.
+Order table Orders:
+
++----------------+---------+
+| Column Name    | Type    |
++----------------+---------+
+| order_id       | int     |
+| book_id        | int     |
+| quantity       | int     |
+| dispatch_date  | date    |
++----------------+---------+
+order_id is the primary key of this table.
+book_id is the foreign key of the Books table.
+ 
+
+You need to write a SQL command to filter out the books that have less than 10 orders in the past year.
+
+Note: Books that are less than one month old from the shelves (available from) are not considered. 
+And suppose today is 2019-06-23.
+
+ 
+
+The following is a sample output:
+
+Books table:
++---------+--------------------+----------------+
+| book_id | name               | available_from |
++---------+--------------------+----------------+
+| 1       | "Kalila And Demna" | 2010-01-01     |
+| 2       | "28 Letters"       | 2012-05-12     |
+| 3       | "The Hobbit"       | 2019-06-10     |
+| 4       | "13 Reasons Why"   | 2019-06-01     |
+| 5       | "The Hunger Games" | 2008-09-21     |
++---------+--------------------+----------------+
+
+Orders table:
++----------+---------+----------+---------------+
+| order_id | book_id | quantity | dispatch_date |
++----------+---------+----------+---------------+
+| 1        | 1       | 2        | 2018-07-26    |
+| 2        | 1       | 1        | 2018-11-05    |
+| 3        | 3       | 8        | 2019-06-11    |
+| 4        | 4       | 6        | 2019-06-05    |
+| 5        | 4       | 5        | 2019-06-20    |
+| 6        | 5       | 9        | 2009-02-02    |
+| 7        | 5       | 8        | 2010-04-13    |
++----------+---------+----------+---------------+
+
+Result table:
++-----------+--------------------+
+| book_id   | name               |
++-----------+--------------------+
+| 1         | "Kalila And Demna" |
+| 2         | "28 Letters"       |
+| 5         | "The Hunger Games" |
++-----------+--------------------+
+
+========================
+schema:
+========================
+drop table M_1098_books
+drop table M_1098_Orders
+
+create table M_1098_books (book_id int, name varchar(30), available_from date);
+insert into M_1098_books (book_id , name, available_from)
+values
+(1, 'Kalila And Demna', '2010-01-01'),
+(2, '28 Letters'      , '2012-05-12'),
+(3, 'The Hobbit'      , '2019-06-10'),
+(4, '13 Reasons Why'  , '2019-06-01'),
+(5, 'The Hunger Games', '2008-09-21');
+
+create table M_1098_Orders (order_id int, book_id int, quantity int, dispatch_date date);
+insert into M_1098_Orders (order_id , book_id , quantity , dispatch_date)
+values
+(1, 1, 2, '2018-07-26'),
+(2, 1, 1, '2018-11-05'),
+(3, 3, 8, '2019-06-11'),
+(4, 4, 6, '2019-06-05'),
+(5, 4, 5, '2019-06-20'),
+(6, 5, 9, '2009-02-02'),
+(7, 5, 8, '2010-04-13');
+
+
+========================
+solution:
+========================
+
+========================
+SQL Server
+========================
+
+select 
+	book_id, 
+	name
+from  
+	(select
+		b.book_id, 
+		b.name, 
+		isnull(count(o.order_id), 0) as orderNumber, 
+		isnull(sum(o.quantity), 0) as quantity   
+	 from M_1098_books b left join  M_1098_Orders o on b.book_id = o.book_id 
+	 where b.available_from < dateadd(month, -1, '2019-06-23')
+	 group by b.book_id, b.name ) temp
+where orderNumber < 10
+order by book_id 
+

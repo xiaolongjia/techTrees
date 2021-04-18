@@ -1,0 +1,16 @@
+/* @charset "utf-8"; */
+/* CSS Document */
+
+#loginContent { width: 350px; margin: 100px auto; }
+
+button[type] { margin: 0.5em 0; }
+
+.error{
+        display: none;
+        margin-left: 10px;
+}
+
+.error_show{
+        color: red;
+        margin-left: 10px;
+}
