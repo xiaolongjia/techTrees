@@ -1,19 +1,13 @@
+
 from django.views import View
 from django.http import JsonResponse, HttpResponse
 from django.core.serializers import serialize
-from django.shortcuts import render, redirect
-from .forms import SignupForm, AddForm
-from .models import CodeModel, Users
+from .models import CodeModel
 import json
 from .mixins import APIDetailMixin, APIUpdateMixin, \
     APIDeleteMixin, APIListMixin, APIRunCodeMixin, \
     APICreateMixin, APIMethodMapMixin, APISingleObjectMixin 
-
-import logging
-import datetime
-
-logger = logging.getLogger(__name__)
-
+    
 class APIView(View):
     def response(self, 
                  queryset=None,
@@ -110,42 +104,6 @@ class APIRunCodeView(APIRunCodeMixin,
             instance.save()
         return self.response(status='Successfully Run and Change',
                              output=output)  # return response      
-
-# login view
-def login(request):
-	return render(request, 'login.html')
-
-# signup view 
-def signup(request):
-    logger.WARNING('at here!')
-    if request.method == 'POST':  # 当提交表单时
-        form = SignupForm(request.POST)  # form 包含提交的数据
-
-        if form.is_valid():  # 如果提交的数据合法
-            newUser = Users()
-            newUser.userID = form.cleaned_data['userID']
-            newUser.email = form.cleaned_data['email']
-            newUser.userLastName = form.cleaned_data['lastName']
-            newUser.userFirstName = form.cleaned_data['firstName']
-            newUser.password = form.cleaned_data['password']
-
-            if not Users.objects.filter(userID=newUser.userID).first() and \
-                    not Users.objects.filter(email=newUser.email).first():
-                newUser.registerDate = datetime.date.today().strftime('%Y-%m-%d')
-                newUser.save()
-                request.session['is_login'] = True
-                request.session['user'] = newUser.userID
-                request.session.set_expiry(30)
-                return redirect('/home/')
-            else:
-                error1 = "user has been registered"
-                error2 = "please check User ID or Email Address"
-                return render(request, 'form.html', {'form': form, 'error1': error1, 'error2': error2})
-
-    else:  # 当正常访问时
-        form = SignupForm()
-    return render(request, 'form.html', {'form': form})
-
 # home view        
 def home(request):
     """
@@ -153,8 +111,6 @@ def home(request):
     :param request: request object
     :return: HttpResponse
     """
-	
-	
     with open('frontend/index.html', 'rb') as f:
         content = f.read()
     return HttpResponse(content)

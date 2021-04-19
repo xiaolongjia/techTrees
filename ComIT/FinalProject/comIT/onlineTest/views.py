@@ -64,6 +64,8 @@ def home(request):
         if not status:
             return redirect('login')
     userID = request.session.get('user')
-    return render(request, 'fundrate.html')
+    return redirect("http://127.0.0.1:8080/")
+    #return render(request, 'fundrate.html')
+    #return render(request, 'fundrate.html')
 
 

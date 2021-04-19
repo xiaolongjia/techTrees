@@ -65,3 +65,7 @@ def tournamentWinner(competitions, results):
 			winner = team
     return winner
 	
+	#sortedList = sorted(output.items(), key=lambda item:item[1], reverse=True)
+	#return sortedList[0][0]
+	
+	

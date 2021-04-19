@@ -18,7 +18,7 @@ Including another URLconf
 # from django.urls import path
 from django.conf.urls import url, include
 
-from online_intepreter_app.views import APICodeView, APIRunCodeView, login, signup, home, js, css # import view function
+from online_intepreter_app.views import APICodeView, APIRunCodeView, home, js, css # import view function
 from django.views.decorators.csrf import csrf_exempt # get rid of csrf function since we have restful framework, would use JWT token in the future
 
 # general set operation API
@@ -42,9 +42,7 @@ api_v1 = [url('^codes/', include(code_api))]  # API v1
 api_versions = [url(r'^v1/', include(api_v1))]  # API version control entry URL
 urlpatterns = [
     url(r'^api/', include(api_versions)),  # API visit URL
-    url(r'^$', login, name='login'),  # login
-	url(r'home/', home, name='index'),  # home
-	url(r'signup/', signup, name='signup'),  # signup
+    url(r'^$', home, name='index'),  # home
     url(r'^js/(?P<filename>.*\.js)$', js, name='js'),  # visit js file
     url(r'^css/(?P<filename>.*\.css)$', css, name='css')  # visit css file
 ]
