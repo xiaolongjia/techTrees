@@ -1,4 +1,4 @@
-#!C:\Python\Python
+#!C:\Python38\Python
 #coding=utf-8
 
 '''
