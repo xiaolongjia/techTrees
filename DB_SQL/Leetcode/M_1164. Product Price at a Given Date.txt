@@ -59,34 +59,6 @@ values
 (3 , 20  , '2019-08-18');
 
 
-create table M_1158_Orders (
-	order_id   int ,
-	order_date date,
-	item_id    int ,
-	buyer_id   int ,
-	seller_id  int
-)
-
-insert into M_1158_Orders (order_id, order_date, item_id, buyer_id, seller_id)
-values 
-(1, '2019-08-01', 4 , 1 , 2 ),
-(2, '2018-08-02', 2 , 1 , 3 ),
-(3, '2019-08-03', 3 , 2 , 3 ),
-(4, '2018-08-04', 1 , 4 , 2 ),
-(5, '2018-08-04', 1 , 3 , 4 ),
-(6, '2019-08-05', 2 , 2 , 4 );
-
-create table M_1158_Items (
-	item_id   int ,
-	item_brand varchar(50)
-)
-
-insert into M_1158_Items (item_id, item_brand)
-values 
-(1, 'Samsung'),
-(2, 'Lenovo'),
-(3, 'LG'),
-(4, 'HP');
 
 ========================
 solution:
@@ -97,12 +69,21 @@ SQL Server
 ========================
 
 select 
-	u.user_id, 
-	u.join_date, 
-	count(o.order_id) as orders_in_2019
-from M_1158_Users u left join M_1158_Orders o 
-on u.user_id = o.buyer_id 
-and o.order_date >= '2019-01-01' 
-and o.order_date < '2020-01-01'
-group by u.user_id, u.join_date
-order by u.user_id 
+	product.product_id, 
+	product.change_date,
+	isnull(m.new_price, 10) as price 
+from 
+	(select 
+		p.product_id,
+		isnull(maxDate.change_date, '2019-08-16') as change_date
+	 from (select distinct product_id from M_1164_Products) p left join 
+		(select 
+			product_id, 
+			max(change_date) as change_date
+		from M_1164_Products
+		where change_date <= '2019-08-16'
+		group by product_id) maxDate 
+	on maxDate.product_id = p.product_id) product 
+left join M_1164_Products m 
+on product.product_id = m.product_id 
+and product.change_date = m.change_date

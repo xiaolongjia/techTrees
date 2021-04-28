@@ -1,3 +1,8 @@
+https://docs.djangoproject.com/zh-hans/3.1/topics/templates/
+https://www.liujiangblog.com/course/django/95
+
+
+
 
 #------------------------
 # djangoDemo project files

@@ -1,5 +1,8 @@
 https://zqt0.gitbook.io/leetcode/sql
 
+format (trans_date, 'yyyy-MM') as month
+
+
 
 SELECT  A.request_at AS Day, 
         ROUND(CAST(ISNULL(B.Cancels,0.0) AS FLOAT)/A.Requests,2) AS 'Cancellation Rate'
