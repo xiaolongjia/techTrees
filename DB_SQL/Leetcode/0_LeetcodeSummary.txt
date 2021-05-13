@@ -1,5 +1,9 @@
 https://zqt0.gitbook.io/leetcode/sql
 
+https://leetcode.jp/problemdetail.php?id=1193
+
+
+
 format (trans_date, 'yyyy-MM') as month
 
 

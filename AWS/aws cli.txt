@@ -1,0 +1,195 @@
+
+#-------------
+# S3 
+#-------------
+
+# list 
+
+aws s3 ls
+aws s3 ls s3://bucket
+aws s3 ls s3://bucket/prefix
+
+# copy
+
+aws s3 cp /to/local/path s3://bucket/prefix
+aws s3 cp s3://bucket/prefix /to/local/path
+aws s3 cp s3://bucket1/prefix1 s3://bucket2/prefix2
+-- cp folder 
+aws s3 cp myfolder s3://mybucket/myfolder --recursive
+
+# sync 
+
+aws sync [--delete] /to/local/dir s3://bucket/prefixdir
+aws sync [--delete] s3://bucket/prefixdir /to/local/dir
+aws sync [--delete] s3://bucket1/prefixdir1 s3://bucket2/prefixdir2
+-- sync folder 
+aws s3 sync myfolder s3://mybucket/myfolder --exclude *.tmp
+
+# 分片上传 
+
+[ec2-user@ip-192-10-0-232 data]$ split -b 40m myvideo.mp4 myvideo-part-
+
+[ec2-user@ip-192-10-0-232 data]$ ls -l
+total 152544
+-rwxrwxrwx 1 ec2-user ec2-user 78102279 Jun 24 06:51 myvideo.mp4
+-rw-rw-r-- 1 ec2-user ec2-user 41943040 Jun 24 06:57 myvideo-part-aa
+-rw-rw-r-- 1 ec2-user ec2-user 36159239 Jun 24 06:57 myvideo-part-ab
+
+aws s3api create-multipart-upload --bucket multiple-upload-test --key myvideo.mp4
+
+{
+"Bucket": " multiple-upload-test",
+"UploadId": "_m6b1l5DMGTl_a6rkmhrUxMaqlzzY6CICEVS4gEXlXv7PWHBIZTi90RrmNQclc6PRRnYzCaA6auA5pDaH4p13Bp8xyuCtwwLVl_xeU1yiX0KOQNhMzbE7_1AMA0WM7uO",
+"Key": "myvideo.mp4"
+}
+
+
+aws s3api list-multipart-uploads --bucket multiple-upload-test
+
+{
+"Uploads": [
+    {
+        "Initiator": {
+            "DisplayName": "xxxxxxx",
+            "ID": "arn:aws-cn:iam::xxxxxxxx:user/xxxxx"
+        },
+        "Initiated": "2016-06-24T07:17:28.000Z",
+        "UploadId": "_m6b1l5DMGTl_a6rkmhrUxMaqlzzY6CICEVS4gEXlXv7PWHBIZTi90RrmNQclc6PRRnYzCaA6auA5pDaH4p13Bp8xyuCtwwLVl_xeU1yiX0KOQNhMzbE7_1AMA0WM7uO",
+        "StorageClass": "STANDARD",
+        "Key": "myvideo.mp4",
+        "Owner": {
+            "ID": "9ad8x098aa27467exxxf6f04d5eaxxx6e6e93d5067ba5bdd86dbb68ddb2511bd"
+        }
+    }
+]
+}
+
+aws s3api upload-part --bucket multiple-upload-test --key myvideo.mp4 --part-number 1 --body myvideo-part-aa --upload-id _m6b1l5DMGTl_a6rkmhrUxMaqlzzY6CICEVS4gEXlXv7PWHBIZTi90RrmNQclc6PRRnYzCaA6auA5pDaH4p13Bp8xyuCtwwLVl_xeU1yiX0KOQNhMzbE7_1AMA0WM7uO
+
+{
+"ETag": "\"82eba7dcefdb5dd5bc72247c3f5543ca\""
+}
+
+aws s3api upload-part --bucket multiple-upload-test --key myvideo.mp4 --part-number 2 --body myvideo-part-ab --upload-id _m6b1l5DMGTl_a6rkmhrUxMaqlzzY6CICEVS4gEXlXv7PWHBIZTi90RrmNQclc6PRRnYzCaA6auA5pDaH4p13Bp8xyuCtwwLVl_xeU1yiX0KOQNhMzbE7_1AMA0WM7uO
+
+{
+"ETag": "\"03902e3af09f974cd406f988587d0814\""
+}
+
+aws s3api list-parts --bucket multiple-upload-test --key myvideo.mp4 --upload-id _m6b1l5DMGTl_a6rkmhrUxMaqlzzY6CICEVS4gEXlXv7PWHBIZTi90RrmNQclc6PRRnYzCaA6auA5pDaH4p13Bp8xyuCtwwLVl_xeU1yiX0KOQNhMzbE7_1AMA0WM7uO
+
+{
+    "Owner": {
+        "ID": "9ad8c098aa27467ec9ef6f04d5ea97a6e6e93d5067ba5bdd86dbb68ddb2511bd"
+    },
+    "Initiator": {
+        "DisplayName": "lanyong",
+        "ID": "arn:aws-cn:iam::xxxxxxxxxx:user/xxxxxx"
+    },
+    "Parts": [
+        {
+            "LastModified": "2016-06-24T07:34:21.000Z",
+            "PartNumber": 1,
+            "ETag": "\"82eba7dcefdb5dd5bc72247c3f5543ca\"",
+            "Size": 41943040
+        },
+        {
+            "LastModified": "2016-06-24T07:39:16.000Z",
+            "PartNumber": 2,
+            "ETag": "\"03902e3af09f974cd406f988587d0814\"",
+            "Size": 36159239
+        }
+    ],
+    "StorageClass": "STANDARD"
+}
+
+将Etags存入组装文件  mpustructs
+
+{
+    "Parts": [
+        {
+            "ETag": "82eba7dcefdb5dd5bc72247c3f5543ca",
+            "PartNumber": 1
+        },
+        {
+            "ETag": "03902e3af09f974cd406f988587d0814",
+            "PartNumber": 2
+        }
+    ]
+}
+
+利用组装文件，重新将分片组装为一个完整的文件
+
+aws s3api complete-multipart-upload --multipart-upload file://mpustructs --bucket multiple-upload-test --key myvideo.mp4 --upload-id _m6b1l5DMGTl_a6rkmhrUxMaqlzzY6CICEVS4gEXlXv7PWHBIZTi90RrmNQclc6PRRnYzCaA6auA5pDaH4p13Bp8xyuCtwwLVl_xeU1yiX0KOQNhMzbE7_1AMA0WM7uO
+
+{
+    "ETag": "\"45f9fd2960aa026c44eec4618bc592a2-2\"",
+    "Bucket": "multiple-upload-test",
+    "Location": "https://s3.cn-north-1.amazonaws.com.cn/multiple-upload-test/myvideo.mp4",
+    "Key": "myvideo.mp4"
+}
+
+
+#-------------
+# IAM
+#-------------
+
+aws iam create-role MY-ROLE-NAME --assum-role-policy-document file://path/to/trustpolicy.json
+aws iam put-role-policy --role-name MY-ROLE-NAME --policy-name MY-PERM-POLICY --policy-document file://path/to/permissionpolicy.json
+aws iam create-instance-profile --instance-profile-name MY-INSTANCE-PROFILE
+aws iam add-role-to-instance-profile --instance-profile-name MY-INSTANCE-PROFILE --role-name MY-ROLE-NAME
+
+#-------------
+# AUTO-SCALING
+#-------------
+
+列出AS组
+aws autoscaling describe-auto-scaling-groups
+
+列出AS实例
+aws autoscaling describe-auto-scaling-instances
+
+从组中分离实例
+aws autoscaling detach-instances --auto-scaling-group-name myasgroup --instance-ids instanceid1 instanceid2 [--should-decrement-desired-capacity|--no-should-decrement-desired-capacity]
+
+附加实例到组
+aws autoscaling attach-instances --auto-scaling-group-name myasgroup --instance-ids instanceid1 instanceid2
+
+挂起AS流程
+aws autoscaling suspend-process --auto-scaling-group-name myasgroup --scaling-processes AZRebalance|AlarmNotification|...
+
+删除AS组
+aws autoscaling delete-auto-scaling-group --auto-scaling-group-name myasgroup
+
+#-------------
+# EC2
+#-------------
+
+# instance 
+
+aws ec2 describe-instances
+aws ec2 describe-instances --instance-ids "instanceid1" "instanceid2"
+aws ec2 start-instances --instance-ids "instanceid1" "instanceid2"
+aws ec2 stop-intances --instance-ids "instanceid1" "instanceid2"
+
+# region and available zone 
+
+aws ec2 describe-region
+aws ec2 describe-availability-zones --region region-name
+
+# connect to Linux instance 私有密钥的路径和文件名 (/path/my-key-pair.pem)
+ssh -i /path/my-key-pair.pem my-instance-user-name@my-instance-public-dns-name
+
+# copy files 
+scp -i /path/my-key-pair.pem /path/my-file.txt ec2-user@my-instance-public-dns-name:path/
+
+#-------------
+# RDS (Amazon Relational Database Service)
+#-------------
+
+SQL Server, Mysql, Oracle, PostgreSQL 
+
+
+sample-instance.abc2defghije.us-west-2.rds.amazonaws.com,1433
+
+
