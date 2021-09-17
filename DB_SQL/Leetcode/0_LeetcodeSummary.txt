@@ -6,6 +6,12 @@ https://leetcode.jp/problemdetail.php?id=1193
 
 format (trans_date, 'yyyy-MM') as month
 
+enum:  
+
+state       VARCHAR(10) NOT NULL CHECK (state IN('approved', 'declined')),
+
+$ 1205 is difficult. 
+
 
 
 SELECT  A.request_at AS Day, 
