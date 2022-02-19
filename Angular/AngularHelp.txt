@@ -1,0 +1,34 @@
+
+document list:   https://angular.cn/guide/setup-local
+
+
+npm install -g @angular/cli
+
+create workaround: 
+
+ng new my-app
+cd my-app
+ng serve --open 
+
+ng new angular-tour-of-heroes
+cd angular-tour-of-heroes
+ng serve --open
+
+=============================
+src/app/app.component.ts 
+src/app/app.component.html 
+src/styles.css 
+
+
+creating component: 
+
+cd C:\00\02-FAJob\techTrees\Angular\angular-tour-of-heroes
+ng generate component heroes
+
+CREATE src/app/heroes/heroes.component.html (21 bytes)
+CREATE src/app/heroes/heroes.component.spec.ts (626 bytes)
+CREATE src/app/heroes/heroes.component.ts (275 bytes)
+CREATE src/app/heroes/heroes.component.css (0 bytes)
+UPDATE src/app/app.module.ts (475 bytes)
+
+

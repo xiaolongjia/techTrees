@@ -1,0 +1,282 @@
+
+----------------
+homework 2
+----------------
+
+
+二进制转化为十进制
+
+11011
+16*1 + 8*1 + 4*0 + 2*1 + 1*1 = 11
+
+10111011
+128*1 + 64*0 + 32*1 + 16*1 + 8*1 + 4*0 + 2*1 + 1*1 = 188
+
+10010111 = ?
+
+110100011101 = ?
+
+11001001 = ?
+
+十进制转化为二进制
+
+201 = 128 + 64 + 8 + 1 
+
+333 = ?
+
+
+333 = ?
+
+2*2*2*2*2*2*2*2 = 256
+256 ~ 512 
+
+333 = 256 + ? = 256 + 77
+77 = 64 + 13
+
+13 = 8 +4 +1 
+
+333= 256+64+8+4+1
+
+ 101001101
+
+
+422 = ? 
+
+0-7
+10 8
+
+0~1
+101  = 2*2*1 + 2*0 + 1*1 =  5 
+
+0~7
+731  = 8*8*7 + 8*3 + 1*1 = ??
+ 
+0~9 
+731 = 10*10*7 + 10*3 + 1*1 = 731
+
+0~15 = 0~9,a (10) , b (11) ,c (12),d (13),e (14),f  (15)
+2e = 16*2 + 1*14 = 46 
+22bc = 16*16*16*2 + 16*16*2 + 16*11 + 12 = 8192 + 512 + 176 + 12 = 8892 
+
+
+
+----------------
+homework 3
+----------------
+
+1. 编写一下练习程序，运行：
+
+str = 'Hello! today is Sat'
+print (str)          # Prints complete string
+print (str[12])       # Prints first character of the string
+
+print (str[6:15])     # Prints characters starting from 3rd to 5th
+print (str[13:])      # Prints string starting from 3rd character
+print (str * 2)      # Prints string two times
+print (str + "TEST") # Prints concatenated string
+print("*"*30)
+print (str[-2:-5:-1])
+print("*"*30)
+print (str[:])
+print (str[7:10])
+
+2. 用程序实现进制转换： 写一段代码将十进制数：1023 分别转化为2进制，8进制，16进制
+
+
+
+----------------
+homework 4
+----------------
+
+'''
+1. Start Index: End Index: Direction 
+2. When the value of Direction is 1,  Start Index < End Index 
+3. When the value of Direction is -1, Start Index > End Index 
+'''
+
+str = 'Start Index: End Index: Direction'
+print("!"+str[12]+"!")
+print(str[6:15])
+print(str[2:0:-1])
+print(str[-2:-12])
+print(str[-8:-5])
+print(str[8:2:-1])
+print(str[-7:-13:-1])
+print(str[13:])      # Prints string starting from 3rd character
+print(str[-2:-6:-1])
+print(str[:])
+print(str[7:10])
+print(str[-6:-2])
+
+
+Practise 1: 
+
+define a list mylist = [ 'abcd', 2 , 3, 'john', 5 ] then change its value to: mylist = [ 'abcd', 19 , 3]
+
+Practise 2: 
+
+define a list mylist = [ 'abcd', 2 , 3, 'john', 5 ] then change its value to: mylist = [ 'abcd', 19 , 2, 32, 5, 126, "lastone"]
+
+
+
+----------------
+homework 6
+----------------
+
+#--------------
+# Question 1:
+#--------------
+
+Which of the following are true of Python lists? (true/false)
+
+1. A given object may appear in a list more than once (T)
+
+2. All elements in a list must be of the same type (F)
+
+3. These represent the same list: (F)
+
+a = ['a', 'b', 'c']
+b = ['c', 'a', 'b']
+
+4. A list may contain any type of object except another list (F)
+
+5. There is no conceptual limit to the size of a list (F)
+
+#--------------
+# Question 2:
+#--------------
+
+a = ['foo', 'bar', 'baz', 'qux', 'quux', 'corge']
+
+Which below statement is correct?
+
+>>> print(a[-5:-3]) 
+['bar', 'baz']
+
+>>> print(a[2:5] + ['grault'])
+['baz', 'qux', 'quux', 'grault']
+
+>>> print(a[-6])
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+IndexError: list index out of range
+
+#--------------
+# Question 3:
+#--------------
+
+a = [1, 2, 3, 4, 5]
+
+Wite a statement that remove the middle element 3 from a so that it equals [1, 2, 4, 5]:
+
+#--------------
+# Question 4:
+#--------------
+
+a = ['a', 'b', 'c']
+b = ['d', 'e']
+
+a.append('d')
+a.append('e')
+
+a = a + b 
+a+= b 
+
+Wite a statement that adds 'd' and 'e' to the end of a, 
+so that it then equals ['a', 'b', 'c', 'd', 'e']:
+
+a = ['foo', 'bar', 'baz', 'qux', 'quux', 'corge']
+print(a[-5:-3])
+print(a[2:4] + ['grault'])
+print(a[-6])
+
+a = [1, 2, 3, 4, 5]
+print(a)
+
+a = ['a', 'b', 'c']
+b = ['d', 'e']
+
+a = a + b 
+print(a)
+
+a.append('d')
+a.append('e')
+print(a)
+
+
+----------------
+homework 7
+----------------
+
+mylist = [ 'abcd', 786 , 2.23, 'john', 70.2, [1, 2, [4, 5, [10,11], 6], [7, 8, 9], 3] ] # different data types
+print(mylist[5])
+print(mylist[5][2][2][0])
+exit()
+
+#--------------------------------------
+# Arithmetic Operators
+#--------------------------------------
+a, b = 3, 6
+print(a+b)
+print(a-b)
+print(a*b)
+print(b/a)
+print(round(b/a, 0))
+print(b%a)
+print(a**b)
+print(b//a) 
+
+a, b = -9, 2 
+print(a//b)  
+
+
+
+
+1. python -V 
+
+2. 
+
+pip install pgzero
+
+pgzrun [].py
+
+
+3. tk.py  
+
+# python 2.x 
+# from Tkinter import *  
+
+# python 3.x 
+from tkinter import *  
+
+top = tkinter.Tk()
+
+top.mainloop()
+
+
+========================
+pip install pygame
+
+
+/usr/local/bin/pip3 install pgzero
+/usr/local/bin/pip3 install playsound
+
+========================
+
+run tk3.py 
+
+========================
+
+
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 

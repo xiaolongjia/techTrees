@@ -1,9 +1,9 @@
-#!C:\Python\Python
+#!C:\Python38\Python
 
 #--------------------------------------
 # Arithmetic Operators
 #--------------------------------------
-a, b = 10, 24
+a, b = 3, 6
 print(a+b)
 print(a-b)
 print(a*b)
@@ -58,6 +58,7 @@ a, b, c = 21, 10, 0
 c = a + b
 print ("Line 1 - Value of c is ", c)
 
+c = c + a 
 c += a
 print ("Line 2 - Value of c is ", c )
 
@@ -70,11 +71,12 @@ c %= a
 print ("Line 5 - Value of c is ", c)
 c **= a
 print ("Line 6 - Value of c is ", c)
+
 c //= a
 print ("Line 7 - Value of c is ", c)
 
 #--------------------------------------
-# Bitwise Operators
+# Bitwise Operators *
 #--------------------------------------
 a = 60            # 60 = 0011 1100
 b = 13            # 13 = 0000 1101
@@ -116,15 +118,8 @@ if ( b not in list ):
 else:
    print ("Line 2 - b is available in the given list")
 
-c = b/a
-if ( c in list ):
-   print ("Line 3 - a is available in the given list")
-else:
-   print ("Line 3 - a is not available in the given list")
-
-
 #---------------------------------
-# identity Operators
+# identity Operators *
 #---------------------------------
 a = 20
 b = 20
@@ -149,7 +144,7 @@ else:
    print ("Line 5 - a and b have same identity")
 
 #---------------------------------
-# Python Operators Precedence
+# Python Operators Precedence *
 #---------------------------------
 
 x=2

@@ -1,4 +1,4 @@
-#!C:\Python\Python
+#!C:\Python38\Python
 
 #--------------------------
 # Question 1
@@ -24,6 +24,7 @@ var = 279
 print(bin(var))
 print(oct(var))
 print(hex(var))
+exit()
 
 #--------------------------
 # Question 3

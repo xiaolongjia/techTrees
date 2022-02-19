@@ -1,0 +1,30 @@
+
+pip install pygame
+
+python -m pygame.examples.aliens
+
+python -m pip install ./requirements.txt 
+
+
+a=1.01
+
+
+os:  https://www.liujiangblog.com/course/python/53
+sys: https://www.liujiangblog.com/course/python/54
+re:  https://www.liujiangblog.com/course/python/74
+pandas: 
+https://www.yiibai.com/pandas/python_pandas_basic_functionality.html
+https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.reindex.html
+
+
+file size, date
+
+https://blog.csdn.net/HeatDeath/article/details/79526037
+
+nohup
+
+nohup /usr/local/node/bin/node /www/im/chat.js >> /usr/local/node/output.log 2>&1 &
+
+find all files number:
+
+ls -lR |grep "^-"|wc -l

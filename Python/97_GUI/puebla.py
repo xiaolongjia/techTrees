@@ -1,4 +1,4 @@
-#!C:\Python\Python
+#!C:\Python38\Python
 
 import tkinter as tk
 from tkinter import messagebox

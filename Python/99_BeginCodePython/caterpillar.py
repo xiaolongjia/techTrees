@@ -1,7 +1,7 @@
 import random
 import turtle as t
 
-t.bgcolor('yellow')
+t.bgcolor('blue')
 
 caterpillar = t.Turtle()
 caterpillar.shape('square')

@@ -1,4 +1,4 @@
-#!C:\Python\Python
+#!C:\Python38\Python
 
 #------------------------------------------
 # if ... elif ... else
@@ -6,7 +6,7 @@
 x = int(input("please enter an integer:\n"))
 
 if x < 0:
-    print("negative number")
+    print("<0")
 elif x > 0:
     print(">0")
 else :
@@ -16,9 +16,12 @@ else :
 # for ... in ...
 #------------------------------------------
 list = [1,2,3,4,5,5,6,7,6]
+print(list) 
 for i in range(len(list)):
-    print(list[i])
+    list[i] *= 2
+print(list)
 exit()
+
 
 myDict = {1:"Jan", 2:"Feb", 3:"Mar"}
 for myKey in myDict.keys():
